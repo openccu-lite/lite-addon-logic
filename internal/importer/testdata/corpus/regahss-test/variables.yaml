@@ -1,0 +1,49 @@
+# variables/anwesenheit.yaml
+name: Anwesenheit
+note: Anwesenheit
+type: bool
+labels:
+  "false": nicht anwesend
+  "true": anwesend
+start_value: true
+
+# variables/varbool1.yaml
+name: VarBool1
+type: bool
+labels:
+  "false": ist falsch
+  "true": ist wahr
+
+# variables/varenum1.yaml
+name: VarEnum1
+type: list
+entries:
+  - Wert 1
+  - Wert 2
+  - Wert 3
+
+# variables/varnum1.yaml
+name: VarNum1
+type: number
+min: 0
+max: 65000
+
+# variables/varstring1.yaml
+name: VarString1
+type: string
+
+# variables/alarmzone-1.yaml
+name: Alarmzone 1
+note: Alarmmeldung Alarmzone 1
+type: alarm
+labels:
+  "false": nicht ausgelöst
+  "true": ausgelöst
+
+# variables/varalarm1.yaml
+name: VarAlarm1
+type: alarm
+labels:
+  "false": nicht ausgelöst
+  "true": ausgelöst
+

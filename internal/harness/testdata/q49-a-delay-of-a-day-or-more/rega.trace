@@ -1,0 +1,7 @@
+# what the reference did (cmd/regaharness wrote this file)
+reference ReGaHss R1.00.0388.0254
+rate 1
+2026-11-10 11:59:50 +0100 created P
+2026-11-10 12:00:02 +0100 step 1
+2026-11-10 12:00:02 +0100 ran day-and-an-hour
+2026-11-10 12:00:07 +0100 ran five-seconds

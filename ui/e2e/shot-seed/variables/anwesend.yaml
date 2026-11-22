@@ -1,0 +1,7 @@
+name: Anwesend
+note: Jemand ist zu Hause
+type: bool
+labels:
+  "false": abwesend
+  "true": anwesend
+logged: true

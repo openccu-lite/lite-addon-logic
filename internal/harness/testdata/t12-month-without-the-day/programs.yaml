@@ -1,0 +1,88 @@
+# programs/day-30.yaml
+name: day-30
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: monthly
+                at: "12:00"
+                day: 30
+                from: "2026-01-01"
+              trigger: update
+    then:
+      - variable: zzm-day-30-then
+        to: day-30-then
+  - else:
+      - variable: zzm-day-30-else
+        to: day-30-else
+
+# programs/day-31.yaml
+name: day-31
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: monthly
+                at: "12:00"
+                day: 31
+                from: "2026-01-01"
+              trigger: update
+    then:
+      - variable: zzm-day-31-then
+        to: day-31-then
+  - else:
+      - variable: zzm-day-31-else
+        to: day-31-else
+
+# programs/fifth-friday.yaml
+name: fifth-friday
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: monthly
+                at: "12:00"
+                weekdays:
+                  - fri
+                nth: 5
+                from: "2026-01-01"
+              trigger: update
+    then:
+      - variable: zzm-fifth-friday-then
+        to: fifth-friday-then
+  - else:
+      - variable: zzm-fifth-friday-else
+        to: fifth-friday-else
+
+# programs/first-friday.yaml
+name: first-friday
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: monthly
+                at: "12:00"
+                weekdays:
+                  - fri
+                nth: 1
+                from: "2026-01-01"
+              trigger: update
+    then:
+      - variable: zzm-first-friday-then
+        to: first-friday-then
+  - else:
+      - variable: zzm-first-friday-else
+        to: first-friday-else
+

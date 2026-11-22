@@ -1,0 +1,51 @@
+name: Vergleiche alle
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: zaehler-tuerklingel
+              is: 3
+              trigger: update
+        - all:
+            - variable: zaehler-tuerklingel
+              op: gt
+              value: 10
+              trigger: change
+        - all:
+            - variable: zaehler-tuerklingel
+              op: ge
+              value: 20
+              trigger: change
+        - all:
+            - variable: zaehler-tuerklingel
+              op: lt
+              value: 1
+              trigger: change
+        - all:
+            - variable: zaehler-tuerklingel
+              op: le
+              value: 0
+              trigger: check
+        - all:
+            - variable: markise-hinweis
+              is: Sturm
+              trigger: change
+        - all:
+            - variable: heizperiode
+              is: Winter
+              trigger: change
+        - all:
+            - variable: alarm-wasser
+              is: true
+              trigger: change
+    then:
+      - variable: intern-merker
+        to: true
+      - variable: zaehler-tuerklingel
+        to: 0
+        after: 10min
+  - else:
+      - variable: intern-merker
+        to: false

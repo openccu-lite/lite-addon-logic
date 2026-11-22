@@ -1,0 +1,13 @@
+# Q-16: without "laufende Verzögerungen beenden" a pending delayed activity stays when the program is triggered again: two triggers, two executions
+
+program P
+12:00:02 variable:n (5 -> 12): block 1
+  line 1 (block 1) n gt 10 [update]: 12 is true
+  1: variable zzm-late scheduled for 12:00:08, ran 12:00:08
+12:00:05 variable:n (12 -> 12): block 1
+  line 1 (block 1) n gt 10 [update]: 12 is true
+  1: variable zzm-late scheduled for 12:00:11, ran 12:00:11
+12:00:08 variable:n: a delayed activity of block 1 is due, nothing is checked again
+  1: variable zzm-late = late
+12:00:11 variable:n: a delayed activity of block 1 is due, nothing is checked again
+  1: variable zzm-late = late

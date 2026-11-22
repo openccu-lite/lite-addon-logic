@@ -1,0 +1,12 @@
+name: Alle 15 Minuten
+active: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: interval
+                all_day: true
+                interval: 15min
+              trigger: update
+    then: []

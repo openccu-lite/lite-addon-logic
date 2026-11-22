@@ -1,0 +1,17 @@
+# variables/anwesenheit.yaml
+name: Anwesenheit
+note: Anwesenheit
+type: bool
+labels:
+  "false": nicht anwesend
+  "true": anwesend
+start_value: true
+
+# variables/alarmzone-1.yaml
+name: Alarmzone 1
+note: Alarmmeldung Alarmzone 1
+type: alarm
+labels:
+  "false": nicht ausgelöst
+  "true": ausgelöst
+

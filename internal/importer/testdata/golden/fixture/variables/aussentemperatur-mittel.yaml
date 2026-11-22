@@ -1,0 +1,6 @@
+name: Außentemperatur Mittel
+note: Mittelwert, von außen geschrieben
+type: number
+unit: °C
+min: -40
+max: 60

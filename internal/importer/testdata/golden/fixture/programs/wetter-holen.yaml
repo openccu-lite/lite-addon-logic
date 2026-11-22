@@ -1,0 +1,17 @@
+name: Wetter holen
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: interval
+                all_day: true
+                interval: 1h
+                from: "2026-11-21"
+              trigger: update
+    then:
+      - command: "wget -q -O - http://example.invalid/wetter"
+        shell: true
+        wait: true
+        output: markise-hinweis

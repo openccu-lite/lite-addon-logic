@@ -1,0 +1,31 @@
+name: Rollläden abends
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                astro: before_sunset
+                offset: 30min
+                duration: 1h
+                from: "2026-11-21"
+              trigger: update
+            - variable: heizperiode
+              is: Sommer
+              trigger: check
+        - all:
+            - time:
+                kind: daily
+                astro: night
+                from: "2026-11-21"
+              trigger: update
+    cancel_pending: true
+    then:
+      - variable: rollladen-status
+        to: geschlossen
+        after: 5min
+  - else:
+      - variable: rollladen-status
+        to: offen

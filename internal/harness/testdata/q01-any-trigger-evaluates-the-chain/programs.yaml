@@ -1,0 +1,27 @@
+# programs/p.yaml
+name: P
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: a
+              is: true
+              trigger: change
+    then:
+      - variable: zzm-then
+        to: then
+  - when:
+      any:
+        - all:
+            - variable: b
+              is: true
+              trigger: check
+    then:
+      - variable: zzm-elseif
+        to: elseif
+  - else:
+      - variable: zzm-else
+        to: else
+

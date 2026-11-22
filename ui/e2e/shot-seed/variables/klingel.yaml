@@ -1,0 +1,6 @@
+name: Klingel
+note: Der Klingeltaster an der Haustür
+type: bool
+labels:
+  "false": still
+  "true": klingelt

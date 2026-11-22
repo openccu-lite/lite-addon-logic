@@ -1,0 +1,36 @@
+name: Markise bei Wind
+note: Geräte und Taster
+rules:
+  - when:
+      any:
+        - all:
+            - device: HmIP-RF/00111BE9AB9012:4/LEVEL
+              op: gt
+              value: 0.5
+              trigger: change
+            - device: BidCos-RF/LEQ0123456:1/PRESS_SHORT
+              is: true
+              trigger: update
+        - all:
+            - variable: regen
+              is: true
+              not: true
+              trigger: check
+            - device: HmIP-RF/00111BE9AB9012:3/LEVEL
+              op: range
+              from: 0.2
+              below: 0.8
+              not: true
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: HmIP-RF/00111BE9AB9012:4/LEVEL
+        to: 0
+      - set: HmIP-RF/00111BE9AB9012:4/STOP
+        to: true
+        after: 1min30s
+      - variable: modus
+        to: Manuell
+  - else:
+      - set: HmIP-RF/00111BE9AB9012:4/LEVEL
+        special: "[SV]lastValue"

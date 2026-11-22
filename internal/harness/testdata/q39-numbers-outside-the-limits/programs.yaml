@@ -1,0 +1,29 @@
+# programs/p.yaml
+name: P
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: "n"
+              op: gt
+              value: 120
+              trigger: change
+    then:
+      - variable: zzm-above
+        to: above
+  - when:
+      any:
+        - all:
+            - variable: "n"
+              op: lt
+              value: 0
+              trigger: check
+    then:
+      - variable: zzm-below
+        to: below
+  - else:
+      - variable: zzm-inside
+        to: inside
+

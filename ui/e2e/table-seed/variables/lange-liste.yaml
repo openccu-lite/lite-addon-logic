@@ -1,0 +1,6 @@
+name: Betriebsart der Heizungsanlage im Keller einschließlich der Warmwasserbereitung und der Zirkulationspumpe
+note: Kurz
+type: list
+entries:
+  - Automatikbetrieb mit Nachtabsenkung und Frostschutz für alle Heizkreise des Hauses
+  - Aus

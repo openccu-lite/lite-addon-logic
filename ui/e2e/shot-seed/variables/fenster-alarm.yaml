@@ -1,0 +1,5 @@
+name: Fenster offen
+type: alarm
+labels:
+  "false": geschlossen
+  "true": offen

@@ -1,0 +1,24 @@
+name: Zisterne prüfen
+active: true
+at_start: true
+rules:
+  - when:
+      all:
+        - all:
+            - time:
+                kind: interval
+                all_day: true
+                interval: 15min
+                from: "2026-11-21"
+              trigger: update
+        - all:
+            - time:
+                kind: interval
+                at: "08:00"
+                duration: 10h
+                interval: 30min
+                from: "2026-11-21"
+              trigger: check
+    then:
+      - variable: zaehler-tuerklingel
+        to: 1

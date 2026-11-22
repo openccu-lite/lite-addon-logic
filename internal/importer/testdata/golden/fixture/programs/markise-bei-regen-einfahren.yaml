@@ -1,0 +1,32 @@
+name: Markise bei Regen einfahren
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: regen
+              is: true
+              trigger: change
+            - variable: aussentemperatur-mittel
+              op: gt
+              value: 5
+              trigger: check
+        - all:
+            - variable: heizperiode
+              is: Sommer
+              trigger: check
+            - variable: wassermelder-keller
+              is: false
+              trigger: update
+    cancel_pending: true
+    then:
+      - variable: rollladen-status
+        to: Beschattung
+      - variable: markise-hinweis
+        to: wegen Regen eingefahren
+        after: 30s
+  - else:
+      - variable: markise-hinweis
+        to: ""
+    cancel_pending: true

@@ -1,0 +1,26 @@
+devices:
+    - channel: BidCos-RF/LEQ0123456:1
+      name: Taster Flur oben
+      device: Taster Flur
+      type: HM-PB-2-WM55
+      channel_type: KEY
+      rooms:
+        - Flur
+      params:
+        - PRESS_SHORT
+    - channel: CUxD/CUX2801001:1
+      name: Wetter außen
+      device: Wetter
+      type: HM-WDS40-TH-I
+      channel_type: WEATHER
+      params:
+        - TEMPERATURE
+    - channel: HmIP-RF/00111BE9AB9012:3
+      name: Markise Terrasse:3
+      device: Markise Terrasse
+      type: HmIP-BROLL
+      channel_type: BLIND_TRANSMITTER
+      rooms:
+        - Terrasse
+      params:
+        - LEVEL

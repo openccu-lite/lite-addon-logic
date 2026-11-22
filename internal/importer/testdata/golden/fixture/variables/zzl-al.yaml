@@ -1,0 +1,6 @@
+name: zzL_AL
+note: Testalarm
+type: alarm
+labels:
+  "false": nicht ausgeloest
+  "true": ausgeloest

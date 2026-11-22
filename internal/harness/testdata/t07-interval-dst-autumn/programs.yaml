@@ -1,0 +1,21 @@
+# programs/seven.yaml
+name: seven
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: interval
+                all_day: true
+                interval: 7min
+                from: "2026-10-24"
+              trigger: update
+    then:
+      - variable: zzm-seven-then
+        to: seven-then
+  - else:
+      - variable: zzm-seven-else
+        to: seven-else
+

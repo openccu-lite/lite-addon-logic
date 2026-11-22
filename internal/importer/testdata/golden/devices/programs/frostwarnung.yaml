@@ -1,0 +1,13 @@
+name: Frostwarnung
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - device: CUxD/CUX2801001:1/TEMPERATURE
+              op: lt
+              value: 3
+              trigger: update
+    then:
+      - variable: kueche-licht
+        to: true

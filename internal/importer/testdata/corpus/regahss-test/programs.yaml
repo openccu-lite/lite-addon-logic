@@ -1,0 +1,477 @@
+# programs/bool1onfalseupdate.yaml
+name: Bool1OnFalseUpdate
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: varbool1
+              is: false
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:14/PRESS_LONG
+        to: true
+
+# programs/bool1onfalse.yaml
+name: Bool1OnFalse
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: varbool1
+              is: false
+              trigger: change
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:13/PRESS_LONG
+        to: true
+
+# programs/bool1ontrue.yaml
+name: Bool1OnTrue
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: varbool1
+              is: true
+              trigger: change
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:12/PRESS_LONG
+        to: true
+
+# programs/bool1ontrueupdate.yaml
+name: Bool1OnTrueUpdate
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: varbool1
+              is: true
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:15/PRESS_LONG
+        to: true
+
+# programs/timeeveryminute.yaml
+name: TimeEveryMinute
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: interval
+                all_day: true
+                interval: 1min
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:50/PRESS_LONG
+        to: true
+
+# programs/time0100.yaml
+name: Time0100
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "01:00"
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:11/PRESS_LONG
+        to: true
+
+# programs/key16key17.yaml
+name: Key16Key17
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - device: BidCos-RF/BidCoS-RF:16/PRESS_LONG
+              is: true
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:17/PRESS_LONG
+        to: true
+
+# programs/key1.yaml
+name: Key1
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - device: BidCos-RF/BidCoS-RF:1/PRESS_SHORT
+              is: true
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:2/PRESS_LONG
+        to: true
+
+# programs/time0130.yaml
+name: Time0130
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "01:30"
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:20/PRESS_LONG
+        to: true
+
+# programs/time0155.yaml
+name: Time0155
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "01:55"
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:21/PRESS_LONG
+        to: true
+
+# programs/time0200.yaml
+name: Time0200
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "02:00"
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:22/PRESS_LONG
+        to: true
+
+# programs/time0205.yaml
+name: Time0205
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "02:05"
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:23/PRESS_LONG
+        to: true
+
+# programs/time0230.yaml
+name: Time0230
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "02:30"
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:24/PRESS_LONG
+        to: true
+
+# programs/time0255.yaml
+name: Time0255
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "02:55"
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:25/PRESS_LONG
+        to: true
+
+# programs/time0300.yaml
+name: Time0300
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "03:00"
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:26/PRESS_LONG
+        to: true
+
+# programs/time0305.yaml
+name: Time0305
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "03:05"
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:27/PRESS_LONG
+        to: true
+
+# programs/time0330.yaml
+name: Time0330
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "03:30"
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:28/PRESS_LONG
+        to: true
+
+# programs/time0000.yaml
+name: Time0000
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "00:00"
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:29/PRESS_LONG
+        to: true
+
+# programs/time0030.yaml
+name: Time0030
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "00:30"
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:30/PRESS_LONG
+        to: true
+
+# programs/timespan0100-0103.yaml
+name: TimeSpan0100-0103
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "01:00"
+                duration: 3min
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:31/PRESS_LONG
+        to: true
+
+# programs/timespan0158-0202.yaml
+name: TimeSpan0158-0202
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "01:58"
+                duration: 4min
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:32/PRESS_LONG
+        to: true
+
+# programs/timespan0230-0200.yaml
+name: TimeSpan0230-0200
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "02:30"
+                duration: 23h30min
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:33/PRESS_LONG
+        to: true
+
+# programs/timespan0230-0232.yaml
+name: TimeSpan0230-0232
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "02:30"
+                duration: 2min
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:34/PRESS_LONG
+        to: true
+
+# programs/timespanfullday.yaml
+name: TimeSpanFullday
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                all_day: true
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:35/PRESS_LONG
+        to: true
+
+# programs/timespanday.yaml
+name: TimeSpanDay
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                astro: day
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:36/PRESS_LONG
+        to: true
+
+# programs/timespannight.yaml
+name: TimeSpanNight
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                astro: night
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:37/PRESS_LONG
+        to: true
+
+# programs/timeevery10s.yaml
+name: TimeEvery10s
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: interval
+                all_day: true
+                interval: 10s
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:38/PRESS_LONG
+        to: true
+
+# programs/timespan2235-2305.yaml
+name: TimeSpan2235-2305
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "22:35"
+                duration: 30min
+              trigger: update
+    cancel_pending: true
+    then:
+      - set: BidCos-RF/BidCoS-RF:39/PRESS_LONG
+        to: true
+

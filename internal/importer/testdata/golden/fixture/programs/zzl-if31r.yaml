@@ -1,0 +1,17 @@
+name: zzL_If31r
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: interval
+                at: "22:27"
+                duration: 4h
+                interval: 31min
+                from: "2026-11-21"
+              trigger: update
+    then:
+      - script: object t=dom.GetObject("zzL_TT"); t.State(t.Value()#"If31rD@"#system.Date("%d %H:%M:%S")#" ");
+  - else:
+      - script: object t=dom.GetObject("zzL_TT"); t.State(t.Value()#"If31rE@"#system.Date("%d %H:%M:%S")#" ");

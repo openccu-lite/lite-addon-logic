@@ -1,0 +1,135 @@
+# programs/empty.yaml
+name: empty
+active: true
+at_start: true
+rules:
+  - when:
+      any: []
+    then:
+      - variable: zzm-empty-then
+        to: empty-then
+
+# programs/check.yaml
+name: check
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: a
+              is: true
+              trigger: check
+    then:
+      - variable: zzm-check-then
+        to: check-then
+  - else:
+      - variable: zzm-check-else
+        to: check-else
+
+# programs/change.yaml
+name: change
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: a
+              is: true
+              trigger: change
+    then:
+      - variable: zzm-change-then
+        to: change-then
+  - else:
+      - variable: zzm-change-else
+        to: change-else
+
+# programs/update.yaml
+name: update
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: a
+              is: true
+              trigger: update
+    then:
+      - variable: zzm-update-then
+        to: update-then
+  - else:
+      - variable: zzm-update-else
+        to: update-else
+
+# programs/false-alone.yaml
+name: false-alone
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: b
+              is: true
+              trigger: change
+    then:
+      - variable: zzm-false-alone-then
+        to: false-alone-then
+
+# programs/false.yaml
+name: "false"
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: b
+              is: true
+              trigger: change
+    then:
+      - variable: zzm-false-then
+        to: false-then
+  - else:
+      - variable: zzm-false-else
+        to: false-else
+
+# programs/off.yaml
+name: "off"
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: a
+              is: true
+              trigger: change
+    then:
+      - variable: zzm-off-then
+        to: off-then
+  - else:
+      - variable: zzm-off-else
+        to: off-else
+
+# programs/timer.yaml
+name: timer
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "03:00"
+                from: "2026-11-09"
+              trigger: update
+    then:
+      - variable: zzm-timer-then
+        to: timer-then
+  - else:
+      - variable: zzm-timer-else
+        to: timer-else
+

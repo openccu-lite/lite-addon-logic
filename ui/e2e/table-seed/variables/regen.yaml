@@ -1,0 +1,6 @@
+name: Regen
+type: bool
+labels:
+  "false": trocken
+  "true": es regnet
+logged: true

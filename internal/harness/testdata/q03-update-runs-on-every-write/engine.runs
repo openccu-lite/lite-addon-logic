@@ -1,0 +1,18 @@
+# Q-3, Q-4: "bei Aktualisierung auslösen" runs the program on every write, the same value included; with the condition false that is the SONST every time
+
+program P
+12:00:02 variable:n (5 -> 5): block 0
+  line 1 (block 1) n gt 10 [update]: 5 is false
+  1: variable zzm-else = else
+12:00:04 variable:n (5 -> 5): block 0
+  line 1 (block 1) n gt 10 [update]: 5 is false
+  1: variable zzm-else = else
+12:00:06 variable:n (5 -> 12): block 1
+  line 1 (block 1) n gt 10 [update]: 12 is true
+  1: variable zzm-then = then
+12:00:08 variable:n (12 -> 12): block 1
+  line 1 (block 1) n gt 10 [update]: 12 is true
+  1: variable zzm-then = then
+12:00:10 variable:n (12 -> 5): block 0
+  line 1 (block 1) n gt 10 [update]: 5 is false
+  1: variable zzm-else = else

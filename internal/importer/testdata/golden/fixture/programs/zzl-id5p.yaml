@@ -1,0 +1,16 @@
+name: zzL_Id5p
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: interval
+                at: "22:32"
+                interval: 5min
+                from: "2026-11-21"
+              trigger: update
+    then:
+      - script: object t=dom.GetObject("zzL_TT"); t.State(t.Value()#"Id5pD@"#system.Date("%d %H:%M:%S")#" ");
+  - else:
+      - script: object t=dom.GetObject("zzL_TT"); t.State(t.Value()#"Id5pE@"#system.Date("%d %H:%M:%S")#" ");

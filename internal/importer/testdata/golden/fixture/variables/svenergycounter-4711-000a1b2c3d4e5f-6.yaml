@@ -1,0 +1,5 @@
+name: svEnergyCounter_4711_000A1B2C3D4E5F:6
+type: number
+min: 0
+max: 1e+300
+internal: true

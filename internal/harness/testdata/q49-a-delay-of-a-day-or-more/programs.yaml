@@ -1,0 +1,18 @@
+# programs/p.yaml
+name: P
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: a
+              is: true
+              trigger: change
+    then:
+      - variable: zzm-day-and-an-hour
+        to: day-and-an-hour
+      - variable: zzm-five-seconds
+        to: five-seconds
+        after: 5s
+

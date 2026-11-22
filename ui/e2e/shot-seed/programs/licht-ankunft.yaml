@@ -1,0 +1,23 @@
+name: Licht bei Ankunft
+note: Abends das Flurlicht für eine halbe Stunde
+active: true
+rules:
+  - when:
+      all:
+        - all:
+            - variable: anwesend
+              is: true
+              trigger: change
+            - time:
+                kind: daily
+                astro: night
+              trigger: check
+    then:
+      - set: HmIP-RF/000A1B2C3D4E03:2/STATE
+        to: true
+        on_for: 30min
+      - variable: heizmodus
+        to: Komfort
+  - else:
+      - variable: heizmodus
+        to: Eco

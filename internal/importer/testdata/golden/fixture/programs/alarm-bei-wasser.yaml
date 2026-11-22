@@ -1,0 +1,13 @@
+name: Alarm bei Wasser
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: wassermelder-keller
+              is: true
+              trigger: change
+    then:
+      - variable: alarm-wasser
+        to: true

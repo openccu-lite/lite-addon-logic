@@ -1,0 +1,21 @@
+# programs/minute.yaml
+name: minute
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: interval
+                all_day: true
+                interval: 1min
+                from: "2026-11-09"
+              trigger: update
+    then:
+      - variable: zzm-minute-then
+        to: minute-then
+  - else:
+      - variable: zzm-minute-else
+        to: minute-else
+

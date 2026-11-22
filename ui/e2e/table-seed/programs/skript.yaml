@@ -1,0 +1,14 @@
+name: Programm mit Skript
+note: inaktiv, mit einem Skript und systemintern
+active: false
+internal: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: regen
+              is: false
+              trigger: check
+    then:
+      - script: |
+          WriteLine("x");

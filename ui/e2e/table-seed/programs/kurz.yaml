@@ -1,0 +1,10 @@
+name: Kurz
+active: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: regen
+              is: true
+              trigger: change
+    then: []

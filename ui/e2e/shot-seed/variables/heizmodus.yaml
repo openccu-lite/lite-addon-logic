@@ -1,0 +1,6 @@
+name: Heizmodus
+type: list
+entries:
+  - Komfort
+  - Eco
+  - Urlaub

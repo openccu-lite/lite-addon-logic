@@ -1,0 +1,90 @@
+# CI for lite-addon-logic on GitHub-hosted runners: every push to main and every pull request, and
+# the checks of a release (release.yml calls it). The same checks as ci.yml, which runs on the
+# project's own runner and is skipped on GitHub; this one is skipped everywhere else (the jobs' `if`).
+name: github-ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  go:
+    name: go (tidy, gofmt, vet, staticcheck, coverage, race)
+    if: github.server_url == 'https://github.com'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.4'
+      - name: go mod tidy, gofmt, go vet, staticcheck
+        run: |
+          go mod tidy && git diff --exit-code go.mod go.sum || { echo "go.mod/go.sum are not tidy: run 'go mod tidy' and commit"; exit 1; }
+          test -z "$(gofmt -l .)" || { gofmt -l .; echo "gofmt"; exit 1; }
+          go vet ./...
+          go install honnef.co/go/tools/cmd/staticcheck@2026.2.2
+          "$(go env GOPATH)/bin/staticcheck" ./...
+      - name: Go tests with coverage, held to the floor in scripts/coverage-floor
+        run: scripts/coverage.sh
+      - name: Go tests with the race detector
+        run: go test -count=1 -race ./...
+
+  ui:
+    name: ui (svelte-check, unit tests with coverage, build, end to end)
+    if: github.server_url == 'https://github.com'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.4'
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
+      - name: svelte-check, unit tests with coverage held to its floor, build
+        working-directory: ui
+        run: |
+          npm ci --no-audit --no-fund
+          npm run check
+          npm run coverage
+          npm run build
+      - name: The page in a browser, end to end against the daemon on the fake system
+        working-directory: ui
+        run: |
+          npx playwright install --with-deps chromium
+          npx playwright test
+
+  package:
+    name: packages (aarch64, x86_64, armv7l)
+    # (beside the checks, not after them: on the project's own forge, where all three are skipped, a
+    # job that needs skipped ones waits for ever instead of being skipped itself)
+    if: github.server_url == 'https://github.com'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.4'
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
+      - run: VERSION=0.0.0-ci scripts/build.sh
+      - name: The package holds what the system needs
+        run: |
+          ls -la dist/
+          tar tzf dist/logic-x86_64-0.0.0-ci.tar.gz | sort
+          tar tzf dist/logic-x86_64-0.0.0-ci.tar.gz | grep -q '^./logic/etc/lighttpd.conf$'
+          tar tzf dist/logic-x86_64-0.0.0-ci.tar.gz | grep -q '^./logic/app/index.html$'

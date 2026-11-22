@@ -1,0 +1,18 @@
+name: Fenster offen, Heizung absenken
+active: true
+rules:
+  - when:
+      all:
+        - all:
+            - device: HmIP-RF/000A1B2C3D4E02:1/STATE
+              is: OPEN
+              for: 10min
+              trigger: change
+    then:
+      - set: HmIP-RF/000A1B2C3D4E04:1/SET_POINT_TEMPERATURE
+        to: 12
+      - variable: fenster-alarm
+        to: true
+  - else:
+      - set: HmIP-RF/000A1B2C3D4E04:1/SET_POINT_TEMPERATURE
+        to: 21

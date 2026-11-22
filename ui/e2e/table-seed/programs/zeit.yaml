@@ -1,0 +1,11 @@
+name: Täglich um halb sieben
+active: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "06:30"
+              trigger: update
+    then: []

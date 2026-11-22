@@ -1,0 +1,23 @@
+name: Klingel
+active: true
+rules:
+  - when:
+      all:
+        - all:
+            - variable: klingel
+              is: true
+              trigger: update
+    then:
+      - channel: HmIP-RF/000A1B2C3D4E07:1
+        values:
+          SOUNDFILE: SOUNDFILE_001
+          LEVEL: 0.6
+          REPETITIONS: 1
+      - display: HmIP-RF/000A1B2C3D4E11:1
+        lines:
+          - text: "Es klingelt"
+            icon: BELL
+          - text: "{time}"
+        sound: EVENT
+        repetitions: 0
+        interval: 5

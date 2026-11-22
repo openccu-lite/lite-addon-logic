@@ -1,0 +1,16 @@
+# what the reference did (cmd/regaharness wrote this file)
+reference ReGaHss R1.00.0388.0254
+rate 1
+2026-11-10 11:59:50 +0100 created watch-X
+2026-11-10 11:59:50 +0100 created schedules
+2026-11-10 11:59:50 +0100 created cancels
+2026-11-10 11:59:50 +0100 created other-target
+2026-11-10 11:59:50 +0100 ran x-false
+2026-11-10 11:59:51 +0100 ran x-false
+2026-11-10 12:00:02 +0100 step 1
+2026-11-10 12:00:05 +0100 step 2
+2026-11-10 12:00:05 +0100 ran x-false
+2026-11-10 12:00:10 +0100 step 3
+2026-11-10 12:00:12 +0100 step 4
+2026-11-10 12:00:15 +0100 step 5
+2026-11-10 12:00:18 +0100 ran x-true

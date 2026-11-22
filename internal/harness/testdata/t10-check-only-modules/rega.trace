@@ -1,0 +1,41 @@
+# what the reference did (cmd/regaharness wrote this file)
+reference ReGaHss R1.00.0388.0254
+rate 30
+2026-11-10 11:41:14 +0100 created point
+2026-11-10 11:41:14 +0100 created range
+2026-11-10 11:41:14 +0100 ran point-else
+2026-11-10 11:41:14 +0100 ran range-else
+2026-11-10 11:41:15 +0100 created interval
+2026-11-10 11:41:15 +0100 created allday
+2026-11-10 11:41:15 +0100 ran interval-else
+2026-11-10 11:41:15 +0100 ran allday-then
+2026-11-10 11:50:00 +0100 ran interval-then
+2026-11-10 11:55:00 +0100 step 1
+2026-11-10 11:55:00 +0100 ran point-else
+2026-11-10 11:55:00 +0100 ran range-else
+2026-11-10 11:55:00 +0100 ran interval-then
+2026-11-10 11:55:00 +0100 ran allday-then
+2026-11-10 12:00:00 +0100 ran point-then
+2026-11-10 12:00:00 +0100 ran range-then
+2026-11-10 12:00:00 +0100 ran interval-then
+2026-11-10 12:00:01 +0100 step 2
+2026-11-10 12:00:01 +0100 ran point-else
+2026-11-10 12:00:01 +0100 ran range-then
+2026-11-10 12:00:01 +0100 ran interval-then
+2026-11-10 12:00:01 +0100 ran allday-then
+2026-11-10 12:10:00 +0100 ran interval-then
+2026-11-10 12:15:00 +0100 step 3
+2026-11-10 12:15:00 +0100 ran point-else
+2026-11-10 12:15:00 +0100 ran range-then
+2026-11-10 12:15:00 +0100 ran interval-then
+2026-11-10 12:15:00 +0100 ran allday-then
+2026-11-10 12:20:00 +0100 ran interval-then
+2026-11-10 12:30:00 +0100 ran range-else
+2026-11-10 12:30:00 +0100 ran interval-then
+2026-11-10 12:40:00 +0100 step 4
+2026-11-10 12:40:00 +0100 ran interval-then
+2026-11-10 12:40:00 +0100 ran point-else
+2026-11-10 12:40:00 +0100 ran range-else
+2026-11-10 12:40:00 +0100 ran interval-then
+2026-11-10 12:40:00 +0100 ran allday-then
+2026-11-10 12:50:00 +0100 ran interval-then

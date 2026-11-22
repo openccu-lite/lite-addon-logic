@@ -1,0 +1,12 @@
+name: Rollläden abends
+active: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                astro: night
+              trigger: update
+    then: []
+  - else: []

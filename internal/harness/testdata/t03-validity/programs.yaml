@@ -1,0 +1,124 @@
+# programs/end-today.yaml
+name: end-today
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "12:00"
+                from: "2026-11-09"
+                until: "2026-11-10"
+              trigger: update
+    then:
+      - variable: zzm-end-today-then
+        to: end-today-then
+  - else:
+      - variable: zzm-end-today-else
+        to: end-today-else
+
+# programs/end-tomorrow.yaml
+name: end-tomorrow
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "12:00"
+                from: "2026-11-09"
+                until: "2026-11-11"
+              trigger: update
+    then:
+      - variable: zzm-end-tomorrow-then
+        to: end-tomorrow-then
+  - else:
+      - variable: zzm-end-tomorrow-else
+        to: end-tomorrow-else
+
+# programs/begin-today.yaml
+name: begin-today
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "12:00"
+                from: "2026-11-10"
+              trigger: update
+    then:
+      - variable: zzm-begin-today-then
+        to: begin-today-then
+  - else:
+      - variable: zzm-begin-today-else
+        to: begin-today-else
+
+# programs/begin-tomorrow.yaml
+name: begin-tomorrow
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "12:00"
+                from: "2026-11-11"
+              trigger: update
+    then:
+      - variable: zzm-begin-tomorrow-then
+        to: begin-tomorrow-then
+  - else:
+      - variable: zzm-begin-tomorrow-else
+        to: begin-tomorrow-else
+
+# programs/twice.yaml
+name: twice
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "12:00"
+                from: "2026-11-08"
+                count: 2
+              trigger: update
+    then:
+      - variable: zzm-twice-then
+        to: twice-then
+  - else:
+      - variable: zzm-twice-else
+        to: twice-else
+
+# programs/twice-from-today.yaml
+name: twice-from-today
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "12:00"
+                from: "2026-11-10"
+                count: 2
+              trigger: update
+    then:
+      - variable: zzm-twice-from-today-then
+        to: twice-from-today-then
+  - else:
+      - variable: zzm-twice-from-today-else
+        to: twice-from-today-else
+

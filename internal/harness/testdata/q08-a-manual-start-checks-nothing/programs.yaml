@@ -1,0 +1,44 @@
+# programs/active.yaml
+name: active
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: a
+              is: true
+              trigger: change
+    then:
+      - variable: zzm-active-then
+        to: active-then
+  - when:
+      any:
+        - all:
+            - variable: a
+              is: true
+              trigger: check
+    then:
+      - variable: zzm-active-elseif
+        to: active-elseif
+  - else:
+      - variable: zzm-active-else
+        to: active-else
+
+# programs/inactive.yaml
+name: inactive
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: a
+              is: true
+              trigger: change
+    then:
+      - variable: zzm-inactive-then
+        to: inactive-then
+  - else:
+      - variable: zzm-inactive-else
+        to: inactive-else
+

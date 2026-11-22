@@ -1,0 +1,39 @@
+# programs/watch-x.yaml
+name: watch-X
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: x
+              is: true
+              trigger: update
+    then:
+      - variable: zzm-x-true
+        to: x-true
+  - else:
+      - variable: zzm-x-false
+        to: x-false
+
+# programs/p.yaml
+name: P
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: a
+              is: true
+              trigger: change
+    cancel_pending: true
+    then:
+      - variable: x
+        to: true
+        after: 6s
+  - else:
+      - variable: x
+        to: false
+    cancel_pending: true
+

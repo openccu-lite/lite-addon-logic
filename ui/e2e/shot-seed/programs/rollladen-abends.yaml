@@ -1,0 +1,16 @@
+name: Rollladen abends
+active: true
+rules:
+  - when:
+      all:
+        - all:
+            - time:
+                kind: daily
+                astro: before_sunset
+                offset: 20min
+                point: true
+              trigger: update
+    then:
+      - set: HmIP-RF/000A1B2C3D4E01:2/LEVEL
+        to: 0
+        after_up_to: 15min

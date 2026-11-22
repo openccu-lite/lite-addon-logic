@@ -1,0 +1,49 @@
+# programs/a.yaml
+name: a
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                all_day: true
+                weekdays:
+                  - sat
+                  - sun
+                from: "2026-11-12"
+              trigger: update
+    then:
+      - variable: zzm-a-then
+        to: a-then
+  - else:
+      - variable: zzm-a-else
+        to: a-else
+
+# programs/b.yaml
+name: b
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: v
+              is: true
+              trigger: update
+            - time:
+                kind: daily
+                all_day: true
+                weekdays:
+                  - sat
+                  - sun
+                from: "2026-11-12"
+              trigger: check
+    then:
+      - variable: zzm-b-then
+        to: b-then
+  - else:
+      - variable: zzm-b-else
+        to: b-else
+

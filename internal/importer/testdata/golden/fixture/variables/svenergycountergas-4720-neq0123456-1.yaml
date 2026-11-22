@@ -1,0 +1,5 @@
+name: svEnergyCounterGas_4720_NEQ0123456:1
+type: number
+min: 0
+max: 1e+300
+internal: true

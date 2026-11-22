@@ -1,0 +1,12 @@
+name: Neues Feld
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: regen
+              is: true
+              trigger: change
+    then:
+      - variable: kueche-licht
+        to: false

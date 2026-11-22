@@ -1,0 +1,2738 @@
+/* The page's own rules on top of occulite-ui's tokens. Colours are the kit's custom properties
+   only, so dark mode comes with them. Nothing changes its box with its state: pills have a fixed
+   width, the live count reserves its line. */
+
+html,
+body,
+#app {
+    height: 100%;
+    margin: 0;
+}
+
+.lgc-app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.lgc-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 12px 0;
+    flex-wrap: wrap;
+}
+
+.lgc-header h1 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 4px 0 0;
+}
+
+.lgc-spacer {
+    flex: 1;
+}
+
+.lgc-page {
+    flex: 1;
+    min-height: 0;
+    padding: 8px 12px 24px;
+    overflow: auto;
+}
+
+.lgc-banner {
+    margin: 6px 12px 0;
+    padding: 6px 10px;
+    border: 1px solid var(--hmm-error, #c33);
+    border-radius: var(--hmm-radius, 4px);
+}
+
+.lgc-section {
+    max-width: 64rem;
+    margin: 0 0 18px;
+}
+
+.lgc-section h2 {
+    font-size: 1rem;
+    margin: 12px 0 8px;
+}
+
+.lgc-section h3 {
+    font-size: 0.95rem;
+    margin: 12px 0 6px;
+}
+
+.lgc-section-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.lgc-section-head h2 {
+    flex: 1;
+}
+
+.lgc-form {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 30rem);
+    gap: 8px 12px;
+    align-items: center;
+}
+
+.lgc-form .lgc-check,
+.lgc-form .lgc-help,
+.lgc-form .lgc-span {
+    grid-column: 1 / -1;
+}
+
+.lgc-form input[type='text'],
+.lgc-form input[type='password'],
+.lgc-form input[type='number'],
+.lgc-form select,
+.lgc-form textarea {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.lgc-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.lgc-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.lgc-label {
+    color: var(--hmm-fg-muted, inherit);
+}
+
+.lgc-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+}
+
+.lgc-help,
+.lgc-muted {
+    color: var(--hmm-fg-muted, inherit);
+    font-size: var(--hmm-font-size-small, 0.9em);
+}
+
+.lgc-help {
+    margin: 0;
+}
+
+.lgc-notice {
+    padding: 6px 10px;
+    border-left: 3px solid var(--hmm-accent, #2a7de1);
+    background: var(--hmm-bg-sunken, transparent);
+}
+
+.lgc-warning {
+    padding: 6px 10px;
+    border-left: 3px solid var(--hmm-warn, #c80);
+    background: var(--hmm-bg-sunken, transparent);
+}
+
+.lgc-error {
+    color: var(--hmm-error, #c33);
+    min-height: 1.4em;
+    margin: 4px 0;
+}
+
+.lgc-code {
+    font-family: var(--hmm-font-mono, monospace);
+    font-size: var(--hmm-font-size-small, 0.9em);
+    word-break: break-all;
+}
+
+button.lgc-primary,
+button.lgc-primary:hover:not(:disabled) {
+    background: var(--hmm-accent, #0070c1);
+    color: var(--hmm-accent-fg, #fff);
+    border-color: transparent;
+}
+
+button.lgc-danger {
+    background: var(--hmm-error, #c33);
+    color: #fff;
+    border-color: transparent;
+}
+
+.lgc-grid {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.lgc-grid th,
+.lgc-grid td {
+    text-align: left;
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--hmm-border-muted, #8883);
+    vertical-align: middle;
+}
+
+.lgc-grid th {
+    font-weight: 600;
+    color: var(--hmm-fg-muted, inherit);
+}
+
+.lgc-grid-compact th,
+.lgc-grid-compact td {
+    padding: 2px 6px;
+    font-size: var(--hmm-font-size-small, 0.9em);
+}
+
+.lgc-subrow td {
+    border-bottom-width: 2px;
+    padding-top: 0;
+}
+
+.lgc-cell-actions {
+    white-space: nowrap;
+    text-align: right !important;
+}
+
+.lgc-cell-actions button + button {
+    margin-left: 4px;
+}
+
+.lgc-scroll {
+    max-height: 50vh;
+    overflow: auto;
+}
+
+/* a pill keeps its box across states: fixed width, the text cut */
+.lgc-pill {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 9.5em;
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 0.85em;
+    line-height: 1.6;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid var(--hmm-border, #8884);
+}
+
+.lgc-pill.ok {
+    border-color: var(--hmm-ok, #2a8a3e);
+    color: var(--hmm-ok, #2a8a3e);
+}
+
+.lgc-pill.bad {
+    border-color: var(--hmm-error, #c33);
+    color: var(--hmm-error, #c33);
+}
+
+.lgc-kv {
+    display: grid;
+    grid-template-columns: minmax(12rem, max-content) 1fr;
+    gap: 4px 16px;
+    align-items: center;
+}
+
+.lgc-kv > span:nth-child(odd) {
+    color: var(--hmm-fg-muted, inherit);
+}
+
+.lgc-list {
+    margin: 0;
+    padding-left: 1.2em;
+}
+
+/* the status cards */
+.lgc-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 100%;
+    min-height: 0;
+}
+
+.lgc-editor-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lgc-editor-top input {
+    width: 18rem;
+}
+
+.lgc-count {
+    flex: 1;
+    text-align: right;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lgc-editor-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 12px;
+    flex: 1;
+    min-height: 0;
+}
+
+.lgc-tree-pane,
+.lgc-criteria-pane {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 0;
+    overflow: auto;
+    border: 1px solid var(--hmm-border-muted, #8883);
+    border-radius: var(--hmm-radius, 4px);
+    padding: 6px;
+}
+
+.lgc-tree-pane input[type='search'] {
+    flex: 1;
+}
+
+.lgc-tree,
+.lgc-tree ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.lgc-tree ul {
+    padding-left: 2.2em;
+}
+
+.lgc-tree-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 1.8em;
+}
+
+.lgc-tree-name {
+    white-space: nowrap;
+}
+
+.lgc-tree-meta {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lgc-twisty {
+    width: 1.6em;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: inherit;
+}
+
+.lgc-preview {
+    height: 26%;
+    min-height: 6rem;
+    overflow: auto;
+}
+
+.lgc-chips label {
+    display: block;
+    font-size: var(--hmm-font-size-small, 0.9em);
+    color: var(--hmm-fg-muted, inherit);
+    margin-bottom: 2px;
+}
+
+.lgc-chips-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+}
+
+.lgc-chips-box input {
+    flex: 1;
+    min-width: 10rem;
+}
+
+.lgc-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 0 2px 0 8px;
+    border-radius: 999px;
+    border: 1px solid var(--hmm-border, #8884);
+    background: var(--hmm-control-bg, transparent);
+    font-size: var(--hmm-font-size-small, 0.9em);
+}
+
+.lgc-chip button {
+    border: none;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+input.lgc-invalid {
+    outline: 2px solid var(--hmm-error, #c33);
+}
+
+.lgc-checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+input.lgc-narrow {
+    width: 5em;
+}
+
+/* a button whose label changes keeps its width */
+button.lgc-fixed {
+    min-width: 6.5em;
+}
+
+/* the countdown banner and the status cards */
+.lgc-countdown {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 6px 12px 0;
+    padding: 8px 12px;
+    border: 1px solid var(--hmm-error, #c33);
+    border-left-width: 4px;
+    border-radius: var(--hmm-radius, 4px);
+    background: var(--hmm-bg-sunken, transparent);
+    flex-wrap: wrap;
+}
+
+.lgc-small {
+    font-size: var(--hmm-font-size-small, 0.9em);
+}
+
+.lgc-faint {
+    color: var(--hmm-fg-faint, var(--hmm-fg-muted, inherit));
+    font-size: 0.85em;
+}
+
+.lgc-mono {
+    font-family: var(--hmm-font-mono, monospace);
+    font-size: var(--hmm-font-size-small, 0.9em);
+}
+
+.lgc-nowrap {
+    white-space: nowrap;
+}
+
+.lgc-ok {
+    color: var(--hmm-ok, #2a8a3e);
+}
+
+.lgc-error-inline {
+    color: var(--hmm-error, #c33);
+}
+
+.lgc-section-wide {
+    max-width: none;
+}
+
+.lgc-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
+    gap: 14px;
+    max-width: 90rem;
+}
+
+.lgc-card {
+    border: 1px solid var(--hmm-border, #8884);
+    border-radius: var(--hmm-radius, 4px);
+    padding: 10px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--hmm-bg-raised, transparent);
+}
+
+.lgc-card-critical {
+    border-color: var(--hmm-error, #c33);
+}
+
+.lgc-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.lgc-card-head h2 {
+    margin: 0;
+    font-size: 1.05rem;
+}
+
+/* flags are chips with a fixed height; their text does not change the row */
+.lgc-flags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    min-height: 1.8em;
+    align-items: center;
+}
+
+.lgc-flag {
+    display: inline-block;
+    padding: 0 8px;
+    border-radius: 999px;
+    border: 1px solid var(--hmm-border, #8884);
+    line-height: 1.7;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+.lgc-flag.ok {
+    border-color: var(--hmm-ok, #2a8a3e);
+    color: var(--hmm-ok, #2a8a3e);
+}
+
+.lgc-flag.warn {
+    border-color: var(--hmm-warn, #c80);
+    color: var(--hmm-warn, #c80);
+}
+
+.lgc-flag.bad {
+    border-color: var(--hmm-error, #c33);
+    color: var(--hmm-error, #c33);
+}
+
+.lgc-pill.warn {
+    border-color: var(--hmm-warn, #c80);
+    color: var(--hmm-warn, #c80);
+}
+
+.lgc-meters {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.lgc-meter {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.lgc-meter-label {
+    color: var(--hmm-fg-muted, inherit);
+    font-size: var(--hmm-font-size-small, 0.9em);
+}
+
+.lgc-meter-value {
+    font-size: 1.3rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+.lgc-meter-value.bad {
+    color: var(--hmm-error, #c33);
+}
+
+.lgc-meter-value.warn {
+    color: var(--hmm-warn, #c80);
+}
+
+.lgc-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--hmm-border-muted, #8883);
+    overflow: hidden;
+}
+
+.lgc-bar-fill {
+    height: 100%;
+    background: var(--hmm-accent, #2a7de1);
+    transition: width 0.4s;
+}
+
+.lgc-bar-fill.ok {
+    background: var(--hmm-ok, #2a8a3e);
+}
+
+.lgc-bar-fill.warn {
+    background: var(--hmm-warn, #c80);
+}
+
+.lgc-bar-fill.bad {
+    background: var(--hmm-error, #c33);
+}
+
+.lgc-kv-compact {
+    grid-template-columns: minmax(8rem, max-content) 1fr;
+    gap: 2px 12px;
+    font-size: var(--hmm-font-size-small, 0.9em);
+}
+
+.lgc-reasons {
+    padding: 6px 10px;
+    border-left: 3px solid var(--hmm-error, #c33);
+    background: var(--hmm-bg-sunken, transparent);
+}
+
+.lgc-details summary {
+    cursor: pointer;
+    color: var(--hmm-fg-muted, inherit);
+    font-size: var(--hmm-font-size-small, 0.9em);
+}
+
+.lgc-details table {
+    margin-top: 6px;
+    max-height: 18rem;
+}
+
+.lgc-probe {
+    margin-top: 10px;
+    align-items: flex-start;
+}
+
+.lgc-checklist label.lgc-check {
+    flex-wrap: wrap;
+}
+
+.lgc-checklist input.lgc-narrow {
+    width: 5em;
+}
+
+.lgc-grid tr.bad td {
+    color: var(--hmm-error, #c33);
+}
+
+.lgc-grid tr.warn td {
+    color: var(--hmm-warn, #c80);
+}
+
+.lgc-actions .lgc-spacer {
+    flex: 1;
+}
+
+@media (max-width: 40rem) {
+    .lgc-meters {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* notify's own */
+.lgc-linklike {
+    border: none;
+    background: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.lgc-linklike:hover {
+    text-decoration: underline;
+}
+
+.lgc-body {
+    margin: 4px 0;
+    padding: 6px 8px;
+    white-space: pre-wrap;
+    font: inherit;
+    font-size: var(--hmm-font-size-small, 0.9em);
+    background: var(--hmm-bg-sunken, transparent);
+    border-radius: var(--hmm-radius, 4px);
+}
+
+.lgc-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 8px;
+}
+
+.lgc-type-grid button {
+    padding: 10px 8px;
+}
+
+.lgc-checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+}
+
+/* the Test button's result keeps its lines: the dialog does not jump when it arrives */
+.lgc-result {
+    min-height: 2.8em;
+    margin: 6px 0 0;
+}
+
+.lgc-preview-box {
+    grid-column: 1 / -1;
+    border: 1px solid var(--hmm-border-muted, #8883);
+    border-radius: var(--hmm-radius, 4px);
+    padding: 8px 10px;
+    min-height: 4.5em;
+    background: var(--hmm-bg-sunken, transparent);
+}
+
+.lgc-preview-box strong {
+    display: block;
+}
+
+.lgc-preview-box pre {
+    margin: 4px 0 0;
+    white-space: pre-wrap;
+    font: inherit;
+}
+
+.lgc-headers {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+    gap: 4px;
+}
+
+.lgc-secret-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.lgc-secret-row input {
+    flex: 1;
+    min-width: 0;
+}
+
+details.lgc-more {
+    grid-column: 1 / -1;
+}
+
+details.lgc-more > summary {
+    cursor: pointer;
+    color: var(--hmm-fg-muted, inherit);
+    margin-bottom: 8px;
+}
+
+.lgc-form-inner {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 30rem);
+    gap: 8px 12px;
+    align-items: center;
+}
+
+.lgc-form-inner .lgc-check,
+.lgc-form-inner .lgc-help {
+    grid-column: 1 / -1;
+}
+
+.lgc-form-inner input[type='text'],
+.lgc-form-inner input[type='password'],
+.lgc-form-inner input[type='number'],
+.lgc-form-inner select,
+.lgc-form-inner textarea {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+button.lgc-switch {
+    min-width: 4.5em;
+}
+.lgc-off td:not(.lgc-cell-actions) { opacity: 0.55; }
+
+.lgc-cond {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7em;
+    gap: 6px;
+}
+
+.lgc-section > .lgc-help {
+    margin-top: 8px;
+}
+
+.lgc-form input.lgc-time,
+input.lgc-time {
+    width: 9em;
+}
+
+.lgc-form input.lgc-narrow {
+    width: 7em;
+}
+
+/* the ?-icon that opens the guide's section: a fixed box, whatever is beside it */
+.lgc-helplink {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.3em;
+    height: 1.3em;
+    flex: none;
+    border: 1px solid var(--hmm-border, #8886);
+    border-radius: 50%;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--hmm-fg-muted, inherit);
+    vertical-align: middle;
+}
+
+.lgc-helplink:hover,
+.lgc-helplink:focus-visible {
+    color: var(--hmm-accent, #0070c1);
+    border-color: var(--hmm-accent, #0070c1);
+}
+
+/* --- the program list, one program, the variables, the import --- */
+
+.lgc-search {
+    width: 14rem;
+    max-width: 100%;
+}
+
+.lgc-primary {
+    font-weight: 600;
+}
+
+.lgc-col-state {
+    width: 7.5rem;
+}
+
+.lgc-col-actions {
+    width: 1%;
+    white-space: nowrap;
+}
+
+/* a pill keeps its width whatever it says */
+.lgc-grid .lgc-pill {
+    display: inline-block;
+    min-width: 6rem;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.lgc-pill-wide {
+    min-width: 8.5rem;
+}
+
+.lgc-flags-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 2px;
+    min-height: 0;
+}
+
+.lgc-clip {
+    display: inline-block;
+    max-width: 22rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+}
+
+.lgc-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+/* a line that says nothing still takes its line: nothing moves when an error appears */
+.lgc-reserve {
+    min-height: 1.3em;
+}
+
+.lgc-alarm-badge {
+    border: 1px solid var(--hmm-error, #c33);
+    color: var(--hmm-error, #c33);
+    background: transparent;
+    border-radius: 999px;
+    padding: 1px 10px;
+    min-width: 6.5rem;
+    font: inherit;
+    font-size: 0.85em;
+    cursor: pointer;
+}
+
+.lgc-alarm-badge.lgc-alarm-none {
+    visibility: hidden;
+}
+
+.lgc-rule {
+    margin: 14px 0 18px;
+    padding: 8px 10px;
+    border: 1px solid var(--hmm-border, #8884);
+    border-radius: var(--hmm-radius, 4px);
+}
+
+.lgc-rule h3 {
+    margin: 0 0 6px;
+    font-size: 0.98rem;
+}
+
+.lgc-rule h4 {
+    margin: 10px 0 6px;
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.lgc-group {
+    border-left: 3px solid var(--hmm-border, #8886);
+    padding-left: 8px;
+}
+
+.lgc-junction {
+    font-size: 0.8em;
+    font-weight: 600;
+    opacity: 0.75;
+    padding: 2px 0 2px 2rem;
+}
+
+.lgc-junction-outer {
+    padding-left: 0;
+}
+
+.lgc-indent {
+    padding-left: 2rem;
+    margin: 2px 0;
+}
+
+.lgc-line {
+    display: grid;
+    grid-template-columns: 1.6rem 9rem minmax(8rem, 1.2fr) minmax(8rem, 1.4fr) 14rem;
+    gap: 8px;
+    align-items: baseline;
+    padding: 3px 0;
+}
+
+.lgc-line-mark {
+    text-align: center;
+    opacity: 0.8;
+}
+
+.lgc-line-kind,
+.lgc-line-mode {
+    opacity: 0.8;
+    font-size: 0.92em;
+}
+
+.lgc-line-unknown .lgc-line-subject {
+    opacity: 0.6;
+    font-style: italic;
+}
+
+.lgc-line-skipped .lgc-line-comparison {
+    opacity: 0.7;
+}
+
+.lgc-script {
+    margin: 2px 0 8px 2rem;
+    max-height: 14rem;
+    overflow: auto;
+    white-space: pre-wrap;
+}
+
+.lgc-value-cell {
+    min-width: 12rem;
+}
+
+.lgc-value-form {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.lgc-value-form input {
+    width: 9rem;
+    min-width: 0;
+}
+
+.lgc-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.lgc-reason {
+    font-weight: 600;
+}
+
+ul.lgc-reasons {
+    margin: 0;
+    padding-left: 1.1em;
+}
+
+/* at phone width a table becomes cards and a program's rows stack */
+@media (max-width: 40rem) {
+    .lgc-cardgrid thead {
+        display: none;
+    }
+    .lgc-cardgrid,
+    .lgc-cardgrid tbody,
+    .lgc-cardgrid tr,
+    .lgc-cardgrid td {
+        display: block;
+        width: auto;
+    }
+    .lgc-cardgrid tr {
+        border: 1px solid var(--hmm-border, #8884);
+        border-radius: var(--hmm-radius, 4px);
+        margin: 0 0 8px;
+        padding: 4px 6px;
+    }
+    .lgc-cardgrid td {
+        border: 0;
+        padding: 2px 0;
+    }
+    .lgc-cardgrid td[data-label]::before {
+        content: attr(data-label) ': ';
+        opacity: 0.7;
+        font-size: 0.85em;
+    }
+    .lgc-col-state,
+    .lgc-col-actions {
+        width: auto;
+    }
+    .lgc-clip {
+        max-width: 100%;
+        white-space: normal;
+    }
+    .lgc-line {
+        grid-template-columns: 1.6rem 1fr;
+    }
+    .lgc-line > span:nth-child(n + 3) {
+        grid-column: 2;
+    }
+    .lgc-search {
+        width: 100%;
+    }
+    .lgc-value-form input {
+        flex: 1;
+    }
+}
+
+/* a wide table scrolls sideways inside its own box, never the page; it is as tall as it is */
+.lgc-tablewrap {
+    overflow-x: auto;
+}
+
+/* the settings: label, field, hint - and one message line that is always there */
+.lgc-settings-form {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 12rem) minmax(0, 1fr);
+    gap: 8px 12px;
+    align-items: center;
+    max-width: 46rem;
+    margin: 8px 0 16px;
+}
+
+.lgc-settings-form .lgc-field {
+    display: contents;
+}
+
+.lgc-settings-form input {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.lgc-settings-form .lgc-actions,
+.lgc-settings-message {
+    grid-column: 1 / -1;
+}
+
+.lgc-settings-message {
+    min-height: 1.4em;
+    margin: 0;
+}
+
+.lgc-settings-message .lgc-bad {
+    color: var(--hmm-error, #c33);
+}
+
+/* a time module line's times, under its line: the columns of the line above, and a place for
+   "true now" that is there whether it says so or not */
+.lgc-timeline {
+    display: grid;
+    grid-template-columns: 1.6rem 9rem minmax(0, 1fr) auto auto;
+    gap: 8px;
+    align-items: baseline;
+    padding: 0 0 4px;
+    opacity: 0.85;
+}
+
+.lgc-timeline-state {
+    grid-column: 2;
+    min-height: 1.4em;
+}
+
+@media (max-width: 40rem) {
+    .lgc-settings-form {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lgc-timeline {
+        grid-template-columns: minmax(0, 1fr) auto;
+        padding-left: 1.6rem;
+    }
+
+    .lgc-timeline-state,
+    .lgc-timeline-next,
+    .lgc-timeline-last {
+        grid-column: 1;
+    }
+}
+
+/* --- tables with rows of one height (the program list, the variables, the alarm messages) ---
+   The columns have their widths, a text that does not fit is cut (the whole text is the cell's
+   tooltip), pills stand in a column of their own, numbers and values at the right edge. */
+.lgc-fixed {
+    table-layout: fixed;
+    min-width: 62rem;
+}
+
+.lgc-fixed.lgc-variables {
+    min-width: 76rem;
+}
+
+.lgc-fixed th,
+.lgc-fixed td {
+    box-sizing: border-box;
+    height: 2.75rem;
+    padding: 0 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lgc-fixed th .lgc-helplink {
+    vertical-align: middle;
+}
+
+.lgc-cut {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+button.lgc-cut {
+    width: 100%;
+}
+
+.lgc-fixed .lgc-num {
+    text-align: right;
+}
+
+.lgc-fixed .lgc-pill {
+    display: block;
+    width: 100%;
+    min-width: 0;
+}
+
+.lgc-marks {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    min-height: 1.5em;
+}
+
+.lgc-fixed .lgc-marks .lgc-pill {
+    flex: none;
+    width: 6.75rem;
+}
+
+.lgc-fixed .lgc-marks .lgc-pill-more {
+    width: 2.25rem;
+    padding: 0;
+}
+
+.lgc-w-pill { width: 7.5rem; }
+.lgc-w-type { width: 7.5rem; }
+.lgc-w-marks { width: 10rem; }
+.lgc-w-run { width: 13.5rem; }
+.lgc-w-time { width: 9rem; }
+.lgc-w-stamp { width: 11rem; }
+.lgc-w-switch { width: 5.5rem; }
+.lgc-w-num { width: 6.5rem; }
+.lgc-w-value { width: 14.5rem; }
+.lgc-w-button { width: 9.5rem; }
+.lgc-w-buttons { width: 13.5rem; }
+/* the name takes its share of the table, the other text columns share what is left */
+.lgc-w-name { width: 26%; }
+
+/* where the page is too narrow for it the description has no column: it is in the name's tooltip
+   (a card at phone width has its line for it again) */
+@media (min-width: 40.01rem) and (max-width: 88rem) {
+    .lgc-programs .lgc-c-note {
+        display: none;
+    }
+}
+
+@media (min-width: 40.01rem) and (max-width: 96rem) {
+    .lgc-variables .lgc-c-note {
+        display: none;
+    }
+
+    .lgc-variables .lgc-w-name {
+        width: auto;
+    }
+}
+
+.lgc-fixed .lgc-value-cell {
+    min-width: 0;
+}
+
+.lgc-fixed .lgc-value-form {
+    justify-content: flex-end;
+}
+
+.lgc-fixed .lgc-value-form input {
+    flex: 1;
+    width: auto;
+    min-width: 0;
+}
+
+.lgc-fixed .lgc-value-form button {
+    flex: none;
+}
+
+.lgc-num-input {
+    text-align: right;
+}
+
+.lgc-invalid {
+    border-color: var(--hmm-error, #c33) !important;
+}
+
+.lgc-unit {
+    flex: none;
+    width: 2.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.lgc-value-select {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* the message of a table: its line is there whether it says something or not */
+.lgc-table-message {
+    min-height: 1.4em;
+    margin: 0 0 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* at phone width each row is a card of the same lines: label, then the cut text */
+@media (max-width: 40rem) {
+    .lgc-fixed,
+    .lgc-fixed.lgc-variables {
+        min-width: 0;
+    }
+
+    .lgc-fixed.lgc-cardgrid td {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: auto;
+        height: 2.25rem;
+        padding: 0;
+    }
+
+    .lgc-fixed.lgc-cardgrid td[data-label]::before {
+        content: attr(data-label);
+        flex: none;
+        width: 6.5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .lgc-fixed.lgc-cardgrid td > * {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .lgc-fixed.lgc-cardgrid .lgc-num {
+        text-align: left;
+    }
+
+    .lgc-fixed.lgc-cardgrid .lgc-num > .lgc-cut {
+        text-align: right;
+    }
+
+    .lgc-fixed.lgc-cardgrid td > .lgc-pill {
+        flex: none;
+        width: 8.5rem;
+    }
+
+    .lgc-fixed.lgc-cardgrid .lgc-cell-actions {
+        justify-content: flex-end;
+    }
+
+    .lgc-fixed.lgc-cardgrid .lgc-cell-actions > * {
+        flex: none;
+    }
+
+    .lgc-fixed .lgc-cut {
+        white-space: nowrap;
+    }
+}
+
+/* a section's head: the ?-icon stands beside the heading, what belongs to the list at the right;
+   at phone width the search and the button take the next line instead of squeezing the heading */
+.lgc-section-head:has(.lgc-spacer) h2 {
+    flex: none;
+    white-space: nowrap;
+}
+
+.lgc-section-head .hmm-button {
+    white-space: nowrap;
+}
+
+/* the tabs never push the page wider than the screen: they scroll in their own line */
+.lgc-header .hmm-tabs {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+@media (max-width: 40rem) {
+    .lgc-section-head:has(.lgc-spacer) {
+        flex-wrap: wrap;
+    }
+
+    .lgc-section-head .lgc-search {
+        flex: 1 1 8rem;
+        width: auto;
+        min-width: 0;
+    }
+
+    .lgc-fixed.lgc-cardgrid .lgc-marks .lgc-pill:not(.lgc-pill-more),
+    .lgc-fixed.lgc-cardgrid td > .lgc-pill {
+        width: 8.5rem;
+    }
+}
+
+/* a group's heading and its sentence inside the settings' grid take the whole width */
+.lgc-settings-form .lgc-settings-group {
+    grid-column: 1 / -1;
+    margin: 0;
+}
+
+.lgc-settings-form .lgc-section-head.lgc-settings-group {
+    margin-top: 8px;
+}
+
+/* at phone width a message of the settings may need two lines: both are kept for it */
+@media (max-width: 40rem) {
+    .lgc-settings-message {
+        min-height: 2.9em;
+    }
+}
+
+/* a head with nothing at its right: the ?-icon stands beside the heading */
+.lgc-section-head.lgc-head-tight h2 {
+    flex: none;
+}
+
+/* --- the program editor --- */
+
+.lgc-ed-head {
+    max-width: 46rem;
+}
+
+.lgc-ed-rulehead {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.lgc-ed-rulehead h3 {
+    margin: 0;
+}
+
+.lgc-ed-row {
+    display: grid;
+    grid-template-columns: 1.4rem 1.4rem 9.5rem minmax(10rem, 1.3fr) minmax(12rem, 1.7fr) 15rem 8.7rem;
+    gap: 6px;
+    align-items: center;
+    padding: 3px 0 0;
+    border-radius: var(--hmm-radius, 4px);
+}
+
+.lgc-ed-row > * {
+    min-width: 0;
+}
+
+.lgc-ed-row select,
+.lgc-ed-row input[type='text'] {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.lgc-ed-kind,
+.lgc-ed-trigger {
+    width: 100%;
+}
+
+.lgc-ed-problem {
+    grid-column: 3 / -1;
+    min-height: 1.3rem;
+    line-height: 1.3rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lgc-ed-handle {
+    cursor: grab;
+    text-align: center;
+    opacity: 0.6;
+    user-select: none;
+    touch-action: none;
+}
+
+.lgc-ed-mark {
+    text-align: center;
+    opacity: 0.8;
+}
+
+.lgc-ed-over {
+    outline: 2px dashed var(--hmm-accent, #4a8fe7);
+    outline-offset: -1px;
+}
+
+.lgc-ed-dragged {
+    opacity: 0.5;
+}
+
+.lgc-ed-subject {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+}
+
+select.lgc-ed-subject {
+    display: block;
+}
+
+.lgc-ed-pick {
+    flex: 1 1 55%;
+    min-width: 0;
+    text-align: left;
+}
+
+.lgc-ed-param {
+    flex: 1 1 45%;
+    min-width: 0;
+    width: 45%;
+}
+
+.lgc-ed-timebutton,
+.lgc-ed-script {
+    grid-column: 4 / 6;
+    text-align: left;
+}
+
+.lgc-ed-compare {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    width: 100%;
+}
+
+.lgc-ed-not {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.lgc-ed-op {
+    flex: 0 1 9.5rem;
+    width: 9.5rem;
+}
+
+.lgc-ed-value {
+    flex: 1 1 5rem;
+    width: 5rem;
+    min-width: 0;
+}
+
+.lgc-ed-typed {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.lgc-ed-typed input {
+    flex: 1 1 auto;
+    width: 100%;
+}
+
+.lgc-ed-unit {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.lgc-ed-delay {
+    display: flex;
+    gap: 4px;
+}
+
+.lgc-ed-delay > select:first-child {
+    flex: 1 1 auto;
+    width: 6rem;
+}
+
+.lgc-ed-delay-n {
+    flex: 0 0 3.2rem;
+    width: 3.2rem;
+}
+
+.lgc-ed-delay-unit {
+    flex: 0 0 auto;
+    width: 4.2rem;
+}
+
+.lgc-ed-compare > .lgc-small {
+    white-space: nowrap;
+}
+
+.lgc-ed-hidden {
+    visibility: hidden;
+}
+
+.lgc-ed-buttons {
+    display: flex;
+    gap: 2px;
+    justify-content: flex-end;
+    white-space: nowrap;
+}
+
+button.lgc-ed-icon {
+    padding: 2px 0;
+    width: 2rem;
+    min-width: 2rem;
+}
+
+button.lgc-ed-set {
+    color: var(--hmm-accent, #4a8fe7);
+    font-weight: 700;
+}
+
+.lgc-form .lgc-inputs {
+    grid-column: 1 / -1;
+}
+
+.lgc-input-row {
+    gap: 6px;
+    margin-bottom: 4px;
+    flex-wrap: nowrap;
+}
+
+.lgc-input-row > * {
+    min-width: 0;
+}
+
+.lgc-form select.lgc-input-kind {
+    flex: 0 0 12rem;
+    width: 12rem;
+}
+
+.lgc-form select.lgc-input-variable,
+.lgc-input-row .lgc-ed-pick {
+    flex: 1 1 55%;
+    width: auto;
+}
+
+.lgc-form .lgc-input-row .lgc-ed-param {
+    flex: 1 1 35%;
+    width: 35%;
+}
+
+.lgc-input-row > button:last-child {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 760px) {
+    .lgc-input-row {
+        flex-wrap: wrap;
+    }
+
+    .lgc-form select.lgc-input-kind {
+        flex: 1 1 100%;
+    }
+
+    .lgc-form .lgc-input-row .lgc-ed-param {
+        flex: 1 1 30%;
+    }
+}
+
+.lgc-opt {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lgc-opt p {
+    margin: 0 0 8px;
+}
+
+.lgc-opt-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    align-items: center;
+}
+
+.lgc-opt-row input.lgc-narrow {
+    width: 4.5rem;
+}
+
+select.lgc-opt-unit {
+    width: 6.5rem;
+}
+
+.lgc-opt-pair {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    white-space: nowrap;
+}
+
+button.lgc-ed-add {
+    margin: 2px 0 6px 3.2rem;
+}
+
+select.lgc-ed-junction {
+    width: 6rem;
+}
+
+.lgc-ed-cancel {
+    font-weight: normal;
+    margin-left: 1rem;
+    display: inline-flex;
+}
+
+.lgc-ed-hints {
+    min-height: 2.8rem;
+    margin: 8px 0;
+    padding-left: 1.2rem;
+    opacity: 0.85;
+}
+
+.lgc-ed-error {
+    flex: 1 1 12rem;
+}
+
+select.lgc-invalid {
+    border-color: var(--hmm-error, #c33);
+}
+
+.lgc-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 100%;
+    min-height: 0;
+}
+
+.lgc-picker-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.lgc-picker-filters select {
+    max-width: 12rem;
+}
+
+.lgc-picker-search {
+    flex: 1 1 14rem;
+    min-width: 0;
+}
+
+.lgc-picker-list {
+    flex: 1 1 auto;
+    overflow: auto;
+    min-height: 12rem;
+}
+
+.lgc-picker-list table.lgc-grid {
+    width: 100%;
+    min-width: 0;
+}
+
+.lgc-tm-words {
+    min-height: 1.4rem;
+}
+
+.lgc-tm-next {
+    min-height: 6.6rem;
+}
+
+@media (max-width: 760px) {
+    .lgc-ed-row {
+        grid-template-columns: 1.4rem 1.4rem minmax(0, 1fr) 8.7rem;
+    }
+
+    .lgc-ed-row > .lgc-ed-subject,
+    .lgc-ed-row > .lgc-ed-compare,
+    .lgc-ed-row > .lgc-ed-trigger,
+    .lgc-ed-row > .lgc-ed-timebutton,
+    .lgc-ed-row > .lgc-ed-script,
+    .lgc-ed-row > .lgc-ed-problem {
+        grid-column: 1 / -1;
+    }
+
+    .lgc-ed-row > .lgc-ed-buttons {
+        grid-column: 4;
+        grid-row: 1;
+    }
+
+    .lgc-ed-compare {
+        flex-wrap: wrap;
+    }
+
+    button.lgc-ed-add {
+        margin-left: 0;
+    }
+
+    .lgc-ed-cancel {
+        margin-left: 0;
+    }
+
+    .lgc-ed-head,
+    .lgc-tm-form {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lgc-tm-form > .lgc-label {
+        margin-top: 4px;
+        font-weight: 600;
+    }
+}
+
+/* --- the schedule --- */
+
+.lgc-w-rel { width: 9rem; }
+.lgc-w-sprog { width: 24%; }
+.lgc-w-slast { width: 12rem; }
+.lgc-w-sdelay { width: 6.5rem; }
+
+.lgc-rel {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.lgc-rel-bar {
+    display: block;
+    height: 3px;
+    width: 100%;
+}
+
+.lgc-rel-none {
+    visibility: hidden;
+}
+
+.lgc-rel-bar .lgc-bar-fill {
+    display: block;
+}
+
+/* --- the triggers page --- */
+
+.lgc-trg {
+    border: 1px solid var(--hmm-border, #8884);
+    border-radius: var(--hmm-radius, 4px);
+    padding: 6px 10px;
+    margin: 8px 0;
+}
+
+.lgc-trg-head {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+    padding-bottom: 4px;
+}
+
+.lgc-trg-last {
+    text-align: right;
+}
+
+.lgc-trg-row {
+    display: grid;
+    grid-template-columns: 1.6rem 15rem minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+    padding: 2px 0;
+    min-height: 1.6rem;
+}
+
+.lgc-trg-row button.lgc-cut {
+    text-align: left;
+}
+
+.lgc-trg-off > span:not(.lgc-trg-note),
+.lgc-trg-off > button {
+    opacity: 0.6;
+}
+
+.lgc-trg-note {
+    text-align: right;
+}
+
+@media (max-width: 40rem) {
+    .lgc-trg-head {
+        grid-template-columns: 7.5rem minmax(0, 1fr);
+    }
+
+    .lgc-trg-last {
+        grid-column: 1 / -1;
+        text-align: left;
+    }
+
+    .lgc-trg-row {
+        grid-template-columns: 1.6rem minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .lgc-trg-note {
+        grid-column: 2 / -1;
+        text-align: left;
+    }
+
+    .lgc-trg-note:empty {
+        display: none;
+    }
+}
+
+/* the run trace: an entry is a row of one height that opens to its lines and steps */
+.lgc-run-list {
+    margin-top: 8px;
+}
+
+.lgc-run {
+    border-bottom: 1px solid var(--hmm-border, #8884);
+}
+
+.lgc-run-head {
+    display: grid;
+    grid-template-columns: 1.2rem 10.5rem minmax(0, 1fr) minmax(0, 1.6fr) 10rem;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+    height: 2.2rem;
+    padding: 0 4px;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.lgc-run-own .lgc-run-head {
+    grid-template-columns: 1.2rem 10.5rem minmax(0, 1fr) 10rem;
+}
+
+.lgc-run-head:hover,
+.lgc-run-open > .lgc-run-head {
+    background: var(--hmm-hover, #8881);
+}
+
+.lgc-run-outcome,
+.lgc-run-verdict {
+    display: flex;
+    justify-content: flex-end;
+    min-width: 0;
+}
+
+.lgc-run-outcome .lgc-pill,
+.lgc-run-verdict .lgc-pill {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.lgc-run-body {
+    padding: 4px 4px 10px 1.6rem;
+}
+
+.lgc-run-detail {
+    margin: 2px 0 6px;
+}
+
+.lgc-run-line,
+.lgc-run-step {
+    display: grid;
+    grid-template-columns: 1.6rem minmax(0, 1.4fr) minmax(0, 1fr) 7.5rem;
+    gap: 8px;
+    align-items: center;
+    min-height: 1.7rem;
+}
+
+.lgc-run-step {
+    grid-template-columns: 1.6rem minmax(0, 1.4fr) minmax(0, 1.4fr);
+}
+
+.lgc-run-skip > .lgc-run-text,
+.lgc-run-skip > .lgc-run-value {
+    opacity: 0.6;
+}
+
+.lgc-run-bad > .lgc-run-status {
+    color: var(--hmm-error, #c33);
+}
+
+.lgc-run-select {
+    max-width: 14rem;
+}
+
+@media (max-width: 40rem) {
+    .lgc-run-head,
+    .lgc-run-own .lgc-run-head {
+        grid-template-columns: 1.2rem minmax(0, 1fr) 7.5rem;
+        height: 3.6rem;
+        row-gap: 0;
+    }
+
+    .lgc-run-program,
+    .lgc-run-trigger {
+        grid-column: 2 / -1;
+    }
+
+    .lgc-run-own .lgc-run-trigger {
+        grid-column: 2 / -1;
+    }
+
+    .lgc-run-head > .lgc-run-outcome {
+        grid-column: 3;
+        grid-row: 1;
+    }
+
+    .lgc-run-line,
+    .lgc-run-step {
+        grid-template-columns: 1.6rem minmax(0, 1fr) 6.5rem;
+        padding: 2px 0;
+    }
+
+    .lgc-run-value,
+    .lgc-run-status {
+        grid-column: 2 / -1;
+    }
+
+    .lgc-run-line > .lgc-run-verdict {
+        grid-column: 3;
+        grid-row: 1;
+    }
+
+    .lgc-run-body {
+        padding-left: 0.4rem;
+    }
+}
+
+@media (max-width: 40rem) {
+    .lgc-run-step > .lgc-run-text {
+        grid-column: 2 / -1;
+    }
+}
+
+/* the dry run's dialog: what to try, the value, the button - and the entry it answers */
+.lgc-sim-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 12rem auto;
+    gap: 8px;
+    align-items: center;
+    margin: 8px 0;
+}
+
+.lgc-sim-value {
+    min-height: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.lgc-sim-result {
+    min-height: 12rem;
+}
+
+.lgc-sim-result .lgc-run-head {
+    cursor: default;
+}
+
+.lgc-sim-result .lgc-run-head:disabled {
+    opacity: 1;
+}
+
+@media (max-width: 40rem) {
+    .lgc-sim-form {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .lgc-sim-line {
+        grid-column: 1 / -1;
+    }
+}
+
+/* the versions: the list at the left, the comparison at the right */
+.lgc-ver {
+    display: grid;
+    grid-template-columns: 19rem minmax(0, 1fr);
+    gap: 12px;
+    height: 26rem;
+}
+
+.lgc-ver-list {
+    overflow-y: auto;
+    border: 1px solid var(--hmm-border, #8884);
+    border-radius: var(--hmm-radius, 4px);
+}
+
+.lgc-ver-row {
+    display: grid;
+    grid-template-rows: repeat(3, 1.35rem);
+    width: 100%;
+    height: 4.6rem;
+    box-sizing: border-box;
+    padding: 4px 8px;
+    border: 0;
+    border-bottom: 1px solid var(--hmm-border, #8884);
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.lgc-ver-row:hover,
+.lgc-ver-chosen {
+    background: var(--hmm-hover, #8881);
+}
+
+.lgc-ver-chosen {
+    box-shadow: inset 3px 0 0 var(--hmm-accent, #0070c1);
+}
+
+.lgc-ver-side {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+}
+
+.lgc-ver-bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+}
+
+.lgc-ver-diff {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    border: 1px solid var(--hmm-border, #8884);
+    border-radius: var(--hmm-radius, 4px);
+    padding: 4px 0;
+    font-size: 0.85em;
+}
+
+.lgc-diff-line {
+    display: flex;
+    white-space: pre;
+    min-height: 1.4em;
+}
+
+.lgc-diff-mark {
+    flex: 0 0 1.6em;
+    text-align: center;
+    user-select: none;
+}
+
+.lgc-diff-add {
+    background: color-mix(in srgb, var(--hmm-ok, #2a8a3e) 18%, transparent);
+}
+
+.lgc-diff-del {
+    background: color-mix(in srgb, var(--hmm-error, #c33) 18%, transparent);
+}
+
+.lgc-diff-gap {
+    padding: 2px 1.6em;
+    font-family: var(--hmm-font, inherit);
+}
+
+.lgc-button-aside {
+    margin-right: auto;
+}
+
+@media (max-width: 40rem) {
+    .lgc-ver {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: 9.4rem minmax(0, 1fr);
+        height: 30rem;
+    }
+
+    .lgc-ver-bar {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .lgc-ver-stats {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+}
+
+/* the webhook's form: method and address in one line, headers as name and value, the body below */
+.lgc-hook {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lgc-hook-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.lgc-hook-method {
+    flex: 0 0 6rem;
+}
+
+.lgc-hook-name {
+    flex: 0 0 12rem;
+    min-width: 0;
+}
+
+.lgc-hook-url {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.lgc-hook-head {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+textarea.lgc-hook-body {
+    box-sizing: border-box;
+    width: 100%;
+    height: 7.5em;
+    min-height: 3em;
+    resize: vertical;
+}
+
+.lgc-hook-ph {
+    white-space: nowrap;
+}
+
+.lgc-hook p {
+    margin: 0;
+}
+
+@media (max-width: 760px) {
+    .lgc-hook-name {
+        flex-basis: 38%;
+    }
+}
+
+/* the command's form: the shell's line, the arguments one per row, what becomes of it */
+.lgc-cmd {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lgc-cmd p {
+    margin: 0;
+}
+
+.lgc-cmd-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    min-height: 2.2rem;
+}
+
+.lgc-cmd-n {
+    flex: 0 0 1.8rem;
+    text-align: right;
+}
+
+.lgc-cmd-kind {
+    flex: 0 0 11.5rem;
+    min-width: 0;
+}
+
+.lgc-cmd-text {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.lgc-cmd-device {
+    display: flex;
+    gap: 6px;
+}
+
+.lgc-cmd-device > * {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.lgc-cmd-format {
+    flex: 0 0 9.5rem;
+    min-width: 0;
+}
+
+/* says whether a shell reads the command: the same box in both states */
+.lgc-cmd-mark {
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 2px 8px;
+    border: 1px solid var(--hmm-border, #ccc);
+    border-radius: 4px;
+    font-size: 0.85em;
+}
+
+.lgc-cmd-mark.lgc-cmd-on {
+    border-color: var(--hmm-warn, #c80);
+    color: var(--hmm-warn, #c80);
+    font-weight: 600;
+}
+
+textarea.lgc-cmd-line {
+    box-sizing: border-box;
+    width: 100%;
+    height: 5em;
+    min-height: 3em;
+    resize: vertical;
+}
+
+.lgc-cmd-field {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    font-size: 0.85em;
+}
+
+.lgc-cmd-field > * {
+    font-size: 1rem;
+}
+
+@media (max-width: 760px) {
+    .lgc-cmd-row {
+        flex-wrap: wrap;
+    }
+
+    .lgc-cmd-kind {
+        flex-basis: calc(100% - 4.6rem);
+    }
+
+    .lgc-cmd-text {
+        flex-basis: 100%;
+    }
+
+    .lgc-cmd-format {
+        flex: 1 1 0;
+    }
+
+    .lgc-cmd-field {
+        flex-basis: 100%;
+    }
+}
+
+/* in the editor's row a Wake-on-LAN's two fields take the columns of subject and comparison */
+input.lgc-ed-subject,
+input.lgc-ed-compare {
+    display: block;
+}
+
+/* the secrets: name, who uses it, remove - every row of one height */
+.lgc-secrets {
+    max-width: 46rem;
+    margin: 8px 0;
+    border-top: 1px solid var(--hmm-border, #ccc);
+}
+
+.lgc-secret-row {
+    display: grid;
+    grid-template-columns: 14rem minmax(0, 1fr) 2.2rem;
+    gap: 10px;
+    align-items: center;
+    height: 2.4rem;
+    border-bottom: 1px solid var(--hmm-border, #ccc);
+}
+
+.lgc-secret-wide {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 760px) {
+    .lgc-secret-row {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 2.2rem;
+    }
+}
+
+/* replacing a device: the two lists take the form's width and cut what does not fit; the
+   line that says what would change is always there, two lines high */
+.lgc-settings-form .lgc-replace-wide {
+    grid-column: 2 / -1;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    text-overflow: ellipsis;
+}
+
+.lgc-replace-preview {
+    grid-column: 1 / -1;
+    min-height: 2.8em;
+}
+
+@media (max-width: 760px) {
+    .lgc-settings-form .lgc-replace-wide {
+        grid-column: auto;
+    }
+}
+
+/* the history's remote: the address over two columns; the state line keeps two lines; a fetch's
+   entries and changes are rows of one height that cut what does not fit */
+.lgc-settings-form input.lgc-remote-wide {
+    grid-column: 2 / -1;
+}
+
+.lgc-remote-host {
+    min-width: 0;
+}
+
+.lgc-remote-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.lgc-settings-message.lgc-remote-state {
+    min-height: 1.4em;
+}
+
+.lgc-remote-actions {
+    flex-wrap: wrap;
+}
+
+.lgc-remote-preview {
+    max-width: 46rem;
+    margin: 0 0 16px;
+    padding: 8px 12px;
+    border: 1px solid var(--hmm-border, #ccc);
+    border-radius: 4px;
+}
+
+.lgc-remote-preview p {
+    margin: 4px 0 8px;
+}
+
+.lgc-remote-entries {
+    max-height: 9rem;
+    margin: 0 0 8px;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+    font-size: 0.9em;
+}
+
+.lgc-remote-entries li {
+    height: 1.6rem;
+    line-height: 1.6rem;
+}
+
+.lgc-remote-changes {
+    margin: 0 0 8px;
+    border-top: 1px solid var(--hmm-border, #ccc);
+}
+
+.lgc-remote-change {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    height: 2.2rem;
+    border-bottom: 1px solid var(--hmm-border, #ccc);
+}
+
+@media (max-width: 760px) {
+    .lgc-settings-form input.lgc-remote-wide {
+        grid-column: auto;
+    }
+
+    .lgc-settings-message.lgc-remote-state {
+        min-height: 2.8em;
+    }
+
+    .lgc-remote-change {
+        grid-template-columns: 9rem minmax(0, 1fr);
+        height: auto;
+        min-height: 2.2rem;
+    }
+
+    .lgc-remote-change > :nth-child(3):empty {
+        display: none;
+    }
+
+    .lgc-remote-change > :nth-child(3) {
+        grid-column: 1 / -1;
+    }
+}
+
+/* the values of a channel: a tick with the datapoint's name, its field, its limits - every row of one height */
+.lgc-vals {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lgc-vals-intro {
+    margin: 0;
+}
+
+.lgc-vals-list {
+    max-height: 22rem;
+    overflow-y: auto;
+    border-top: 1px solid var(--hmm-border, #ccc);
+}
+
+.lgc-vals-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) 7rem;
+    gap: 10px;
+    align-items: center;
+    height: 2.4rem;
+    border-bottom: 1px solid var(--hmm-border, #ccc);
+}
+
+.lgc-vals-name {
+    white-space: nowrap;
+}
+
+.lgc-vals-field {
+    min-width: 0;
+}
+
+.lgc-vals-field select,
+.lgc-vals-field input[type='text'] {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.lgc-vals-field .lgc-ed-value {
+    width: 100%;
+}
+
+.lgc-vals-off {
+    opacity: 0.45;
+}
+
+button.lgc-ed-values {
+    display: block;
+    text-align: left;
+}
+
+/* a channel's form: a label, its control - a row keeps its height whatever is ticked or chosen */
+.lgc-cf {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.lgc-cf-row {
+    display: grid;
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    height: 2.4rem;
+}
+
+.lgc-cf-row.lgc-cf-tall {
+    height: 4.8rem;
+}
+
+.lgc-cf-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.lgc-cf-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.lgc-cf-field select,
+.lgc-cf-field input[type='text'] {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.lgc-cf-field .lgc-ed-typed {
+    flex: 0 0 6.5rem;
+    width: 6.5rem;
+}
+
+.lgc-cf-range {
+    flex: 1 1 6rem;
+    min-width: 0;
+}
+
+.lgc-cf-rainbow {
+    appearance: none;
+    height: 0.7rem;
+    border-radius: 999px;
+    background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+}
+
+.lgc-cf-hue {
+    display: grid;
+    grid-template-columns: 1.7rem minmax(0, 1fr) 6.5rem;
+    gap: 6px 8px;
+    align-items: center;
+    width: 100%;
+}
+
+.lgc-cf-hue .lgc-ed-typed {
+    width: 6.5rem;
+}
+
+.lgc-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.lgc-swatch {
+    box-sizing: border-box;
+    width: 1.7rem;
+    height: 1.7rem;
+    padding: 0;
+    border-radius: 999px;
+    border: 1px solid var(--hmm-border, #888);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    cursor: pointer;
+}
+
+.lgc-swatch-show {
+    display: inline-block;
+    cursor: default;
+}
+
+.lgc-swatch-word {
+    width: auto;
+    padding: 0 8px;
+    background: transparent;
+    color: inherit;
+}
+
+.lgc-swatch-on {
+    outline-color: var(--hmm-accent, #2a7ae2);
+}
+
+button.lgc-cf-all {
+    margin-right: auto;
+}
+
+/* the display composer: five lines of fixed height beside a preview of the display */
+.lgc-dsp {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* the device helper dialog: the device's select never grows with its longest entry; the
+   list of the variables' names is three lines high whether the day values are made or not */
+.lgc-hlp-device {
+    width: 100%;
+    max-width: 100%;
+}
+
+.lgc-hlp-names {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    min-width: 0;
+}
+
+.lgc-hlp-names li {
+    height: 1.5rem;
+    line-height: 1.5rem;
+}
+
+.lgc-dsp-body {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.lgc-dsp-lines {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.lgc-dsp-row {
+    display: grid;
+    grid-template-columns: 1.4rem minmax(0, 1fr) 8.5rem 6rem auto;
+    gap: 6px;
+    align-items: center;
+    height: 2.2rem;
+}
+
+.lgc-dsp-row input[type='text'],
+.lgc-dsp-row select,
+.lgc-dsp-sound select {
+    box-sizing: border-box;
+    min-width: 0;
+    width: 100%;
+}
+
+.lgc-dsp-invert {
+    white-space: nowrap;
+}
+
+.lgc-dsp-side {
+    flex: 0 0 13.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.lgc-dsp-preview {
+    border: 6px solid #c8c8c0;
+    border-radius: 6px;
+    background: #f4f4ee;
+    filter: grayscale(1);
+}
+
+.lgc-dsp-shown {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 1.9rem;
+    padding: 0 4px;
+    overflow: hidden;
+    white-space: pre;
+    font-family: ui-monospace, 'DejaVu Sans Mono', Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+}
+
+.lgc-dsp-glyph {
+    flex: 0 0 auto;
+}
+
+.lgc-dsp-sound {
+    display: grid;
+    grid-template-columns: 9.5rem minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.8fr);
+    gap: 8px;
+    align-items: center;
+    height: 2.2rem;
+}
+
+@media (max-width: 760px) {
+    .lgc-dsp-body {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .lgc-dsp-side {
+        flex-basis: auto;
+    }
+
+    .lgc-dsp-row {
+        grid-template-columns: 1.2rem minmax(0, 1fr) minmax(0, 0.9fr);
+        grid-template-rows: 2.2rem 2.2rem;
+        height: 4.6rem;
+    }
+
+    .lgc-dsp-row .lgc-dsp-align {
+        grid-column: 2;
+    }
+
+    .lgc-dsp-sound {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        height: 4.6rem;
+    }
+}
+
+/* "convert into a form" in the line an activity keeps for what is wrong: a link, no taller than the line */
+button.lgc-ed-convert {
+    border: 0;
+    padding: 0;
+    margin-right: 8px;
+    background: none;
+    color: var(--hmm-accent, #2a7ae2);
+    font: inherit;
+    line-height: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+@media (max-width: 760px) {
+    .lgc-cf-row {
+        grid-template-columns: 6.5rem minmax(0, 1fr);
+    }
+
+    .lgc-cf-field .lgc-ed-typed,
+    .lgc-cf-hue .lgc-ed-typed {
+        flex-basis: 5rem;
+        width: 5rem;
+    }
+
+    .lgc-cf-hue {
+        grid-template-columns: 1.7rem minmax(0, 1fr) 5rem;
+    }
+}
+
+@media (max-width: 760px) {
+    .lgc-vals-row {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    }
+
+    .lgc-vals-range {
+        display: none;
+    }
+}

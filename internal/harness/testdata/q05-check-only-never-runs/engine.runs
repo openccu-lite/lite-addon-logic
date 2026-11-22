@@ -1,0 +1,8 @@
+# Q-5: a program whose lines are all "nur prüfen" never runs by itself
+
+program P
+12:00:02 variable:a (false -> true): not triggered, check-only
+12:00:04 variable:b (false -> true): not triggered, check-only
+12:00:06 variable:a (true -> false): not triggered, check-only
+12:00:08 outside: block 1 without a look at the conditions
+  1: variable zzm-then = then

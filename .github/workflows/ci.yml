@@ -1,0 +1,64 @@
+# CI for lite-addon-logic on the project's own runner (host mode, label ci), on the forge the project is
+# developed on. On GitHub it does not run (the job's `if`): github-ci.yml runs the same checks on
+# GitHub-hosted runners there. This job stays a superset of github-ci.yml's.
+name: ci
+
+on:
+  push:
+    # ci-rerun/**: a commit's checks are re-run by pushing it there
+    branches: [main, 'ci-rerun/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    if: github.server_url != 'https://github.com'
+    runs-on: ci
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.4'
+          cache: false
+      - name: Go
+        run: |
+          go version
+          go mod tidy && git diff --exit-code go.mod go.sum || { echo "go.mod/go.sum are not tidy: run 'go mod tidy' and commit"; exit 1; }
+          test -z "$(gofmt -l .)" || { gofmt -l .; echo "gofmt"; exit 1; }
+          go vet ./...
+          go install honnef.co/go/tools/cmd/staticcheck@2026.2.2
+          "$(go env GOPATH)/bin/staticcheck" ./...
+      - name: Go tests with coverage, held to the floor in scripts/coverage-floor
+        run: scripts/coverage.sh
+      - name: Go tests with the race detector
+        run: go test -count=1 -race ./...
+      - name: UI (svelte-check, unit tests with coverage held to its floor, build)
+        working-directory: ui
+        run: |
+          node --version
+          npm ci --no-audit --no-fund
+          npm run check
+          npm run coverage
+          npm run build
+      - name: The page in a browser, end to end against the daemon on the fake system
+        working-directory: ui
+        # the runner is a host executor: a cancelled run leaves the daemon and the fake system
+        # behind (Playwright's webServer is not a child the runner kills), and the next run then
+        # finds their ports taken; Chromium's profile directories go to a TMPDIR of the run's own
+        run: |
+          for p in $(pgrep -u "$(id -un)" -f 'build/(logic-dev|fakesystem) ' || true); do kill "$p" || true; done
+          TMPDIR=$(mktemp -d /tmp/logic-pw.XXXXXX)
+          export TMPDIR
+          trap 'rm -rf "$TMPDIR"' EXIT
+          npx playwright install chromium
+          npx playwright test
+      - name: The packages (aarch64, x86_64, armv7l)
+        run: |
+          VERSION=0.0.0-ci scripts/build.sh
+          ls -la dist/
+          tar tzf dist/logic-x86_64-0.0.0-ci.tar.gz | sort
+          tar tzf dist/logic-x86_64-0.0.0-ci.tar.gz | grep -q '^./logic/etc/lighttpd.conf$'
+          tar tzf dist/logic-x86_64-0.0.0-ci.tar.gz | grep -q '^./logic/app/index.html$'

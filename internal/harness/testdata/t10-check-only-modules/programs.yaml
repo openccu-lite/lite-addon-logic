@@ -1,0 +1,94 @@
+# programs/point.yaml
+name: point
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: v
+              is: true
+              trigger: update
+            - time:
+                kind: daily
+                at: "12:00"
+                from: "2026-11-09"
+              trigger: check
+    then:
+      - variable: zzm-point-then
+        to: point-then
+  - else:
+      - variable: zzm-point-else
+        to: point-else
+
+# programs/range.yaml
+name: range
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: v
+              is: true
+              trigger: update
+            - time:
+                kind: daily
+                at: "12:00"
+                duration: 30min
+                from: "2026-11-09"
+              trigger: check
+    then:
+      - variable: zzm-range-then
+        to: range-then
+  - else:
+      - variable: zzm-range-else
+        to: range-else
+
+# programs/interval.yaml
+name: interval
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: v
+              is: true
+              trigger: update
+            - time:
+                kind: interval
+                all_day: true
+                interval: 10min
+                from: "2026-11-09"
+              trigger: check
+    then:
+      - variable: zzm-interval-then
+        to: interval-then
+  - else:
+      - variable: zzm-interval-else
+        to: interval-else
+
+# programs/allday.yaml
+name: allday
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: v
+              is: true
+              trigger: update
+            - time:
+                kind: daily
+                all_day: true
+                from: "2026-11-09"
+              trigger: check
+    then:
+      - variable: zzm-allday-then
+        to: allday-then
+  - else:
+      - variable: zzm-allday-else
+        to: allday-else
+

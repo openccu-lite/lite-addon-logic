@@ -1,0 +1,18 @@
+name: Wetter holen
+active: true
+rules:
+  - when:
+      all:
+        - all:
+            - time:
+                kind: interval
+                all_day: true
+                interval: 30min
+              trigger: update
+    then:
+      - command:
+          - "curl"
+          - "-s"
+          - "https://wetter.example.org/aussen"
+        wait: true
+        output: aussentemperatur

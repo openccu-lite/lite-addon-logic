@@ -1,0 +1,6 @@
+name: Alarm Einbruch
+note: Alarmzone Erdgeschoss
+type: alarm
+labels:
+  "false": nicht ausgelöst
+  "true": ausgelöst

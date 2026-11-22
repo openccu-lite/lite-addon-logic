@@ -1,0 +1,20 @@
+name: Szene Abend
+note: ruft andere Programme per Skript auf
+active: true
+operable: false
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: regen
+              is: false
+              trigger: change
+    then:
+      - run: rolllaeden-abends
+        mode: then
+      - deactivate: nachtabsenkung
+      - activate: markise-bei-regen-einfahren
+        after: 10s
+  - else:
+      - activate: nachtabsenkung

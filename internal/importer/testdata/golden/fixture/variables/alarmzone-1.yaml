@@ -1,0 +1,6 @@
+name: Alarmzone 1
+note: Alarmmeldung Alarmzone 1
+type: alarm
+labels:
+  "false": nicht ausgelöst
+  "true": ausgelöst

@@ -1,0 +1,7 @@
+name: intern Merker
+type: bool
+labels:
+  "false": ist falsch
+  "true": ist wahr
+visible: false
+internal: true

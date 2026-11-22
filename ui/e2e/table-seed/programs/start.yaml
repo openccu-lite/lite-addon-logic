@@ -1,0 +1,8 @@
+name: Nach dem Start
+note: wird nach jedem Systemstart einmal geprüft
+active: true
+at_start: true
+rules:
+  - when:
+      all: []
+    then: []

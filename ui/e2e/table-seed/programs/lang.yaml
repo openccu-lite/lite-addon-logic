@@ -1,0 +1,22 @@
+name: Markise auf der Terrasse einfahren, sobald es regnet oder der Wind zu stark wird, aber nur wenn sie nicht schon eingefahren ist
+note: Diese Beschreibung ist absichtlich so lang, dass sie in keiner Spalte Platz hat und gekürzt werden muss, ohne dass die Zeile höher wird als die anderen
+active: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: regen
+              is: true
+              trigger: change
+            - variable: lange-zahl
+              op: gt
+              value: 5
+              trigger: change
+            - variable: lange-liste
+              is: Aus
+              trigger: change
+            - time:
+                kind: daily
+                astro: night
+              trigger: update
+    then: []

@@ -1,0 +1,18 @@
+# what the reference did (cmd/regaharness wrote this file)
+reference ReGaHss R1.00.0388.0254
+rate 1
+2026-11-10 11:59:53 +0100 created change
+2026-11-10 11:59:53 +0100 created update
+2026-11-10 11:59:53 +0100 ran change-else
+2026-11-10 11:59:53 +0100 ran update-else
+2026-11-10 11:59:54 +0100 ran change-else
+2026-11-10 11:59:54 +0100 ran update-else
+2026-11-10 12:00:02 +0100 step 1
+2026-11-10 12:00:02 +0100 ran change-then
+2026-11-10 12:00:02 +0100 ran update-then
+2026-11-10 12:00:05 +0100 step 2
+2026-11-10 12:00:05 +0100 ran change-then
+2026-11-10 12:00:05 +0100 ran update-then
+2026-11-10 12:00:08 +0100 step 3
+2026-11-10 12:00:08 +0100 ran change-else
+2026-11-10 12:00:08 +0100 ran update-else

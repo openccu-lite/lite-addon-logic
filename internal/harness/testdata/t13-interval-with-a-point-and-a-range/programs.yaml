@@ -1,0 +1,43 @@
+# programs/at-point.yaml
+name: at-point
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: interval
+                at: "12:05"
+                interval: 5min
+                from: "2026-11-09"
+              trigger: update
+    then:
+      - variable: zzm-at-point-then
+        to: at-point-then
+  - else:
+      - variable: zzm-at-point-else
+        to: at-point-else
+
+# programs/in-range.yaml
+name: in-range
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: interval
+                at: "12:03"
+                duration: 15min
+                interval: 4min
+                from: "2026-11-09"
+              trigger: update
+    then:
+      - variable: zzm-in-range-then
+        to: in-range-then
+  - else:
+      - variable: zzm-in-range-else
+        to: in-range-else
+

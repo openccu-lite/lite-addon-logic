@@ -1,0 +1,27 @@
+# programs/both.yaml
+name: both
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "12:03"
+                from: "2026-11-09"
+              trigger: update
+        - all:
+            - time:
+                kind: daily
+                at: "12:05"
+                duration: 2min
+                from: "2026-11-09"
+              trigger: update
+    then:
+      - variable: zzm-both-then
+        to: both-then
+  - else:
+      - variable: zzm-both-else
+        to: both-else
+

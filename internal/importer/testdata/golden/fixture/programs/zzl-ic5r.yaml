@@ -1,0 +1,17 @@
+name: zzL_Ic5r
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: interval
+                at: "22:27"
+                duration: 1h15min
+                interval: 5min
+                from: "2026-11-21"
+              trigger: update
+    then:
+      - script: object t=dom.GetObject("zzL_TT"); t.State(t.Value()#"Ic5rD@"#system.Date("%d %H:%M:%S")#" ");
+  - else:
+      - script: object t=dom.GetObject("zzL_TT"); t.State(t.Value()#"Ic5rE@"#system.Date("%d %H:%M:%S")#" ");

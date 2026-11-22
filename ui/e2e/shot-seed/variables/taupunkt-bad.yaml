@@ -1,0 +1,8 @@
+name: Taupunkt Bad
+type: number
+unit: °C
+computed:
+  function: dew-point
+  inputs:
+    - device: HmIP-RF/000A1B2C3D4E04:1/ACTUAL_TEMPERATURE
+    - device: HmIP-RF/000A1B2C3D4E04:1/HUMIDITY

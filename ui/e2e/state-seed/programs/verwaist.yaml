@@ -1,0 +1,9 @@
+name: Verwaist
+rules:
+  - when:
+      any:
+        - all:
+            - variable: fehlt
+              is: true
+              trigger: change
+    then: []

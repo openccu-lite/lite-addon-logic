@@ -1,0 +1,12 @@
+name: Nur prüfen
+active: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "07:15"
+              trigger: check
+    then: []
+  - else: []

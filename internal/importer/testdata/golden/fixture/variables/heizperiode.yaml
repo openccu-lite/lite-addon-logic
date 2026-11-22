@@ -1,0 +1,7 @@
+name: Heizperiode
+note: wird vom Programm Heizperiode schalten gesetzt
+type: list
+entries:
+  - Sommer
+  - Übergang
+  - Winter

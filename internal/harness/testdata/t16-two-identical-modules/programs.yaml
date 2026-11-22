@@ -1,0 +1,26 @@
+# programs/twins.yaml
+name: twins
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "12:03"
+                from: "2026-11-09"
+              trigger: update
+        - all:
+            - time:
+                kind: daily
+                at: "12:03"
+                from: "2026-11-09"
+              trigger: update
+    then:
+      - variable: zzm-twins-then
+        to: twins-then
+  - else:
+      - variable: zzm-twins-else
+        to: twins-else
+

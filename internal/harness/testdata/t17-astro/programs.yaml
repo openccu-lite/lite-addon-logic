@@ -1,0 +1,189 @@
+# programs/rise.yaml
+name: rise
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                astro: sunrise
+                from: "2026-10-09"
+              trigger: update
+    then:
+      - variable: zzm-rise-then
+        to: rise-then
+  - else:
+      - variable: zzm-rise-else
+        to: rise-else
+
+# programs/set.yaml
+name: set
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                astro: sunset
+                from: "2026-10-09"
+              trigger: update
+    then:
+      - variable: zzm-set-then
+        to: set-then
+  - else:
+      - variable: zzm-set-else
+        to: set-else
+
+# programs/day.yaml
+name: day
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                astro: day
+                from: "2026-10-09"
+              trigger: update
+    then:
+      - variable: zzm-day-then
+        to: day-then
+  - else:
+      - variable: zzm-day-else
+        to: day-else
+
+# programs/night.yaml
+name: night
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                astro: night
+                from: "2026-10-09"
+              trigger: update
+    then:
+      - variable: zzm-night-then
+        to: night-then
+  - else:
+      - variable: zzm-night-else
+        to: night-else
+
+# programs/day-early.yaml
+name: day-early
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                astro: before_sunrise
+                offset: 1h
+                from: "2026-10-09"
+              trigger: update
+    then:
+      - variable: zzm-day-early-then
+        to: day-early-then
+  - else:
+      - variable: zzm-day-early-else
+        to: day-early-else
+
+# programs/night-late.yaml
+name: night-late
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                astro: night
+                offset: 1h30min
+                from: "2026-10-09"
+              trigger: update
+    then:
+      - variable: zzm-night-late-then
+        to: night-late-then
+  - else:
+      - variable: zzm-night-late-else
+        to: night-late-else
+
+# programs/morning.yaml
+name: morning
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                astro: day
+                offset: 30min
+                duration: 2h
+                from: "2026-10-09"
+              trigger: update
+    then:
+      - variable: zzm-morning-then
+        to: morning-then
+  - else:
+      - variable: zzm-morning-else
+        to: morning-else
+
+# programs/evening.yaml
+name: evening
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                astro: before_sunset
+                offset: 40min
+                duration: 1h
+                from: "2026-10-09"
+              trigger: update
+    then:
+      - variable: zzm-evening-then
+        to: evening-then
+  - else:
+      - variable: zzm-evening-else
+        to: evening-else
+
+# programs/by-day.yaml
+name: by-day
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: v
+              is: true
+              trigger: update
+            - time:
+                kind: daily
+                astro: day
+                from: "2026-10-09"
+              trigger: check
+    then:
+      - variable: zzm-by-day-then
+        to: by-day-then
+  - else:
+      - variable: zzm-by-day-else
+        to: by-day-else
+

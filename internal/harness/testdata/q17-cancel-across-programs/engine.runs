@@ -1,0 +1,32 @@
+# Q-17: the box cancels the pending writes to the variables its block names, whichever program scheduled them; a block that names another variable cancels nothing
+
+program cancels
+12:00:05 variable:b (false -> true): block 1
+  line 1 (block 1) b eq true [change]: true is true
+  cancelled 1 pending
+  1: variable x = false
+
+program other-target
+12:00:15 variable:c (false -> true): block 1
+  line 1 (block 1) c eq true [change]: true is true
+  1: variable y = false
+
+program schedules
+12:00:02 variable:a (false -> true): block 1
+  line 1 (block 1) a eq true [change]: true is true
+  1: variable x scheduled for 12:00:08, ended 12:00:05 by program:cancels
+12:00:10 variable:a (true -> false): evaluated, no block ran
+  line 1 (block 1) a eq true [change]: false is false
+12:00:12 variable:a (false -> true): block 1
+  line 1 (block 1) a eq true [change]: true is true
+  1: variable x scheduled for 12:00:18, ran 12:00:18
+12:00:18 variable:a: a delayed activity of block 1 is due, nothing is checked again
+  1: variable x = true
+
+program watch-X
+12:00:05 variable:x (false -> false): block 0
+  line 1 (block 1) x eq true [update]: false is false
+  1: variable zzm-x-false = x-false
+12:00:18 variable:x (false -> true): block 1
+  line 1 (block 1) x eq true [update]: true is true
+  1: variable zzm-x-true = x-true

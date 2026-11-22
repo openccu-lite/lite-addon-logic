@@ -1,0 +1,8 @@
+name: Außentemperatur auf der Nordseite des Hauses unter dem Dachvorsprung neben der Regenrinne, gemittelt über die letzten fünfzehn Minuten
+note: Diese Beschreibung ist absichtlich so lang, dass sie in keiner Spalte Platz hat und deshalb gekürzt werden muss, ohne dass die Zeile höher wird als die anderen Zeilen der Liste
+type: number
+unit: Kilowattstunden
+min: -40
+max: 60
+logged: true
+internal: false

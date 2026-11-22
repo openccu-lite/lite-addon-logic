@@ -1,0 +1,60 @@
+# programs/in.yaml
+name: in
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: "n"
+              op: range
+              from: 20
+              below: 50
+              trigger: update
+    then:
+      - variable: zzm-in-then
+        to: in-then
+  - else:
+      - variable: zzm-in-else
+        to: in-else
+
+# programs/turned.yaml
+name: turned
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: "n"
+              op: range
+              from: 50
+              below: 20
+              trigger: update
+    then:
+      - variable: zzm-turned-then
+        to: turned-then
+  - else:
+      - variable: zzm-turned-else
+        to: turned-else
+
+# programs/out.yaml
+name: out
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: "n"
+              op: outside
+              from: 20
+              to: 50
+              trigger: update
+    then:
+      - variable: zzm-out-then
+        to: out-then
+  - else:
+      - variable: zzm-out-else
+        to: out-else
+

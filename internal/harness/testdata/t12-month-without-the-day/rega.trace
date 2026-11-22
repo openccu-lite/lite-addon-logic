@@ -1,0 +1,13 @@
+# what the reference did (cmd/regaharness wrote this file)
+reference ReGaHss R1.00.0388.0254
+rate 60
+2026-04-30 11:35:51 +0200 created day-30
+2026-04-30 11:35:51 +0200 ran day-30-else
+2026-04-30 11:35:52 +0200 created day-31
+2026-04-30 11:35:52 +0200 created fifth-friday
+2026-04-30 11:35:52 +0200 created first-friday
+2026-04-30 11:35:52 +0200 ran day-31-else
+2026-04-30 11:35:52 +0200 ran fifth-friday-else
+2026-04-30 11:35:52 +0200 ran first-friday-else
+2026-04-30 12:00:00 +0200 ran day-30-then
+2026-05-01 12:00:01 +0200 ran first-friday-then

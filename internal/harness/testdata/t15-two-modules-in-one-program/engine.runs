@@ -1,0 +1,15 @@
+# Q-33: two triggering time modules in one program: each fires for itself - a point, and a range with its begin and its end
+
+program both
+12:03:00 time:1:point: block 1
+  line 1 (block 1) time module daily [update]: true
+  line 2 (block 1) time module daily [update]: false
+  1: variable zzm-both-then = both-then
+12:05:00 time:2:begin: block 1
+  line 1 (block 1) time module daily [update]: false
+  line 2 (block 1) time module daily [update]: true
+  1: variable zzm-both-then = both-then
+12:07:00 time:2:end: block 0
+  line 1 (block 1) time module daily [update]: false
+  line 2 (block 1) time module daily [update]: false
+  1: variable zzm-both-else = both-else

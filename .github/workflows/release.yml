@@ -1,0 +1,68 @@
+# A release: a tag v<version> on main, on GitHub. The checks run again for the tag (github-ci.yml),
+# the packages are built with the tag's version, and the release is made with the gh CLI - its title
+# is the tag, its notes the changelog's section, its assets the packages and their SHA-256 files (the
+# names openccu-lite's catalogue resolves). A version with a pre-release part (1.0.0-beta.0) is
+# published as a pre-release.
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    if: github.server_url == 'https://github.com'
+    uses: ./.github/workflows/github-ci.yml
+
+  release:
+    name: release
+    # (always(): elsewhere the job it needs is skipped, and this one would wait for ever)
+    if: always() && github.server_url == 'https://github.com' && needs.ci.result == 'success'
+    runs-on: ubuntu-latest
+    needs: ci
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.4'
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
+      - name: The tag is the manifest's version and has its changelog entry
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          test "$(jq -r .version addon/openccu-lite.json)" = "$VERSION" || { echo "the manifest's version is not $VERSION"; exit 1; }
+          grep -q "^## \[$VERSION\]" CHANGELOG.md || { echo "CHANGELOG.md has no entry for $VERSION"; exit 1; }
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+      - run: scripts/build.sh
+      - name: Every package holds what the system needs, and its SHA-256 file matches
+        run: |
+          for arch in aarch64 x86_64 armv7l; do
+            f=dist/logic-$arch-$VERSION.tar.gz
+            tar tzf "$f" | grep -q '^./openccu-lite.json$'
+            tar tzf "$f" | grep -q '^./logic/bin/logic$'
+            tar tzf "$f" | grep -q '^./logic/etc/lighttpd.conf$'
+            tar tzf "$f" | grep -q '^./logic/app/index.html$'
+            test "$(tar xzOf "$f" ./openccu-lite.json | jq -r .version)" = "$VERSION"
+            (cd dist && sha256sum -c "logic-$arch-$VERSION.tar.gz.sha256")
+          done
+          ls -la dist/
+      - name: The release notes are the changelog's section
+        run: |
+          awk -v v="$VERSION" '$0 ~ "^## \\[" { on = ($0 ~ "^## \\[" v "\\]"); next } on' CHANGELOG.md > notes.md
+          test -s notes.md
+          cat notes.md
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pre=
+          case "$VERSION" in *-*) pre=--prerelease ;; esac
+          gh release create "$GITHUB_REF_NAME" dist/* --title "$GITHUB_REF_NAME" --notes-file notes.md --verify-tag $pre

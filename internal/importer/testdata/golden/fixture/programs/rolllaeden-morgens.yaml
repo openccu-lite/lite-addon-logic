@@ -1,0 +1,29 @@
+name: Rollläden morgens
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "06:30"
+                from: "2026-11-21"
+              trigger: update
+        - all:
+            - time:
+                kind: daily
+                at: "07:00"
+                from: "2026-12-01"
+                until: "2027-03-31"
+              trigger: update
+        - all:
+            - time:
+                kind: daily
+                at: "07:15"
+                from: "2026-11-21"
+                count: 10
+              trigger: update
+    then:
+      - variable: rollladen-status
+        to: offen

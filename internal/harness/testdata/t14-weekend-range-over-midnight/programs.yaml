@@ -1,0 +1,24 @@
+# programs/weekend.yaml
+name: weekend
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "20:00"
+                duration: 14h
+                weekdays:
+                  - sat
+                  - sun
+                from: "2026-11-14"
+              trigger: update
+    then:
+      - variable: zzm-weekend-then
+        to: weekend-then
+  - else:
+      - variable: zzm-weekend-else
+        to: weekend-else
+

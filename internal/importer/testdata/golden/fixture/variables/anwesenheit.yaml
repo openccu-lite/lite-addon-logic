@@ -1,0 +1,7 @@
+name: Anwesenheit
+note: Anwesenheit
+type: bool
+labels:
+  "false": nicht anwesend
+  "true": anwesend
+start_value: true

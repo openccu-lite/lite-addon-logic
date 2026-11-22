@@ -1,0 +1,128 @@
+name: Markise bei Regen einfahren
+note: Regensensor auf der Terrasse; im Winter deaktiviert
+active: true
+visible: false
+operable: false
+internal: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: regen
+              is: true
+              trigger: change
+            - device: HmIP-RF/00111BE9AB9012:4/LEVEL  # Markise Terrasse
+              op: gt
+              value: 0
+              trigger: check
+              note: "nur wenn sie draußen ist: sonst nichts tun"
+        - any:
+            - variable: heizperiode
+              is: Winter
+              not: true
+              trigger: update
+            - variable: aussentemperatur
+              op: range
+              from: -5
+              below: 15.5
+              for: 10min
+              trigger: value
+            - variable: aussentemperatur
+              op: outside
+              from: 30
+              to: 35
+              trigger: check
+            - variable: hinweis
+              op: ne
+              value: "on"
+              trigger: change
+            - time:
+                kind: daily
+                at: "06:30"
+                duration: 1h30min
+                every: 2
+                from: "2026-12-01"
+                until: "2027-03-31 12:00"
+                count: 10
+              trigger: update
+            - time:
+                kind: weekly
+                astro: before_sunset
+                offset: 30min
+                weekdays:
+                  - mon
+                  - wed
+              trigger: check
+            - time:
+                kind: daily
+                astro: before_sunset
+                offset: 20min
+                point: true
+                twilight: civil
+              trigger: update
+            - time:
+                kind: interval
+                at: "08:00:30"
+                interval: 15min
+              trigger: update
+            - time:
+                kind: yearly
+                at: "00:00"
+                day: 24
+                month: 12
+              trigger: update
+            - time:
+                kind: once
+                at: "12:00"
+                date: "2027-01-01"
+              trigger: update
+    note: der erste Block
+    cancel_pending: true
+    then:
+      - set: HmIP-RF/00111BE9AB9012:4/LEVEL  # Markise Terrasse
+        to: 0
+      - variable: hinweis
+        to: wegen Regen eingefahren
+        after: 30s
+        note: |-
+          zwei Zeilen
+          Notiz
+      - variable: hinweis
+        to: ""
+      - variable: zaehler
+        from_variable: aussentemperatur
+      - variable: zaehler
+        from: HmIP-RF/00111BE9AB9012:4/LEVEL  # Markise Terrasse
+      - set: BidCos-RF/NEQ0123456:1/LEVEL
+        special: OLD_LEVEL
+      - set: BidCos-RF/NEQ0123456:1/STATE
+        from_variable: regen
+      - run: rolllaeden-abends
+        mode: then
+      - run: rolllaeden-abends
+        mode: check
+        after: 2h
+      - activate: nachtabsenkung
+      - deactivate: nachtabsenkung
+      - script: |-
+          string out;
+          system.Exec("wget -q -O - http://example.invalid/", &out);
+
+          WriteLine(out);
+      - script: var x = 1;
+      - set: BidCos-RF/NEQ0123456:1/STATE
+        to: true
+        on_for: 5min
+        after: 0s
+        after_up_to: 30min
+      - variable: hinweis
+        to: spät
+        after: 10min
+        after_up_to: 1h
+  - when:
+      all: []
+    then: []
+  - else: []
+    note: nichts zu tun
+    cancel_pending: true

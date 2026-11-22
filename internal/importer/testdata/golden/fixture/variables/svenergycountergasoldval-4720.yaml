@@ -1,0 +1,5 @@
+name: svEnergyCounterGasOldVal_4720
+type: number
+min: 0
+max: 1e+300
+internal: true

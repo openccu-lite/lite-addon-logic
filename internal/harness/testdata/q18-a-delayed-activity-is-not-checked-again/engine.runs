@@ -1,0 +1,10 @@
+# Q-18: a delayed activity runs when it is due although the condition has become false
+
+program P
+12:00:02 variable:a (false -> true): block 1
+  line 1 (block 1) a eq true [change]: true is true
+  1: variable zzm-late scheduled for 12:00:08, ran 12:00:08
+12:00:04 variable:a (true -> false): evaluated, no block ran
+  line 1 (block 1) a eq true [change]: false is false
+12:00:08 variable:a: a delayed activity of block 1 is due, nothing is checked again
+  1: variable zzm-late = late

@@ -1,0 +1,36 @@
+# programs/change.yaml
+name: change
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: al
+              is: true
+              trigger: change
+    then:
+      - variable: zzm-change-then
+        to: change-then
+  - else:
+      - variable: zzm-change-else
+        to: change-else
+
+# programs/update.yaml
+name: update
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: al
+              is: true
+              trigger: update
+    then:
+      - variable: zzm-update-then
+        to: update-then
+  - else:
+      - variable: zzm-update-else
+        to: update-else
+

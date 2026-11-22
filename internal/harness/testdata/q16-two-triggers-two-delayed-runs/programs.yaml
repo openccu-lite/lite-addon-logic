@@ -1,0 +1,17 @@
+# programs/p.yaml
+name: P
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: "n"
+              op: gt
+              value: 10
+              trigger: update
+    then:
+      - variable: zzm-late
+        to: late
+        after: 6s
+

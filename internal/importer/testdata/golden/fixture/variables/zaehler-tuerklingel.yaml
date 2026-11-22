@@ -1,0 +1,4 @@
+name: Zähler Türklingel
+type: number
+min: 0
+max: 65000

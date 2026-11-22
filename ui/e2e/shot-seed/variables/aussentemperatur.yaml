@@ -1,0 +1,5 @@
+name: Außentemperatur
+type: number
+unit: °C
+min: -40
+max: 60

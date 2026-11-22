@@ -1,0 +1,29 @@
+# Q-7: two trigger lines on the same variable give one run per write, not two
+
+program change
+12:00:02 variable:n (5 -> 25): block 1
+  line 1 (block 1) n gt 10 [change]: 25 is true
+  line 2 (block 1) n gt 20 [change]: 25 is true
+  1: variable zzm-change-then = change-then
+12:00:05 variable:n (25 -> 15): block 1
+  line 1 (block 1) n gt 10 [change]: 15 is true
+  line 2 (block 1) n gt 20 [change]: 15 is false
+  1: variable zzm-change-then = change-then
+12:00:08 variable:n (15 -> 5): block 0
+  line 1 (block 1) n gt 10 [change]: 5 is false
+  line 2 (block 1) n gt 20 [change]: 5 is false
+  1: variable zzm-change-else = change-else
+
+program update
+12:00:02 variable:n (5 -> 25): block 1
+  line 1 (block 1) n gt 10 [update]: 25 is true
+  line 2 (block 1) n gt 20 [update]: 25 is true
+  1: variable zzm-update-then = update-then
+12:00:05 variable:n (25 -> 15): block 1
+  line 1 (block 1) n gt 10 [update]: 15 is true
+  line 2 (block 1) n gt 20 [update]: 15 is false
+  1: variable zzm-update-then = update-then
+12:00:08 variable:n (15 -> 5): block 0
+  line 1 (block 1) n gt 10 [update]: 5 is false
+  line 2 (block 1) n gt 20 [update]: 5 is false
+  1: variable zzm-update-else = update-else

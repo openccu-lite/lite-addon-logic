@@ -1,0 +1,6 @@
+name: Rollladen Status
+type: list
+entries:
+  - offen
+  - geschlossen
+  - Beschattung

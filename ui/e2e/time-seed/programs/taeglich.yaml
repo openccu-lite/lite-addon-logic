@@ -1,0 +1,11 @@
+name: Täglich 06:30
+active: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "06:30"
+              trigger: update
+    then: []

@@ -1,0 +1,68 @@
+// Where the guide is: the daemon serves docs/de/handbuch.md and docs/en/guide.md as pages at
+// docs/de/ and docs/en/ below the page's own path.
+
+/** The anchors of the guide the page links; the guide has each in both languages (a Go test). */
+export const TOPICS = [
+    'overview',
+    'from-ccu',
+    'quirks',
+    'programs',
+    'program-list',
+    'program-marks',
+    'triggers',
+    'else',
+    'delays',
+    'program-run',
+    'editor',
+    'editor-lines',
+    'editor-devices',
+    'editor-activities',
+    'editor-time',
+    'additions',
+    'values',
+    'forms',
+    'display',
+    'display-text',
+    'webhook',
+    'webhook-placeholders',
+    'wake',
+    'command',
+    'command-values',
+    'start',
+    'time',
+    'time-next',
+    'time-location',
+    'time-clock',
+    'triggers-page',
+    'trace',
+    'trace-not-triggered',
+    'dry-run',
+    'versions',
+    'schedule',
+    'schedule-delays',
+    'settings',
+    'pacing',
+    'loop-guard',
+    'secrets',
+    'remote',
+    'replace-device',
+    'variables',
+    'variable-page',
+    'variable-types',
+    'variable-limits',
+    'computed',
+    'helpers',
+    'alarms',
+    'import',
+    'import-sources',
+    'import-dry-run',
+    'import-what',
+    'import-report',
+    'file-rules',
+] as const;
+export type Topic = (typeof TOPICS)[number];
+
+export function docUrl(language: string, topic: string): string {
+    const lang = language === 'de' ? 'de' : 'en';
+    return `docs/${lang}/#${topic}`;
+}

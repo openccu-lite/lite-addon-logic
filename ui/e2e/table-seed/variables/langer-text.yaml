@@ -1,0 +1,4 @@
+name: Text
+note: Eine Zeichenkette mit einem langen Wert
+type: string
+start_value: Dieser Wert ist eine sehr lange Zeichenkette, die nicht in das Feld passt und trotzdem die Zeile nicht höher machen darf als alle anderen

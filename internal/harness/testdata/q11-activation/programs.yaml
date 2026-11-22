@@ -1,0 +1,34 @@
+# programs/true.yaml
+name: "true"
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: a
+              is: true
+              trigger: change
+    then:
+      - variable: zzm-true-then
+        to: true-then
+  - else:
+      - variable: zzm-true-else
+        to: true-else
+
+# programs/false.yaml
+name: "false"
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: a
+              is: false
+              trigger: change
+    then:
+      - variable: zzm-false-then
+        to: false-then
+  - else:
+      - variable: zzm-false-else
+        to: false-else
+

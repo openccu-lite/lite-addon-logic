@@ -1,0 +1,21 @@
+name: Nachtabsenkung
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: weekly
+                at: "22:00"
+                duration: 8h
+                weekdays:
+                  - mon
+                  - wed
+                from: "2026-11-21"
+              trigger: update
+    then:
+      - variable: intern-merker
+        to: true
+  - else:
+      - variable: intern-merker
+        to: false

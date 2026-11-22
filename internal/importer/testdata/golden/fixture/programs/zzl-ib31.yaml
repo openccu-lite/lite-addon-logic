@@ -1,0 +1,16 @@
+name: zzL_Ib31
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: interval
+                all_day: true
+                interval: 31min
+                from: "2026-11-21"
+              trigger: update
+    then:
+      - script: object t=dom.GetObject("zzL_TT"); t.State(t.Value()#"Ib31D@"#system.Date("%d %H:%M:%S")#" ");
+  - else:
+      - script: object t=dom.GetObject("zzL_TT"); t.State(t.Value()#"Ib31E@"#system.Date("%d %H:%M:%S")#" ");

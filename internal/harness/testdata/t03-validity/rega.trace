@@ -1,0 +1,27 @@
+# what the reference did (cmd/regaharness wrote this file)
+reference ReGaHss R1.00.0388.0254
+rate 60
+2026-11-10 11:24:42 +0100 created end-today
+2026-11-10 11:24:42 +0100 created end-tomorrow
+2026-11-10 11:24:42 +0100 created begin-today
+2026-11-10 11:24:42 +0100 created begin-tomorrow
+2026-11-10 11:24:42 +0100 created twice
+2026-11-10 11:24:42 +0100 created twice-from-today
+2026-11-10 11:24:42 +0100 ran end-today-else
+2026-11-10 11:24:42 +0100 ran end-tomorrow-else
+2026-11-10 11:24:42 +0100 ran begin-today-else
+2026-11-10 11:24:42 +0100 ran begin-tomorrow-else
+2026-11-10 11:24:42 +0100 ran twice-else
+2026-11-10 11:24:42 +0100 ran twice-from-today-else
+2026-11-10 12:00:00 +0100 ran end-today-then
+2026-11-10 12:00:00 +0100 ran end-tomorrow-then
+2026-11-10 12:00:00 +0100 ran begin-today-then
+2026-11-10 12:00:00 +0100 ran twice-from-today-then
+2026-11-11 12:00:00 +0100 ran end-tomorrow-then
+2026-11-11 12:00:00 +0100 ran begin-today-then
+2026-11-11 12:00:00 +0100 ran begin-tomorrow-then
+2026-11-11 12:00:00 +0100 ran twice-from-today-then
+2026-11-12 12:00:01 +0100 ran begin-today-then
+2026-11-12 12:00:01 +0100 ran begin-tomorrow-then
+2026-11-13 12:00:00 +0100 ran begin-today-then
+2026-11-13 12:00:00 +0100 ran begin-tomorrow-then

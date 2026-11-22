@@ -1,0 +1,5 @@
+anwesenheit = true
+varbool1 = false
+varenum1 = "Wert 1"
+varnum1 = 0
+varstring1 = "???"

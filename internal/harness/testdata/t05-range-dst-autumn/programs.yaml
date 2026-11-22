@@ -1,0 +1,62 @@
+# programs/night.yaml
+name: night
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "22:00"
+                duration: 8h
+                from: "2026-10-23"
+              trigger: update
+    then:
+      - variable: zzm-night-then
+        to: night-then
+  - else:
+      - variable: zzm-night-else
+        to: night-else
+
+# programs/repeated.yaml
+name: repeated
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "02:10"
+                duration: 20min
+                from: "2026-10-23"
+              trigger: update
+    then:
+      - variable: zzm-repeated-then
+        to: repeated-then
+  - else:
+      - variable: zzm-repeated-else
+        to: repeated-else
+
+# programs/at-half-past-two.yaml
+name: at-half-past-two
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "02:30"
+                from: "2026-10-23"
+              trigger: update
+    then:
+      - variable: zzm-at-half-past-two-then
+        to: at-half-past-two-then
+  - else:
+      - variable: zzm-at-half-past-two-else
+        to: at-half-past-two-else
+

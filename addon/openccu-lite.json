@@ -1,0 +1,41 @@
+{
+  "format": 1,
+  "id": "logic",
+  "name": "Logic",
+  "description": {
+    "de": "Programme und Systemvariablen, wie man sie von der CCU kennt: Wenn … Dann … Sonst, mit „bei Änderung auslösen“, „bei Aktualisierung auslösen“ und „nur prüfen“, verzögerten Aktivitäten und Systemvariablen (Logikwert, Werteliste, Zahl, Zeichenkette, Alarm). Übernimmt Programme und Systemvariablen aus einer CCU-Sicherung (.sbk) oder aus der ReGa-Datenbank, die nach dem Umstieg auf dem System geblieben ist; ein Programm ohne Skript verhält sich danach wie auf der CCU. Programme und Variablen sind lesbare Dateien mit Verlauf. Andere Programme erreichen sie über die Schnittstelle „Logic“ wie Geräte. Skripte gibt es bewusst nicht: dafür sind Node-RED (RedMatic), Home Assistant oder ioBroker da.",
+    "en": "Programs and system variables as known from the CCU: If … Then … Else, with \"trigger when changed\", \"trigger when updated\" and \"check only\", delayed activities and system variables (boolean, value list, number, string, alarm). Imports programs and system variables from a CCU backup (.sbk) or from the ReGa database kept on the system after the switch; a program without a script then behaves as it did on the CCU. Programs and variables are readable files with a history. Other software reaches them through the interface \"Logic\" like devices. There are no scripts, on purpose: that is what Node-RED (RedMatic), Home Assistant or ioBroker are for."
+  },
+  "version": "1.0.0-beta.0",
+  "homepage": "https://github.com/openccu-lite/lite-addon-logic",
+  "licence": "MIT",
+  "changelog": "https://github.com/openccu-lite/lite-addon-logic/blob/main/CHANGELOG.md",
+  "release": {
+    "github": "openccu-lite/lite-addon-logic",
+    "asset": "logic-{arch}-{version}.tar.gz",
+    "prerelease": true
+  },
+  "requires": {
+    "lite": "2.0.0-rc.1",
+    "architectures": ["aarch64", "x86_64", "armv7l"]
+  },
+  "ui": {
+    "icon": "logic/www/icon.svg",
+    "icon_dark": "logic/www/icon-dark.svg",
+    "settings_url": "/addons/logic/",
+    "session_header": true,
+    "regadom_import_url": "/addons/logic/#/import"
+  },
+  "runtime": {
+    "daemon": true,
+    "needs": [],
+    "capabilities": [],
+    "ports": [],
+    "api_scopes": ["rpc:operate", "meta:read", "meta:interface", "regadom:read"],
+    "rpc_interface": {"name": "Logic", "port": 39310},
+    "note": {
+      "de": "Öffnet keinen Port im Netz und braucht kein Zusatzrecht. Liest die Werte der Datenpunkte, die Ihre Programme verwenden, und schaltet, was Ihre Programme schalten (rpc:operate); liest Namen und Räume (meta:read); trägt die Namen seiner eigenen Programme und Variablen ein und sonst nichts (meta:interface); liest die ReGa-Datenbank der CCU, die nach dem Umstieg auf dem System geblieben ist, um Programme und Systemvariablen daraus zu übernehmen (regadom:read). Stellt Programme und Variablen als Schnittstelle „Logic“ bereit, die nur auf dem System selbst lauscht (127.0.0.1:39310). Kontaktiert von sich aus nichts außerhalb des Systems; nur was Sie selbst in Programmen und Einstellungen einrichten: Webhooks, Wake-on-LAN, Befehle (mit den Rechten des Addons, nie als root) und ein Remote für den Verlauf.",
+      "en": "Opens no port to the network and needs no privilege. Reads the values of the datapoints your programs use and switches what your programs switch (rpc:operate); reads names and rooms (meta:read); writes the names of its own programs and variables and nothing else (meta:interface); reads the CCU's ReGa database kept on the system after the switch, to import programs and system variables from it (regadom:read). Offers programs and variables as the interface \"Logic\", which listens on the system itself only (127.0.0.1:39310). Contacts nothing outside the system on its own; only what you set up yourself in programs and settings: webhooks, Wake-on-LAN, commands (with the addon's rights, never as root) and a remote for the history."
+    }
+  }
+}

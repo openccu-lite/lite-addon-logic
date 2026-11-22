@@ -1,0 +1,28 @@
+# what the reference did (cmd/regaharness wrote this file)
+reference ReGaHss R1.00.0388.0254
+rate 20
+2026-10-25 01:35:09 +0200 created seven
+2026-10-25 01:35:09 +0200 ran seven-else
+2026-10-25 01:38:00 +0200 ran seven-then
+2026-10-25 01:45:00 +0200 ran seven-then
+2026-10-25 01:52:00 +0200 ran seven-then
+2026-10-25 01:59:00 +0200 ran seven-then
+2026-10-25 02:06:00 +0200 ran seven-then
+2026-10-25 02:13:00 +0200 ran seven-then
+2026-10-25 02:20:00 +0200 ran seven-then
+2026-10-25 02:27:00 +0200 ran seven-then
+2026-10-25 02:34:00 +0200 ran seven-then
+2026-10-25 02:41:00 +0200 ran seven-then
+2026-10-25 02:48:00 +0200 ran seven-then
+2026-10-25 02:55:01 +0200 ran seven-then
+2026-10-25 02:02:00 +0100 ran seven-then
+2026-10-25 02:09:00 +0100 ran seven-then
+2026-10-25 02:16:00 +0100 ran seven-then
+2026-10-25 02:23:00 +0100 ran seven-then
+2026-10-25 02:30:00 +0100 ran seven-then
+2026-10-25 02:37:00 +0100 ran seven-then
+2026-10-25 02:44:00 +0100 ran seven-then
+2026-10-25 02:51:00 +0100 ran seven-then
+2026-10-25 02:58:00 +0100 ran seven-then
+2026-10-25 03:05:00 +0100 ran seven-then
+2026-10-25 03:12:00 +0100 ran seven-then

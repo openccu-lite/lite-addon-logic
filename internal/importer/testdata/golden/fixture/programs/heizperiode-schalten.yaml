@@ -1,0 +1,43 @@
+name: Heizperiode schalten
+active: true
+at_start: true
+rules:
+  - when:
+      any:
+        - all:
+            - variable: aussentemperatur-mittel
+              op: lt
+              value: 5
+              trigger: change
+    then:
+      - variable: heizperiode
+        to: Winter
+  - when:
+      any:
+        - all:
+            - variable: aussentemperatur-mittel
+              op: range
+              from: 5
+              below: 15
+              trigger: change
+    then:
+      - variable: heizperiode
+        to: Übergang
+  - when:
+      all:
+        - all:
+            - variable: aussentemperatur-mittel
+              op: ge
+              value: 15
+              trigger: change
+        - all:
+            - variable: aussentemperatur-mittel
+              op: outside
+              from: 30
+              to: 35
+              trigger: check
+    then:
+      - variable: heizperiode
+        to: Sommer
+        after: 2h
+  - else: []

@@ -1,0 +1,5 @@
+name: zzL_A
+type: bool
+labels:
+  "false": aus
+  "true": an

@@ -1,0 +1,10 @@
+name: Inaktiv und unsichtbar
+note: "Beschreibung mit Umlauten: äöüß"
+visible: false
+at_start: true
+rules:
+  - when:
+      any: []
+    then:
+      - variable: intern-merker
+        to: true

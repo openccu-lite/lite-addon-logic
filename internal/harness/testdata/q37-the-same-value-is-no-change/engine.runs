@@ -1,0 +1,14 @@
+# Q-37: writing a value list: only a flip of the line's truth runs the program, the same value or another non-matching one does not
+
+program P
+12:00:02 variable:l (a -> b): block 1
+  line 1 (block 1) l eq b [change]: b is true
+  1: variable zzm-then = then
+12:00:04 variable:l (b -> b): not triggered, no-change
+12:00:06 variable:l (b -> c): block 0
+  line 1 (block 1) l eq b [change]: c is false
+  1: variable zzm-else = else
+12:00:10 variable:l (c -> a): not triggered, no-change (2 times since 12:00:08)
+12:00:12 variable:l (a -> b): block 1
+  line 1 (block 1) l eq b [change]: b is true
+  1: variable zzm-then = then

@@ -1,0 +1,11 @@
+# what the reference did (cmd/regaharness wrote this file)
+reference ReGaHss R1.00.0388.0254
+rate 20
+2026-11-10 11:55:08 +0100 ran both-else
+2026-11-10 11:55:08 +0100 ran both-then
+2026-11-10 11:55:09 +0100 ran both-else
+2026-11-10 11:55:39 +0100 created both
+2026-11-10 11:55:39 +0100 ran both-else
+2026-11-10 12:03:00 +0100 ran both-then
+2026-11-10 12:05:00 +0100 ran both-then
+2026-11-10 12:07:00 +0100 ran both-else

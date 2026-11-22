@@ -1,0 +1,13 @@
+name: Nachtabsenkung
+active: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "22:00"
+                duration: 8h
+              trigger: update
+    then: []
+  - else: []

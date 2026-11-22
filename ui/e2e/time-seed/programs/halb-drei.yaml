@@ -1,0 +1,11 @@
+name: Halb drei
+active: true
+rules:
+  - when:
+      any:
+        - all:
+            - time:
+                kind: daily
+                at: "02:30"
+              trigger: update
+    then: []

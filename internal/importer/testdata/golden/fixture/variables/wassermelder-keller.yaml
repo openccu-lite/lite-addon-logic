@@ -1,0 +1,5 @@
+name: Wassermelder Keller
+type: bool
+labels:
+  "false": trocken
+  "true": nass

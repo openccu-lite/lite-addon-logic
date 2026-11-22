@@ -1,0 +1,6 @@
+name: Alarm Wasser
+note: Wasser im Keller
+type: alarm
+labels:
+  "false": nicht ausgelöst
+  "true": ausgelöst
