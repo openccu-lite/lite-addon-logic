@@ -12,6 +12,10 @@ on:
 permissions:
   contents: read
 
+# the tests and the guide examples count local times in Europe/Berlin, as the CCU does; GitHub's runners are UTC
+env:
+  TZ: Europe/Berlin
+
 jobs:
   ci:
     if: github.server_url == 'https://github.com'
