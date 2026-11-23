@@ -166,16 +166,18 @@ test('a program is changed: lines moved by arrows and by dragging, a time contro
     await expect(dialog.getByTestId('tm-error')).toHaveText('Choose at least one weekday.');
     await dialog.getByTestId('tm-day-mon').check();
     await dialog.getByTestId('tm-day-sat').check();
-    await dialog.getByTestId('tm-at').fill('07:30');
-    await expect(dialog.getByTestId('tm-words')).toHaveText('weekly Mon, Sat, at 07:30');
+    // six hours from now: the two-hour window must not be running while the test looks at it
+    const at = `${String((new Date().getHours() + 6) % 24).padStart(2, '0')}:30`;
+    await dialog.getByTestId('tm-at').fill(at);
+    await expect(dialog.getByTestId('tm-words')).toHaveText(`weekly Mon, Sat, at ${at}`);
     await expect(dialog.getByTestId('tm-next').locator('div')).toHaveCount(5);
-    await expect(dialog.getByTestId('tm-next').locator('div').first()).toContainText('07:30');
+    await expect(dialog.getByTestId('tm-next').locator('div').first()).toContainText(at);
     await dialog.getByTestId('tm-ranged').check();
     await dialog.getByTestId('tm-duration').fill('2');
     await expect(dialog.getByTestId('tm-next').locator('div').first()).toContainText('(begin)');
     await dialog.getByTestId('tm-save').click();
     await expect(dialog).toHaveCount(0);
-    await expect(lines.nth(2).getByTestId('line-time')).toHaveText('weekly Mon, Sat, from 07:30, for 2 h');
+    await expect(lines.nth(2).getByTestId('line-time')).toHaveText(`weekly Mon, Sat, from ${at}, for 2 h`);
     await expect(lines.nth(2).getByTestId('line-trigger').locator('option')).toHaveCount(2);
     // the form again, on what was set
     await lines.nth(2).getByTestId('line-time').click();
@@ -199,7 +201,7 @@ test('a program is changed: lines moved by arrows and by dragging, a time contro
     await editor.getByTestId('editor-save').click();
     const detail = page.getByTestId('program-detail');
     await expect(detail.getByTestId('line')).toHaveCount(2);
-    await expect(detail).toContainText('weekly Mon, Sat, from 07:30, for 2 h');
+    await expect(detail).toContainText(`weekly Mon, Sat, from ${at}, for 2 h`);
 
     // changes that are not saved: another tab and "Cancel" both ask first
     await page.getByTestId('program-edit').click();
