@@ -22,16 +22,13 @@ exactly two things: **programs and system variables**.
 - **No migration of scripts.** A script is not translated on import. It stays in the program as text, and the
   program comes in inactive. For tasks that need a script, Node-RED (RedMatic), Home Assistant or ioBroker are the
   right tools.
-- **No big automation system.** Logic is for the simple, local automations a CCU could always do: "when it rains,
-  retract the awning", timers, alarms. Its scope stays small on purpose and is frozen with version 1.0; after that
-  there are bug fixes, no new features.
-
-In return, the imported programs are visible and traceable: every program and every variable is a readable file with
-a history, and for every run the page shows what the program saw and did – and why it did *not* run.
+- **No big automation system.** Logic is for the simple, local automations a CCU could always do: "when it is not
+  raining, not windy and the sun is shining, extend the awning", timers, alarms. Its scope stays small on purpose; the
+  focus is on bug fixes, not new features.
 
 The model is the CCU as eQ-3 ships it: Logic behaves like the ReGaHss of the CCU3 firmware – its
 [quirks](docs/en/guide.md#quirks) included – and is [measured against a real ReGaHss](docs/en/guide.md#compared).
-OpenCCU's changed program logic from 3.89.14 on is followed only where it matches corrections Logic makes anyway;
+OpenCCU's changed program logic is followed only where it matches corrections Logic makes anyway;
 backups of OpenCCU 3.89.14 and newer can be imported all the same.
 
 ## What it looks like
@@ -61,23 +58,16 @@ The system variables, with their values and a computed dew point; the schedule w
 | **Programs** | one to one: *If … Else if … Else*, AND/OR, every condition with its trigger kind (*when changed*, *when updated*, *check only*), negated lines, activities *immediately* or *delayed*, the properties *active*, *visible*, *operable*, *internal* |
 | **Time modules** | with every setting, including astro (sunrise and sunset), patterns and validity; the CCU's location is imported |
 | **System variables** | with type (boolean, value list, number, string, alarm), labels, unit, limits, channel assignment – and with their current **value** |
-| **Two one-line scripts** | "run program" and "activate/deactivate program" are recognised and become ordinary activities |
-| **A script that is a single `system.Exec`** | becomes a [webhook](docs/en/guide.md#webhook) (`wget` or `curl` of an address), [Wake-on-LAN](docs/en/guide.md#wake) (`ether-wake`) or a [command](docs/en/guide.md#command) with the same line. The program comes in inactive: a command runs with the addon's rights, not as root as on the CCU – look at it first |
+| **Some one-line scripts** | "run program", "activate/deactivate program" or "system.Exec" are recognised and become ordinary activities |
 | **The CCU's counters** (energy, feed-in, gas, water, rain, sunshine) | are recognised and counted on by built-in [device helpers](docs/en/guide.md#helpers): the total, today and yesterday come along with their readings, without a jump at the device's first report. The hidden counter programs themselves (scripts) are no longer needed |
 
 ## What is not imported
 
-| Does not come along | Why / what instead |
-| --- | --- |
-| **Scripts** | Logic runs no scripts. The program comes in inactive, the script is kept as text |
-| **CUxD** | does not exist on openccu-lite; the program comes in inactive |
-| **Rooms, functions, device names** | the system imports them itself during the switch |
-| **Users, favourites, direct links** | are not this addon's business |
-| **A triggered alarm** | the CCU's database stores no alarm state; every alarm variable starts as "never triggered" |
+Logic runs no scripts. Programs with scripts come in inactive, the script is kept as text.
 
 ## What now works without a script
 
-Much of what needed a script on the CCU is an ordinary condition or activity of a program in Logic:
+Some of what needed a script on the CCU is available in Logic as an ordinary condition or activity of a program:
 
 | Task | On the CCU | In Logic |
 | --- | --- | --- |
@@ -94,9 +84,6 @@ Much of what needed a script on the CCU is an ordinary condition or activity of 
 | Run a program of the system, its output into a variable | `system.Exec`, as root; while it waits, every program stands still | the activity [Command](docs/en/guide.md#command): with a time limit, in the background or waited for, output and exit code into variables, with the addon's rights |
 | Count energy, gas, water, rain and sunshine: total, today, yesterday | the CCU's hidden counter programs, scripts | built-in [device helpers](docs/en/guide.md#helpers) |
 | Run, activate or deactivate another program | a one-line script | an ordinary [activity](docs/en/guide.md#editor-activities); the two one-line scripts are recognised on import |
-
-A command uses the programs the system brings; other addons' programs are closed to it (the Mosquitto addon's
-`mosquitto_pub`, for instance, does not start).
 
 A form for a channel – the sound of an HmIP-MP3P, in one command – and a command in place of `system.Exec`:
 
@@ -139,9 +126,8 @@ something has been renamed in the meantime.
 
 ## For other software
 
-Programs and system variables are devices of the interface **`Logic`**, which the system offers like the radio
-interfaces. Node-RED, Home Assistant, ioBroker or hm2mqtt.js read and set variables and run programs through it, just
-as they did through ReGa on the CCU.
+Programs and system variables are devices of the interface **`Logic`** and available over XML-RPC and lite-rpc.
+Node-RED, Home Assistant, ioBroker or hm2mqtt.js read and set variables and run programs through it.
 
 ## More
 
