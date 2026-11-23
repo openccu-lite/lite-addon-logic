@@ -188,7 +188,9 @@ func TestRunSaverCoalesces(t *testing.T) {
 	w := s.Written()
 	cancel()
 	<-done
-	if most := int(elapsed/pendingEvery) + 2; w.PendingFiles < 3 || w.PendingFiles > most {
+	// counted over the whole time the saver ran, as for the state below: under -race a slow write
+	// lets a tick fall into the waiting time after the last change
+	if most := int((elapsed+3*pendingEvery)/pendingEvery) + 1; w.PendingFiles < 3 || w.PendingFiles > most {
 		t.Errorf("%d changes in %v: the delays' file written %d times, at most %d expected", changes, elapsed, w.PendingFiles, most)
 	}
 	if most := int((elapsed+3*pendingEvery)/stateEvery) + 1; w.StateFiles < 1 || w.StateFiles > most {
