@@ -5,7 +5,7 @@
 > **Erste Vorabversion: 1.0.0-beta.0.** Braucht openccu-lite 2.0.0-rc.1 oder neuer. Vieles ist noch nicht im Alltag
 > erprobt: Getestet wurde auf Testsystemen und gegen ein simuliertes System, einige Geräteformulare, die Anzeige des
 > HmIP-WRCD und die Zähler-Helfer noch an keinem echten Gerät. Rückmeldungen und Fehler bitte als
-> [Issue bei openccu-lite](https://github.com/openccu-lite/openccu-lite/issues).
+> [Issue im Logic-Repository](https://github.com/openccu-lite/lite-addon-logic/issues).
 
 Logic führt Programme aus, wie man sie von der CCU kennt (*Wenn … Dann … Sonst*), und hält Systemvariablen. Beides
 übernimmt es aus einer CCU-Sicherung oder aus der ReGa-Datenbank, die nach dem Umstieg auf dem System geblieben ist.

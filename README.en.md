@@ -5,7 +5,7 @@
 > **First pre-release: 1.0.0-beta.0.** Needs openccu-lite 2.0.0-rc.1 or newer. Much of it has not yet been tried in
 > daily use: it was tested on test systems and against a simulated system, and some of the device forms, the
 > HmIP-WRCD's display and the counter helpers have not yet run on a real device. Feedback and bugs please as an
-> [issue at openccu-lite](https://github.com/openccu-lite/openccu-lite/issues).
+> [issue in the Logic repository](https://github.com/openccu-lite/lite-addon-logic/issues).
 
 Logic runs programs as known from the CCU (*If … Then … Else*) and holds system variables. It imports both from a CCU
 backup or from the ReGa database kept on the system after the switch. A program without a script then behaves as it
