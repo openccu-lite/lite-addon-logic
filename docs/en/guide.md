@@ -330,8 +330,10 @@ At the top you pick a program, show only the entries in which something ran, or 
 activities, pauses of the loop guard, missed times), and search by program, trigger or activity. The same history, for
 one program only, is at the end of the program's view.
 
-The addon remembers the last 200 entries per program and 5000 in all; they survive a restart of the addon and of the
-system. They are kept beside the addon's state, not with the program files.
+The addon remembers the last 5000 entries of all programs together; they survive a restart of the addon and of the
+system, and are kept beside the addon's state, not with the program files. While it runs, the addon also keeps every
+program's own last 20 entries, however much the other programs have run since - a program that runs once a day still
+shows its last runs.
 
 #### <a id="trace-not-triggered"></a>Not triggered
 The most frequent question is "why did it not run?". Pick a program on the History tab (or open the program): between
@@ -1622,12 +1624,19 @@ names of variables and programs that are gone are removed again - also of those 
 running, a restored folder or a file deleted by hand for instance. When a
 variable or a program is added or removed, the interface reports it like a device that was paired or deleted.
 
+The field `FLAGS` of the channel `:1` says what is set as **visible** and **internal** on the addon's page, with
+the values Homematic has for channels: 1 for visible, 2 for internal, 3 for both, 0 for neither. A user interface
+can decide by it what to show; the system's Control page leaves what is not visible out of its list of unassigned
+channels (a checkbox shows it) and shows it where it is assigned to a room or a function.
+
 ### <a id="interface-variable"></a>Datapoints of a system variable
 | Datapoint | Type | Meaning |
 | --- | --- | --- |
 | `VALUE` | by the variable | the value; read, write, an event at every write |
 
-- **Boolean** and **alarm:** `BOOL`.
+- **Boolean** and **alarm:** `BOOL`. When the variable has texts of its own for false and true, they are in
+  `VALUE_LIST`: the text for false first, then the one for true (empty where none is given). The value stays
+  `true` or `false`.
 - **Number:** `FLOAT` with the variable's unit, minimum and maximum.
 - **Value list:** `ENUM` - the value is the entry's **number** (0 for the first), the entries are in `VALUE_LIST`.
   A write also takes the entry's text.
@@ -1656,7 +1665,8 @@ messages), `var-service-messages` (the number of service messages), `var-duty-cy
 | `RUN_THEN` | `ACTION` | runs the first *Then* without looking at the conditions (the CCU's "Start") |
 | `LAST_RUN` | `INTEGER` | an event at every run: the number of the block that ran (1 for the first; 0 for *Else* or nothing) |
 
-`RUN` and `RUN_THEN` are taken only by a program that is **operable**.
+`RUN` and `RUN_THEN` are taken only by a program that is **operable**. For any other, the description of the two
+datapoints already says that they cannot be written (`OPERATIONS` 0).
 
 ### <a id="interface-notes"></a>Notes for your own software
 - The interface speaks XML-RPC as rfd and HmIPServer do: `init`, `listDevices`, `getDeviceDescription`,
@@ -1665,4 +1675,6 @@ messages), `var-service-messages` (the number of service messages), `var-duty-cy
 - Nothing radio-specific exists: no service messages, no direct links, no `MASTER` parameters.
 - A device's `FIRMWARE` field is a fingerprint of its datapoints' description. Software that keeps descriptions
   per device type and firmware thus has the right one for every shape - a number with other limits, a list with
-  other entries. When a variable's shape changes, its device is reported as deleted and new.
+  other entries, other texts for true and false. Visible, internal and operable are part of the shape too. When
+  the shape of a variable or a program changes, its device is reported as deleted and new - also to software that
+  registers again after an update of the addon and still keeps the device with the old firmware.

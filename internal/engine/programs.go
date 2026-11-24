@@ -25,6 +25,8 @@ type progState struct {
 	// lines are the condition lines, flattened in file order
 	lines []*lineState
 	runs  []*Run
+	// lastRun is the last entry in which a block ran
+	lastRun *Run
 	// recent are the times of the last runs, for the loop guard; pausedUntil is its pause
 	recent      []time.Time
 	pausedUntil time.Time
@@ -92,7 +94,7 @@ func (e *Engine) SetPrograms(programs map[string]*model.Program) {
 		old := e.progs[k]
 		ps := &progState{def: def}
 		if old != nil {
-			ps.runs, ps.recent, ps.pausedUntil, ps.failures, ps.lastFailure = old.runs, old.recent, old.pausedUntil, old.failures, old.lastFailure
+			ps.runs, ps.lastRun, ps.recent, ps.pausedUntil, ps.failures, ps.lastFailure = old.runs, old.lastRun, old.recent, old.pausedUntil, old.failures, old.lastFailure
 		}
 		def.Lines(func(rule int, l *model.Line) {
 			ps.lines = append(ps.lines, &lineState{def: l, rule: rule, truth: truthUnknown})
@@ -271,12 +273,9 @@ func (e *Engine) programInfo(key string, ps *progState) ProgramInfo {
 	if ps.pausedUntil.After(e.o.Clock.Now()) {
 		in.PausedUntil = ps.pausedUntil
 	}
-	for i := len(ps.runs) - 1; i >= 0; i-- {
-		if !ps.runs[i].None && !ps.runs[i].Delayed {
-			r := copyRun(ps.runs[i])
-			in.LastRun = &r
-			break
-		}
+	if ps.lastRun != nil {
+		r := copyRun(ps.lastRun)
+		in.LastRun = &r
 	}
 	return in
 }
@@ -544,6 +543,7 @@ func (e *Engine) execute(key string, ps *progState, c cause, mode string) {
 	if block >= 0 {
 		r := &ps.def.Rules[block]
 		run.None = false
+		ps.lastRun = run
 		run.Block = block + 1
 		if r.Else {
 			run.Block = 0

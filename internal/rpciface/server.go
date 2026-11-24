@@ -352,13 +352,15 @@ func (s *Server) greet(sub *subscriber) {
 	s.mu.Lock()
 	devices := sorted(s.devices)
 	s.mu.Unlock()
-	known := map[string]string{} // address -> the parent's firmware is not told; VERSION is
+	// address -> the FIRMWARE the client keeps for it ("" for a channel, or a client that keeps none)
+	known := map[string]string{}
 	if res, err := s.call(sub, "listDevices", sub.id); err == nil {
 		if list, ok := res.([]any); ok {
 			for _, e := range list {
 				if m, ok := e.(map[string]any); ok {
 					if a, ok := m["ADDRESS"].(string); ok {
-						known[a] = a
+						fw, _ := m["FIRMWARE"].(string)
+						known[a] = fw
 					}
 				}
 			}
@@ -366,6 +368,7 @@ func (s *Server) greet(sub *subscriber) {
 	}
 	ours := map[string]bool{}
 	var come []any
+	var changed []any
 	for _, d := range devices {
 		lacks := false
 		for _, a := range append([]string{d.address}, d.channels()...) {
@@ -374,11 +377,18 @@ func (s *Server) greet(sub *subscriber) {
 				lacks = true
 			}
 		}
+		// a device the client keeps with another FIRMWARE has another shape since the client last
+		// heard of it (an update of the addon changed its description): it goes and comes, as sync
+		// reports a change while the interface runs
+		if fw := known[d.address]; !lacks && fw != "" && fw != d.firmware {
+			changed = append(changed, d.address, d.address+":0", d.address+":1")
+			lacks = true
+		}
 		if lacks {
 			come = append(come, d.descriptions()...)
 		}
 	}
-	var gone []any
+	gone := changed
 	for a := range known {
 		if !ours[a] {
 			gone = append(gone, a)
@@ -794,6 +804,9 @@ func (s *Server) write(d *device, name string, value any) *Fault {
 	if p == nil {
 		return fault(FaultUnknownParam, "%s has no datapoint %s", d.address, name)
 	}
+	if d.variable == nil && p.typ == "ACTION" && !d.operable {
+		return fault(FaultNotSupported, "%s is not operable: it cannot be run from outside", d.address)
+	}
 	if p.ops&opWrite == 0 {
 		return fault(FaultNotSupported, "%s of %s cannot be written", name, d.address)
 	}
@@ -814,9 +827,6 @@ func (s *Server) write(d *device, name string, value any) *Fault {
 		}
 		err = s.o.Backend.SetActive(d.key, b)
 	default:
-		if !d.operable {
-			return fault(FaultNotSupported, "%s is not operable: it cannot be run from outside", d.address)
-		}
 		err = s.o.Backend.Run(d.key, name == "RUN_THEN")
 	}
 	if err == nil {

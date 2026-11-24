@@ -34,6 +34,12 @@ const (
 	prefixPrg    = "prg-"
 )
 
+// Flags of a channel, as Homematic's device descriptions have them.
+const (
+	flagVisible  = 1
+	flagInternal = 2
+)
+
 // Operations of a datapoint.
 const (
 	opRead  = 1
@@ -47,6 +53,9 @@ type Program struct {
 	Name     string
 	Active   bool
 	Operable bool
+	// Visible and Internal are the CCU's "sichtbar" and "systemintern".
+	Visible  bool
+	Internal bool
 	// LastRun is the block that ran last: 1 the first rule, 2 the second ..., 0 SONST or nothing yet.
 	LastRun int
 }
@@ -97,6 +106,9 @@ type device struct {
 	variable *model.Variable // nil for a program
 	readOnly bool
 	operable bool
+	// visible and internal are the object's flags; the value channel's FLAGS carry them.
+	visible  bool
+	internal bool
 }
 
 func (d *device) param(name string) *param {
@@ -127,7 +139,7 @@ func limit(p *float64, fallback float64) float64 {
 }
 
 func variableDevice(v *model.Variable) *device {
-	d := &device{address: prefixVar + v.Key, typ: TypeVariable, key: v.Key, name: v.Name, variable: v, readOnly: engine.IsSystemValue(v.Key) || v.Computed != nil || (v.Helper != nil && v.Helper.Role != model.RoleTotal)}
+	d := &device{address: prefixVar + v.Key, typ: TypeVariable, key: v.Key, name: v.Name, variable: v, visible: v.Visible, internal: v.Internal, readOnly: engine.IsSystemValue(v.Key) || v.Computed != nil || (v.Helper != nil && v.Helper.Role != model.RoleTotal)}
 	ops := opRead | opWrite | opEvent
 	if d.readOnly {
 		ops = opRead | opEvent
@@ -136,6 +148,11 @@ func variableDevice(v *model.Variable) *device {
 	switch v.Type {
 	case model.VarBool, model.VarAlarm:
 		value.typ, value.min, value.max, value.def = "BOOL", false, true, false
+		// the texts of false and true, where the variable has its own: a list of two, the type
+		// stays BOOL and the value a boolean
+		if l := v.Labels; l != nil && (l.False != "" || l.True != "") {
+			value.list = []string{l.False, l.True}
+		}
 	case model.VarNumber:
 		value.typ, value.unit = "FLOAT", v.Unit
 		value.min, value.max = limit(v.Min, -math.MaxFloat32), limit(v.Max, math.MaxFloat32)
@@ -159,11 +176,16 @@ func variableDevice(v *model.Variable) *device {
 }
 
 func programDevice(p Program) *device {
-	d := &device{address: prefixPrg + p.Key, typ: TypeProgram, key: p.Key, name: p.Name, operable: p.Operable}
+	d := &device{address: prefixPrg + p.Key, typ: TypeProgram, key: p.Key, name: p.Name, operable: p.Operable, visible: p.Visible, internal: p.Internal}
+	// a program that is not operable takes no RUN: its description says so (no operation at all)
+	run := 0
+	if p.Operable {
+		run = opWrite
+	}
 	d.params = []param{
 		{name: "ACTIVE", typ: "BOOL", ops: opRead | opWrite | opEvent, min: false, max: true, def: false},
-		{name: "RUN", typ: "ACTION", ops: opWrite, min: false, max: true, def: false, order: 1},
-		{name: "RUN_THEN", typ: "ACTION", ops: opWrite, min: false, max: true, def: false, order: 2},
+		{name: "RUN", typ: "ACTION", ops: run, min: false, max: true, def: false, order: 1},
+		{name: "RUN_THEN", typ: "ACTION", ops: run, min: false, max: true, def: false, order: 2},
 		{name: "LAST_RUN", typ: "INTEGER", ops: opRead | opEvent, min: 0, max: math.MaxInt32, def: 0, order: 3},
 	}
 	d.fingerprint()
@@ -173,13 +195,27 @@ func programDevice(p Program) *device {
 // fingerprint makes the device's FIRMWARE out of its datapoints' descriptions. Software that
 // keeps paramset descriptions per device type and firmware (the system's own cache does) then
 // keeps one per shape - a number with other limits, a list with other entries - and asks again
-// when a variable's definition changes.
+// when a variable's definition changes. The value channel's flags are part of it: they are in
+// the channel's description, which the same software keeps too.
 func (d *device) fingerprint() {
 	h := fnv.New32a()
+	fmt.Fprintf(h, "flags %d\n", d.flags())
 	for _, p := range d.params {
 		fmt.Fprintf(h, "%s|%s|%d|%v|%v|%v|%s|%s\n", p.name, p.typ, p.ops, p.min, p.max, p.def, p.unit, strings.Join(p.list, ";"))
 	}
 	d.firmware = "1." + strconv.FormatUint(uint64(h.Sum32()), 10)
+}
+
+// flags are the value channel's FLAGS: visible and internal, as the object says them.
+func (d *device) flags() int {
+	f := 0
+	if d.visible {
+		f |= flagVisible
+	}
+	if d.internal {
+		f |= flagInternal
+	}
+	return f
 }
 
 func (d *device) channels() []string { return []string{d.address + ":0", d.address + ":1"} }
@@ -188,12 +224,12 @@ func (d *device) channels() []string { return []string{d.address + ":0", d.addre
 func (d *device) descriptions() []any {
 	dev := map[string]any{"ADDRESS": d.address, "TYPE": d.typ, "PARENT": "", "CHILDREN": d.channels(), "PARAMSETS": []string{"MASTER"},
 		"FIRMWARE": d.firmware, "VERSION": 1, "FLAGS": 1, "INTERFACE": Interface, "RF_ADDRESS": 0, "ROAMING": 0, "RX_MODE": 0}
-	channel := func(index int, typ string) map[string]any {
+	channel := func(index int, typ string, flags int) map[string]any {
 		return map[string]any{"ADDRESS": d.address + ":" + strconv.Itoa(index), "TYPE": typ, "PARENT": d.address, "PARENT_TYPE": d.typ, "INDEX": index,
-			"PARAMSETS": []string{"MASTER", "VALUES"}, "VERSION": 1, "FLAGS": 1, "DIRECTION": 0, "AES_ACTIVE": 0,
+			"PARAMSETS": []string{"MASTER", "VALUES"}, "VERSION": 1, "FLAGS": flags, "DIRECTION": 0, "AES_ACTIVE": 0,
 			"LINK_SOURCE_ROLES": "", "LINK_TARGET_ROLES": ""}
 	}
-	return []any{dev, channel(0, "MAINTENANCE"), channel(1, d.channelType())}
+	return []any{dev, channel(0, "MAINTENANCE", flagVisible), channel(1, d.channelType(), d.flags())}
 }
 
 // build makes the devices of everything the backend has, by address.

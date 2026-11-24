@@ -364,8 +364,10 @@ Oben wählen Sie ein Programm, zeigen nur Einträge, bei denen etwas lief, oder 
 übersprungene Aktivitäten, Pausen des Schleifenschutzes, verpasste Zeiten) und suchen nach Programm, Auslöser oder
 Aktivität. Derselbe Verlauf, nur für ein Programm, steht am Ende der Ansicht des Programms.
 
-Das Addon merkt sich die letzten 200 Einträge je Programm und 5000 insgesamt; sie überstehen einen Neustart des Addons
-und des Systems. Sie liegen neben dem Zustand des Addons, nicht bei den Programmdateien.
+Das Addon merkt sich die letzten 5000 Einträge aller Programme zusammen; sie überstehen einen Neustart des Addons und
+des Systems und liegen neben dem Zustand des Addons, nicht bei den Programmdateien. Solange es läuft, behält das Addon
+außerdem von jedem Programm dessen letzte 20 Einträge, gleich wie oft die anderen Programme seitdem gelaufen sind – ein
+Programm, das einmal am Tag läuft, zeigt seine letzten Läufe weiterhin.
 
 #### <a id="trace-not-triggered"></a>Nicht ausgelöst
 Die häufigste Frage ist „warum lief es nicht?“. Wählen Sie im Reiter Verlauf ein Programm (oder öffnen Sie das
@@ -1724,12 +1726,20 @@ gelöschte Datei.
 Kommt eine Variable oder ein Programm hinzu oder fällt weg, meldet die Schnittstelle das wie ein angelerntes oder
 gelöschtes Gerät.
 
+Das Feld `FLAGS` des Kanals `:1` sagt, was auf der Seite des Addons als **sichtbar** und **systemintern**
+eingestellt ist, mit den Werten, die Homematic für Kanäle kennt: 1 für sichtbar, 2 für systemintern, 3 für beides,
+0 für keines. Eine Oberfläche kann danach entscheiden, was sie zeigt; die Bedienung des Systems lässt Unsichtbares
+aus ihrer Liste der nicht zugeordneten Kanäle weg (ein Häkchen zeigt es) und zeigt es dort, wo es einem Raum oder
+Gewerk zugeordnet ist.
+
 ### <a id="interface-variable"></a>Datenpunkte einer Systemvariablen
 | Datenpunkt | Typ | Bedeutung |
 | --- | --- | --- |
 | `VALUE` | je nach Variable | der Wert; lesen, schreiben, Ereignis bei jedem Schreiben |
 
-- **Logikwert** und **Alarm:** `BOOL`.
+- **Logikwert** und **Alarm:** `BOOL`. Hat die Variable eigene Texte für falsch und wahr, stehen sie in
+  `VALUE_LIST`: zuerst der Text für falsch, dann der für wahr (leer, wo keiner angegeben ist). Der Wert bleibt
+  `true` oder `false`.
 - **Zahl:** `FLOAT` mit Einheit, Minimum und Maximum der Variablen.
 - **Werteliste:** `ENUM` – der Wert ist die **Nummer** des Eintrags (0 für den ersten), die Einträge stehen in
   `VALUE_LIST`. Beim Schreiben wird auch der Text des Eintrags angenommen.
@@ -1758,7 +1768,8 @@ Alarmmeldungen), `var-service-messages` (Anzahl der Servicemeldungen), `var-duty
 | `RUN_THEN` | `ACTION` | führt das erste *Dann* aus, ohne die Bedingungen zu prüfen (der „Start“ der CCU) |
 | `LAST_RUN` | `INTEGER` | Ereignis bei jedem Lauf: die Nummer des Blocks, der lief (1 für den ersten; 0 für *Sonst* oder nichts) |
 
-`RUN` und `RUN_THEN` nimmt nur ein Programm an, das **bedienbar** ist.
+`RUN` und `RUN_THEN` nimmt nur ein Programm an, das **bedienbar** ist. Bei einem anderen sagt schon die
+Beschreibung der beiden Datenpunkte, dass man sie nicht schreiben kann (`OPERATIONS` 0).
 
 ### <a id="interface-notes"></a>Hinweise für eigene Software
 - Die Schnittstelle spricht XML-RPC wie rfd und HmIPServer: `init`, `listDevices`, `getDeviceDescription`,
@@ -1767,5 +1778,7 @@ Alarmmeldungen), `var-service-messages` (Anzahl der Servicemeldungen), `var-duty
 - Funkspezifisches gibt es nicht: keine Servicemeldungen, keine Direktverknüpfungen, keine `MASTER`-Parameter.
 - Das Feld `FIRMWARE` eines Geräts ist ein Kennwert seiner Datenpunkt-Beschreibung. Software, die
   Beschreibungen je Gerätetyp und Firmware zwischenspeichert, hat so für jede Form – eine Zahl mit anderen Grenzen,
-  eine Liste mit anderen Einträgen – die richtige. Ändert sich die Form einer Variablen, wird ihr Gerät als
-  gelöscht und neu gemeldet.
+  eine Liste mit anderen Einträgen, andere Texte für wahr und falsch – die richtige. Auch sichtbar,
+  systemintern und bedienbar gehören zur Form. Ändert sich die Form einer Variablen oder eines Programms, wird
+  das Gerät als gelöscht und neu gemeldet - auch einer Software, die sich nach einem Update des Addons wieder
+  anmeldet und das Gerät mit der alten Firmware kennt.

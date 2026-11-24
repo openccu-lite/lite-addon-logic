@@ -2,6 +2,7 @@ package engine
 
 import (
 	"errors"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -316,7 +317,7 @@ func TestTraceRingsAndImport(t *testing.T) {
 		r.clock.Advance(time.Second)
 	}
 	all := r.e.Trace(0)
-	if len(all) < TraceKept || len(all) > TraceKept+TraceKept/10 || len(r.e.Runs("p")) != RunsKept {
+	if len(all) < TraceKept || len(all) > TraceKept+TraceKept/10 || len(r.e.Runs("p")) != len(all) {
 		t.Fatalf("%d in the global log, %d with the program", len(all), len(r.e.Runs("p")))
 	}
 	// the step of an entry the log dropped is not found any more: ending its delay is no error
@@ -332,7 +333,7 @@ func TestTraceRingsAndImport(t *testing.T) {
 	extra := append(append([]Run{}, all...), Run{Seq: 3, Program: "p"}, Run{Seq: all[len(all)-1].Seq + 1, Program: "gone", Time: r.clock.Now()})
 	r2.e.ImportTrace(extra)
 	back := r2.e.Trace(0)
-	if len(back) != TraceKept-1 || back[len(back)-1].Program != "gone" || len(r2.e.Runs("p")) != RunsKept {
+	if len(back) != TraceKept-1 || back[len(back)-1].Program != "gone" || len(r2.e.Runs("p")) != len(back)-1 || len(r2.e.progs["p"].runs) != RunsKept {
 		t.Fatalf("after the import: %d entries, the last %+v, %d with the program", len(back), back[len(back)-1], len(r2.e.Runs("p")))
 	}
 	r2.set("y", 2, FromUser)
@@ -369,5 +370,85 @@ func TestTraceRingsAndImport(t *testing.T) {
 	r3.e.Import(st)
 	if got := r3.texts("p"); !strings.Contains(got, "a delayed activity of block 1 is due") || !strings.Contains(got, "1: variable out: dropped, it was due at") {
 		t.Errorf("the dropped delay:\n%s", got)
+	}
+}
+
+// What a program shows of its runs: its entries of the global log and its own last ones - a
+// program that runs seldom keeps its last runs however much the others fill the global log,
+// and no program holds more than its own few beyond that log.
+func TestRunsOfAProgram(t *testing.T) {
+	r := newPrig(t)
+	onY := "rules:\n  - when:\n      all:\n        - all:\n            - variable: y\n              op: ge\n              value: 0\n              trigger: update\n    then: []\n"
+	r.add("busy", onY)
+	r.add("rare", onX("              op: gt\n              value: 10\n", "change"))
+	seqs := func(runs []Run) (out []uint64) {
+		for _, run := range runs {
+			out = append(out, run.Seq)
+		}
+		return out
+	}
+	// the rare program: a run, notes that it was not triggered, another run - five entries
+	r.set("x", 11, FromUser)
+	r.set("x", 12, FromUser) // not triggered: no change of the truth
+	r.set("x", 13, FromUser) // (the same note, counted)
+	r.set("x", 1, FromUser)
+	r.set("x", 2, FromUser)
+	r.set("x", 20, FromUser)
+	rare := r.e.Runs("rare")
+	if len(rare) != 5 || !rare[1].Untriggered || rare[1].Count != 2 || rare[2].Block != 0 || !rare[3].Untriggered || rare[4].Block != 1 {
+		t.Fatalf("the rare program: %v", seqs(rare))
+	}
+	for i := 1; i < len(rare); i++ {
+		if rare[i].Seq <= rare[i-1].Seq {
+			t.Fatalf("not in order: %v", seqs(rare))
+		}
+	}
+	// the busy one fills the global log more than once
+	for i := 0; i < 2*TraceKept; i++ {
+		r.set("y", 1, FromUser)
+		r.clock.Advance(time.Second)
+	}
+	all := r.e.Trace(0)
+	if all[0].Program != "busy" || all[0].Seq <= rare[4].Seq {
+		t.Fatalf("the global log still begins with %+v", all[0])
+	}
+	if got := r.e.Runs("rare"); !reflect.DeepEqual(seqs(got), seqs(rare)) {
+		t.Errorf("the rare program lost entries: %v, had %v", seqs(got), seqs(rare))
+	}
+	if in, _ := r.e.Program("rare"); in.LastRun == nil || in.LastRun.Seq != rare[4].Seq {
+		t.Errorf("the rare program's last run: %+v", in.LastRun)
+	}
+	if got := r.e.Runs("busy"); len(got) != len(all) || got[0].Seq != all[0].Seq {
+		t.Errorf("the busy program shows %d entries, the global log has %d", len(got), len(all))
+	}
+	r.e.mu.Lock()
+	own := len(r.e.progs["busy"].runs)
+	r.e.mu.Unlock()
+	if own < RunsKept || own > RunsKept+RunsKept/2 {
+		t.Errorf("the busy program holds %d entries of its own", own)
+	}
+	// a page of a program's entries, newest first, across both
+	page, more := r.e.TracePage("rare", 0, 2)
+	if len(page) != 2 || !more || page[0].Seq != rare[4].Seq || page[1].Seq != rare[3].Seq {
+		t.Errorf("the first page: %v %t", seqs(page), more)
+	}
+	page, more = r.e.TracePage("rare", page[1].Seq, 10)
+	if len(page) != 3 || more || page[2].Seq != rare[0].Seq {
+		t.Errorf("the second page: %v %t", seqs(page), more)
+	}
+	// how many a program keeps of its own is an option
+	e := New(Options{Clock: r.clock, RunsKept: 3})
+	e.SetVariables(r.e.set.Variables)
+	e.SetPrograms(r.progs)
+	for i := 0; i < TraceKept+TraceKept/10+10; i++ {
+		_ = e.SetVariable("y", 1, FromUser)
+		r.clock.Advance(time.Second)
+		if i < 10 {
+			_ = e.SetVariable("x", 20+10*(i%2), FromUser)
+			_ = e.SetVariable("x", 1, FromUser)
+		}
+	}
+	if got := e.Runs("rare"); len(got) != 3 {
+		t.Errorf("with three kept the rare program has %d entries", len(got))
 	}
 }

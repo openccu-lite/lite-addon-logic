@@ -2,9 +2,11 @@
 #
 #   update_script of lite-addon-logic (MIT): the CCU addon handbook's steps (chapter 02), for
 #   openccu-lite only. The system unpacks the archive below /usr/local/tmp, cd's into it and runs
-#   ./update_script. Exit 10 = fresh install, 0 = update. The manifest openccu-lite.json beside
-#   this script is read by the system before this script runs; the unit, the proxy rule and the
-#   menu entry are the system's.
+#   ./update_script. It exits 0, a fresh install too: exit 10 is the classic CCU's "reboot to
+#   finish", which openccu-lite does not need - it starts a new addon's unit itself - but would
+#   still offer a reboot for (B-9). The manifest openccu-lite.json beside this script is read by
+#   the system before this script runs; the unit, the proxy rule and the menu entry are the
+#   system's.
 #
 #   The addon's tree is logic/ next to this script: bin/logic (the daemon), app/ (the page, served
 #   by the daemon at /addons/logic/), www/ (the icons and the 503 page), rc.d (the service
@@ -21,7 +23,7 @@ ADDONS_DIR=/usr/local/addons
 ADDON_DIR=$ADDONS_DIR/$ADDON
 CONF_DIR=/usr/local/etc/config
 WWW_DIR=$CONF_DIR/addons/www/$ADDON
-EXITCODE=10
+UPDATE=0
 
 mount | grep /usr/local >/dev/null 2>&1 || mount /usr/local
 
@@ -31,7 +33,7 @@ mkdir -p $CONF_DIR/rc.d
 
 # an update: stop the running service through the previous version's script
 if [ -f $CONF_DIR/rc.d/$ADDON ]; then
-    EXITCODE=0
+    UPDATE=1
     $CONF_DIR/rc.d/$ADDON stop
 fi
 
@@ -62,8 +64,8 @@ ln -sf $ADDON_DIR/rc.d $CONF_DIR/rc.d/$ADDON
 sync
 
 # openccu-lite starts the unit itself after a fresh install; after an update it is started here
-if [ $EXITCODE -eq 0 ]; then
+if [ $UPDATE -eq 1 ]; then
     systemctl start addon-$ADDON.service 2>/dev/null || true
 fi
 
-exit $EXITCODE
+exit 0

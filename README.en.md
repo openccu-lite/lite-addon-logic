@@ -2,7 +2,7 @@
 
 **Programs and system variables for [openccu-lite](https://github.com/openccu-lite/openccu-lite)** · [Deutsch](README.md)
 
-> **First pre-release: 1.0.0-beta.0.** Needs openccu-lite 2.0.0-rc.1 or newer. Much of it has not yet been tried in
+> **Pre-release: 1.0.0-beta.1.** Needs openccu-lite 2.0.0-rc.1 or newer. Much of it has not yet been tried in
 > daily use: it was tested on test systems and against a simulated system, and some of the device forms, the
 > HmIP-WRCD's display and the counter helpers have not yet run on a real device. Feedback and bugs please as an
 > [issue in the Logic repository](https://github.com/openccu-lite/lite-addon-logic/issues).

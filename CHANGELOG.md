@@ -2,10 +2,31 @@
 
 ## [Unreleased]
 
+## [1.0.0-beta.1] - 2026-11-24
+
+The second pre-release, for openccu-lite 2.0.0-rc.1 and later; the system's tiles for programs and system variables
+under Control come with openccu-lite 2.0.0-rc.4. **The first start after this update reports every variable and
+program once as deleted and new** to software that follows the interface "Logic" (their description changed, see
+below) - in its logs that is no fault, and names, rooms and values stay.
+
+- **No reboot asked for after the first install:** installing the package no longer ends with "an addon asked for a
+  reboot to finish its installation" - the system starts Logic right away, and a reboot was never needed.
 - **Fewer writes to storage with logged variables:** the kept changes of logged variables are no longer part of the
   state file, which was written whole twice a minute and grew with them (megabytes with many logged variables). They
   have a file of their own (`state/log.jsonl`) that only gets the new changes; the changes kept so far are moved over
   at the first start.
+- **Less memory with many programs:** every program kept its last 200 entries of the run history in memory beside
+  the 5000 of all programs together - with 300 programs the daemon grew by tens of megabytes within hours. A program
+  now keeps its own last 20 beside the common 5000; what the History tab and a program's view show of the last hours
+  is the same. The daemon also collects unused memory earlier.
+- **The interface says more about variables and programs:** a boolean's own texts for false and true
+  (`VALUE_LIST`), *visible* and *internal* (the value channel's `FLAGS`), and a program that is not operable is
+  described without a writable `RUN`. The system's Control page uses it for its tiles of programs and system
+  variables. After the update every variable and program is reported once as deleted and new to software that follows
+  the interface.
+- **A client that registers again after an update learns of changed objects:** the interface told a client that
+  knew its devices nothing when their description had changed while it was away; it now reports such a device as
+  deleted and new, as it does while it runs.
 
 ## [1.0.0-beta.0] - 2026-11-22
 

@@ -358,8 +358,8 @@ func TestDevices(t *testing.T) {
 	if by["var-alarm-wasser:1"]["TYPE"] != "ALARM" || by["prg-markise:1"]["TYPE"] != "PROGRAM" || by["prg-markise"]["TYPE"] != TypeProgram {
 		t.Error("channel types")
 	}
-	// one description per shape: two booleans share a firmware, a list and a number have their own
-	if by["var-regen"]["FIRMWARE"] == by["var-modus"]["FIRMWARE"] || by["var-regen"]["FIRMWARE"] == by["var-temperatur"]["FIRMWARE"] || by["prg-markise"]["FIRMWARE"] != by["prg-intern"]["FIRMWARE"] {
+	// one description per shape: a list and a number have their own, and a program that is not operable
+	if by["var-regen"]["FIRMWARE"] == by["var-modus"]["FIRMWARE"] || by["var-regen"]["FIRMWARE"] == by["var-temperatur"]["FIRMWARE"] || by["prg-markise"]["FIRMWARE"] == by["prg-intern"]["FIRMWARE"] {
 		t.Error("firmware fingerprints")
 	}
 	if got := h.ok("getDeviceDescription", "var-regen:1"); !reflect.DeepEqual(got, by["var-regen:1"]) {
@@ -371,6 +371,76 @@ func TestDevices(t *testing.T) {
 	h.fault(FaultUnknownDevice, "getDeviceDescription", "var-nichts")
 	h.fault(FaultUnknownDevice, "getDeviceDescription", "var-regen:2")
 	h.fault(FaultInvalidRequest, "getDeviceDescription", 5)
+}
+
+// What Control's panels read (task 53): a boolean's texts, the flags, and whether a program runs.
+func TestTextsFlagsAndOperable(t *testing.T) {
+	b := &fake{
+		vars: []engine.VariableInfo{
+			{Def: &model.Variable{Key: "regen", Name: "Regen", Type: model.VarBool, Visible: true}, Value: false},
+			{Def: &model.Variable{Key: "anwesend", Name: "Anwesenheit", Type: model.VarBool, Visible: true, Labels: &model.Labels{False: "abwesend", True: "anwesend"}}, Value: true},
+			{Def: &model.Variable{Key: "halb", Name: "Halb", Type: model.VarAlarm, Visible: true, Internal: true, Labels: &model.Labels{True: "ja"}}, Value: false},
+			{Def: &model.Variable{Key: "leer", Name: "Leer", Type: model.VarBool, Visible: true, Labels: &model.Labels{}}, Value: false},
+			{Def: &model.Variable{Key: "versteckt", Name: "Versteckt", Type: model.VarBool}, Value: false},
+			{Def: &model.Variable{Key: "intern", Name: "Intern", Type: model.VarBool, Internal: true}, Value: false},
+		},
+		prgs: []Program{
+			{Key: "markise", Name: "Markise", Operable: true, Visible: true},
+			{Key: "fest", Name: "Fest", Visible: true},
+			{Key: "verborgen", Name: "Verborgen", Operable: true, Internal: true},
+		},
+	}
+	h := start(t, Options{Backend: b})
+	by := map[string]map[string]any{}
+	for _, x := range h.ok("listDevices").([]any) {
+		d := x.(map[string]any)
+		by[d["ADDRESS"].(string)] = d
+	}
+	// the value channel says visible (1) and internal (2); channel 0 is a plain visible one
+	for a, flags := range map[string]int{"var-regen:1": 1, "var-halb:1": 3, "var-versteckt:1": 0, "var-intern:1": 2, "prg-markise:1": 1, "prg-verborgen:1": 2,
+		"var-versteckt:0": 1, "prg-verborgen:0": 1} {
+		if by[a]["FLAGS"] != flags {
+			t.Errorf("FLAGS of %s: %v, want %d", a, by[a]["FLAGS"], flags)
+		}
+	}
+	// each of them is a shape of its own: labels that say nothing are none
+	fw := func(a string) any { return by[a]["FIRMWARE"] }
+	if fw("var-regen") != fw("var-leer") || fw("var-regen") == fw("var-anwesend") || fw("var-regen") == fw("var-versteckt") || fw("var-versteckt") == fw("var-intern") ||
+		fw("prg-markise") == fw("prg-fest") || fw("prg-markise") == fw("prg-verborgen") {
+		t.Error("firmware fingerprints")
+	}
+	desc := func(addr string) map[string]any {
+		return h.ok("getParamsetDescription", addr, "VALUES").(map[string]any)
+	}
+	// a boolean's own texts: false first, an empty one where only one is said; still a BOOL
+	v := desc("var-anwesend:1")["VALUE"].(map[string]any)
+	if v["TYPE"] != "BOOL" || !reflect.DeepEqual(v["VALUE_LIST"], []any{"abwesend", "anwesend"}) {
+		t.Errorf("bool with texts: %v", v)
+	}
+	if v = desc("var-halb:1")["VALUE"].(map[string]any); v["TYPE"] != "BOOL" || !reflect.DeepEqual(v["VALUE_LIST"], []any{"", "ja"}) {
+		t.Errorf("alarm with one text: %v", v)
+	}
+	for _, a := range []string{"var-regen:1", "var-leer:1"} {
+		if _, has := desc(a)["VALUE"].(map[string]any)["VALUE_LIST"]; has {
+			t.Errorf("%s: no texts are no list", a)
+		}
+	}
+	if got := h.ok("getValue", "var-anwesend:1", "VALUE"); got != true {
+		t.Errorf("a boolean with texts reads as a boolean: %v", got)
+	}
+	// a program takes RUN only when it is operable, and its description says so
+	for a, ops := range map[string]int{"prg-markise:1": 2, "prg-fest:1": 0} {
+		d := desc(a)
+		if d["RUN"].(map[string]any)["OPERATIONS"] != ops || d["RUN_THEN"].(map[string]any)["OPERATIONS"] != ops || d["ACTIVE"].(map[string]any)["OPERATIONS"] != 7 {
+			t.Errorf("operations of %s: %v", a, d)
+		}
+	}
+	if _, err := h.call("setValue", "prg-fest:1", "RUN_THEN", true); err == nil || !strings.Contains(err.Error(), "not operable") {
+		t.Errorf("the refusal says why: %v", err)
+	}
+	h.fault(FaultNotSupported, "setValue", "prg-fest:1", "RUN", true)
+	h.ok("setValue", "prg-fest:1", "ACTIVE", true)
+	h.ok("setValue", "prg-markise:1", "RUN", true)
 }
 
 func TestParamsetDescriptions(t *testing.T) {
@@ -647,6 +717,24 @@ func TestSubscribers(t *testing.T) {
 	if !reflect.DeepEqual(h.s.Subscribers(), []string{c.srv.URL}) {
 		t.Errorf("subscribers: %v", h.s.Subscribers())
 	}
+	// a client that keeps a device with another FIRMWARE (the addon was updated and the shape changed
+	// since it last heard): the device goes and comes; one with the same FIRMWARE stays as it is
+	e := newClient(t)
+	all := h.ok("listDevices").([]any)
+	for _, x := range all {
+		m := x.(map[string]any)
+		switch m["ADDRESS"] {
+		case "var-modus":
+			m["FIRMWARE"] = "1.0"
+		}
+	}
+	e.knows = all
+	h.ok("init", e.srv.URL, "older")
+	e.wait(3)
+	if calls, _ := e.take(); len(calls) != 3 || calls[1] != "deleteDevices older var-modus,var-modus:0,var-modus:1" || calls[2] != "newDevices older var-modus,var-modus:0,var-modus:1" {
+		t.Errorf("a client with an old FIRMWARE: %v", calls)
+	}
+	h.ok("init", e.srv.URL, "")
 	// a second client that does not know listDevices: everything is announced; the xmlrpc:// spelling
 	d := newClient(t)
 	h.ok("init", "xmlrpc://"+strings.TrimPrefix(d.srv.URL, "http://"), "hm2mqtt")

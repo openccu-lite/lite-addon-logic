@@ -42,7 +42,7 @@ func (b ServiceBackend) Programs() []Program {
 	eng := b.Svc.Engine()
 	var out []Program
 	for _, p := range b.Svc.Programs() {
-		out = append(out, Program{Key: p.Program.Key, Name: p.Program.Name, Active: p.Program.Active, Operable: p.Program.Operable, LastRun: eng.LastRun(p.Program.Key)})
+		out = append(out, Program{Key: p.Program.Key, Name: p.Program.Name, Active: p.Program.Active, Operable: p.Program.Operable, Visible: p.Program.Visible, Internal: p.Program.Internal, LastRun: eng.LastRun(p.Program.Key)})
 	}
 	return out
 }

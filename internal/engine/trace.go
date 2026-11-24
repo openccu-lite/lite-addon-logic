@@ -9,11 +9,17 @@ import (
 )
 
 // The run trace: what every run of a program looked at and did, as data - the page says it in
-// the reader's language. Each program keeps its last RunsKept entries, the engine the last
-// TraceKept of all programs together (the global log); the daemon writes the global log to a
-// ring on disk beside the state file.
+// the reader's language. The engine keeps the last TraceKept entries of all programs together
+// (the global log; the daemon writes it to a ring on disk beside the state file), and every
+// program its own last RunsKept - so that a program which runs once a day still has its last
+// runs when the others have filled the global log many times over. What a program shows is
+// both together: its entries of the global log and its own last ones.
+//
+// The programs' own rings are small on purpose: they are what the entries cost in memory
+// beyond the global log - RunsKept entries times the number of programs. (With two hundred
+// each, three hundred programs held sixty thousand entries after some hours.)
 const (
-	RunsKept  = 200
+	RunsKept  = 20
 	TraceKept = 5000
 )
 
@@ -273,8 +279,8 @@ func (e *Engine) record(ps *progState, r *Run) {
 	e.seq++
 	r.Seq = e.seq
 	ps.runs = append(ps.runs, r)
-	if len(ps.runs) > RunsKept {
-		ps.runs = append([]*Run(nil), ps.runs[len(ps.runs)-RunsKept:]...)
+	if kept := e.o.RunsKept; len(ps.runs) > kept+kept/2 {
+		ps.runs = append([]*Run(nil), ps.runs[len(ps.runs)-kept:]...)
 	}
 	if r.Untriggered {
 		return
@@ -334,11 +340,37 @@ func (e *Engine) Runs(key string) []Run {
 	if ps == nil {
 		return nil
 	}
-	out := make([]Run, len(ps.runs))
-	for i, r := range ps.runs {
+	runs := e.runsOf(key, ps)
+	out := make([]Run, len(runs))
+	for i, r := range runs {
 		out[i] = copyRun(r)
 	}
 	return out
+}
+
+// runsOf answers what is remembered of a program, oldest first: its entries of the global log
+// and its own last ones (with the lock held).
+func (e *Engine) runsOf(key string, ps *progState) []*Run {
+	own := ps.runs
+	if kept := e.o.RunsKept; len(own) > kept {
+		own = own[len(own)-kept:]
+	}
+	out := make([]*Run, 0, len(own))
+	for _, r := range e.trace {
+		if r.Program != key {
+			continue
+		}
+		// the program's own entries before this one first: among them are those the global
+		// log does not have (the notes that it was not triggered) or has dropped
+		for len(own) > 0 && own[0].Seq < r.Seq {
+			out, own = append(out, own[0]), own[1:]
+		}
+		if len(own) > 0 && own[0].Seq == r.Seq {
+			own = own[1:]
+		}
+		out = append(out, r)
+	}
+	return append(out, own...)
 }
 
 // Trace answers the global log, oldest first: the entries of all programs with a number above
@@ -355,7 +387,7 @@ func (e *Engine) Trace(after uint64) []Run {
 }
 
 // ImportTrace takes the global log a ring on disk kept, oldest first: the engine goes on
-// counting after it, and every program that still exists gets its entries back. For a fresh
+// counting after it, and every program that still exists has its entries again. For a fresh
 // engine, before anything ran.
 func (e *Engine) ImportTrace(runs []Run) {
 	e.mu.Lock()
@@ -372,11 +404,14 @@ func (e *Engine) ImportTrace(runs []Run) {
 		e.trace = append(e.trace, r)
 		if ps := e.progs[r.Program]; ps != nil {
 			ps.runs = append(ps.runs, r)
+			if !r.None && !r.Delayed {
+				ps.lastRun = r
+			}
 		}
 	}
 	for _, ps := range e.progs {
-		if len(ps.runs) > RunsKept {
-			ps.runs = append([]*Run(nil), ps.runs[len(ps.runs)-RunsKept:]...)
+		if kept := e.o.RunsKept; len(ps.runs) > kept {
+			ps.runs = append([]*Run(nil), ps.runs[len(ps.runs)-kept:]...)
 		}
 	}
 }
@@ -394,7 +429,7 @@ func (e *Engine) TracePage(program string, before uint64, limit int) (runs []Run
 		if ps == nil {
 			return []Run{}, false
 		}
-		from = ps.runs
+		from = e.runsOf(program, ps)
 	}
 	end := len(from)
 	if before > 0 {

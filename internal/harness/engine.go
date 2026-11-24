@@ -152,7 +152,8 @@ func RunEngineRuns(sc *Scenario, im *Imported, rec *Recording) (Trace, map[strin
 		pos = schedule.Position{Lat: sc.Position.Lat, Lon: sc.Position.Lon, Known: true}
 	}
 	start0 := func() *engine.Engine {
-		e := engine.New(engine.Options{Clock: clock, Location: Zone, Position: pos, Notify: func(n engine.Notification) {
+		// (a scenario's account of a program is all of its entries, however many)
+		e := engine.New(engine.Options{Clock: clock, Location: Zone, Position: pos, RunsKept: 1 << 20, Notify: func(n engine.Notification) {
 			if m, ok := im.Markers[n.Key]; ok && n.Kind == "variable" {
 				trace = append(trace, Entry{Time: clock.Now(), Mark: m})
 			}

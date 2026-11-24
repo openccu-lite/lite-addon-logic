@@ -221,6 +221,12 @@ func TestScripts(t *testing.T) {
 			t.Errorf("%s is not a sh script", p)
 		}
 	}
+	// B-9: no reboot asked for - openccu-lite starts the new addon itself, and exit 10 made it
+	// offer a reboot nobody needed
+	us, _ := os.ReadFile("../../addon/update_script")
+	if !strings.HasSuffix(string(us), "\nexit 0\n") || regexp.MustCompile(`(?m)^\s*exit\s+[^0\s]`).Match(us) {
+		t.Error("update_script: it ends with exit 0 and never asks for a reboot")
+	}
 	rc, _ := os.ReadFile("../../addon/logic/rc.d")
 	if !strings.Contains(string(rc), "ADDON=logic\n") || !strings.Contains(string(rc), "Config-Url: /addons/$ADDON/") {
 		t.Error("rc.d: the addon id or the Config-Url")

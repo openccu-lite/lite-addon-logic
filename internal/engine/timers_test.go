@@ -102,7 +102,7 @@ func (r *trig) ran(key string) string {
 		out = append(out, run.Time.In(r.loc).Format(stamp)+" "+run.Trigger+" "+block)
 	}
 	r.e.mu.Lock()
-	r.e.progs[key].runs = nil
+	r.e.forget(key)
 	r.e.mu.Unlock()
 	return strings.Join(out, "\n")
 }

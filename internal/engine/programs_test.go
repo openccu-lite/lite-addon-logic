@@ -81,9 +81,22 @@ func (r *prig) blocks(key string) string {
 	}
 	// forget them
 	r.e.mu.Lock()
-	r.e.progs[key].runs = nil
+	r.e.forget(key)
 	r.e.mu.Unlock()
 	return strings.Join(out, " ")
+}
+
+// forget drops what is remembered of a program's runs (with the lock held): the tests look
+// at what ran since they last looked.
+func (e *Engine) forget(key string) {
+	e.progs[key].runs, e.progs[key].lastRun = nil, nil
+	kept := e.trace[:0:0]
+	for _, r := range e.trace {
+		if r.Program != key {
+			kept = append(kept, r)
+		}
+	}
+	e.trace = kept
 }
 
 func (r *prig) expect(key, want string) {
@@ -888,7 +901,7 @@ func TestLoopGuard(t *testing.T) {
 	if in, _ = r.e.Program("ok"); !in.PausedUntil.IsZero() {
 		t.Error("a program that runs once a second was paused")
 	}
-	if len(r.e.Runs("ok")) != RunsKept {
+	if len(r.e.Runs("ok")) != RunsKept+10 {
 		t.Errorf("%d runs kept", len(r.e.Runs("ok")))
 	}
 	// the thresholds are settings

@@ -46,6 +46,12 @@ func TestServiceBackend(t *testing.T) {
 		"var-duty-cycle,var-duty-cycle:0,var-duty-cycle:1,var-service-messages,var-service-messages:0,var-service-messages:1,var-sun-azimuth,var-sun-azimuth:0,var-sun-azimuth:1,var-sun-elevation,var-sun-elevation:0,var-sun-elevation:1,var-zahl,var-zahl:0,var-zahl:1" {
 		t.Fatalf("%v", calls)
 	}
+	// the program's and the variables' flags reach the value channel (visible; a system value is visible too)
+	for _, a := range []string{"prg-licht:1", "var-zahl:1", "var-duty-cycle:1"} {
+		if d := h.ok("getDeviceDescription", a).(map[string]any); d["FLAGS"] != 1 {
+			t.Errorf("FLAGS of %s: %v", a, d["FLAGS"])
+		}
+	}
 	// a write inside the limits is taken and comes back as an event; outside them it is refused
 	h.ok("setValue", "var-zahl:1", "VALUE", 7.5)
 	c.wait(1)

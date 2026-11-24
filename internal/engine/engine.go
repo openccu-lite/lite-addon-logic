@@ -132,6 +132,9 @@ type Options struct {
 	LoopRuns   int
 	LoopWindow time.Duration
 	LoopPause  time.Duration
+	// RunsKept is how many entries of the run trace every program keeps of its own, beside
+	// the global log (RunsKept, twenty, when zero).
+	RunsKept int
 	// Location is the time zone the time modules' clock times are in (the system's when nil);
 	// Position is where the sun rises and sets for the astro ones (SetPosition changes it).
 	Location *time.Location
@@ -248,6 +251,9 @@ func New(o Options) *Engine {
 	}
 	if o.LoopPause <= 0 {
 		o.LoopPause = time.Minute
+	}
+	if o.RunsKept <= 0 {
+		o.RunsKept = RunsKept
 	}
 	if o.ClockWait <= 0 {
 		o.ClockWait = 5 * time.Minute

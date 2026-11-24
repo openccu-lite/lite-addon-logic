@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"runtime/debug"
 	"strings"
 	"syscall"
 	"time"
@@ -86,9 +87,25 @@ func bootID() string {
 	return strings.TrimSpace(string(b))
 }
 
+// The daemon's memory on a small system: the Go runtime collects when the heap has doubled
+// since the last collection, so a process holds up to twice what it uses. Here a collection
+// comes when the heap has grown by half - measured on a Raspberry Pi 4 with 300 programs and
+// 800 variables under load: 17 MB held where it was 22, for a seventh more processor time.
+// (A memory limit close to what is in use was tried and is not set: the collector then runs
+// without end - four to six times the processor time. Handing free memory back every minute
+// changed nothing.) GOGC in the environment takes precedence, as for every Go program.
+const memoryGC = 50
+
+func tuneMemory() {
+	if os.Getenv("GOGC") == "" {
+		debug.SetGCPercent(memoryGC)
+	}
+}
+
 func run(o options) error {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
+	tuneMemory()
 	logf := func(format string, args ...any) { log.Printf("logic: "+format, args...) }
 
 	// the system: device writes go out through lite-rpc, the datapoints' values come in from its
