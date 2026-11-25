@@ -170,6 +170,25 @@ func TestTornIndexAndLeftovers(t *testing.T) {
 	if _, err := os.Stat(stale); err == nil {
 		t.Error("the unfinished object file is still there")
 	}
+	// gitfs puts them into the repository's folder (B-11)
+	stale = filepath.Join(dir, ".git", "tmp_obj_456")
+	_ = os.WriteFile(stale, []byte("x"), 0o644)
+	if _, err := Open(dir); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(stale); err == nil {
+		t.Error("the unfinished object file in the repository's folder is still there")
+	}
+	// and a commit leaves none behind anywhere
+	write(t, dir, "programs/a.yaml", "name: A3\n")
+	if _, err := r.Commit(nil, Author{}, "third"); err != nil {
+		t.Fatal(err)
+	}
+	for _, g := range []string{filepath.Join(pack, "tmp_*"), filepath.Join(dir, ".git", "tmp_*"), filepath.Join(dir, ".git", "ref-tmp-*")} {
+		if m, _ := filepath.Glob(g); len(m) != 0 {
+			t.Errorf("left behind: %v", m)
+		}
+	}
 }
 
 func TestOpenErrors(t *testing.T) {

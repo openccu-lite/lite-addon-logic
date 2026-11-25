@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+## [1.0.0-beta.2] - 2026-11-25
+
+The third pre-release, for openccu-lite 2.0.0-rc.1 and later. **The interface "Logic" listens on port 31310 now**
+(see below). An update straight from 1.0.0-beta.0 also brings 1.0.0-beta.1's changed descriptions: its first start
+then reports every variable and program once as deleted and new to software that follows the interface - no fault,
+names, rooms and values stay. An update from 1.0.0-beta.1 leaves the descriptions as they are.
+
+- **The interface "Logic" moves to port 31310** (it was 39310): that port lies in the range the system takes
+  ports for outgoing connections from, and while another program's connection held it, Logic did not start - after a
+  fresh install it failed for minutes. Software that reaches Logic through the system's programming interface
+  (lite-rpc) by its name notices nothing: the system lists the interface at its new port after the update. Only a
+  script that called 127.0.0.1:39310 directly needs the new port.
+- **A push of the history no longer fails now and then while a change is saved:** with a remote set, a push that
+  ran while the next change was written could end with "the remote did not answer as expected: ref file is empty"
+  or "… object not found" until the next push. The history's references are now written whole, and the temporary
+  files of new entries no longer lie where a push looks for the history's stored entries.
+
 ## [1.0.0-beta.1] - 2026-11-24
 
 The second pre-release, for openccu-lite 2.0.0-rc.1 and later; the system's tiles for programs and system variables

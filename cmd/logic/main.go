@@ -54,7 +54,7 @@ func main() {
 	flag.StringVar(&o.confDir, "conf-dir", "/usr/local/etc/config/addons/logic", "the data directory (tree/: programs and variables as files; state/: values; mode 0700)")
 	flag.StringVar(&o.id, "id", "logic", "the addon id (token file, base path)")
 	flag.IntVar(&o.port, "port", 8301, "the loopback port lighttpd proxies to")
-	flag.IntVar(&o.rpcPort, "rpc-port", 39310, "the loopback port of the interface process \"Logic\" (the manifest's runtime.rpc_interface)")
+	flag.IntVar(&o.rpcPort, "rpc-port", 31310, "the loopback port of the interface process \"Logic\" (the manifest's runtime.rpc_interface)")
 	flag.StringVar(&o.base, "system", "http://127.0.0.1", "openccu-lite's URL")
 	flag.StringVar(&o.basePath, "base-path", "", "the path the page is served at (/addons/<id> by default)")
 	flag.StringVar(&o.www, "www", "", "the built page (<addon-dir>/app by default)")

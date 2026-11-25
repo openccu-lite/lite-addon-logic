@@ -36,6 +36,7 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/format/index"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/storage/filesystem"
+	"github.com/openccu-lite/lite-addon-logic/internal/gitfs"
 )
 
 // Repo is the repository in a directory. Its methods may be called from several goroutines; one
@@ -104,10 +105,12 @@ func (r *Repo) now() time.Time {
 	return time.Now()
 }
 
-// sweep removes the temporary object files a failed commit leaves behind.
+// sweep removes the temporary object files a failed commit leaves behind: in the repository's
+// folder (gitfs puts them there) and, from versions before it, in objects/pack.
 func (r *Repo) sweep() {
 	matches, _ := filepath.Glob(filepath.Join(r.dir, ".git", "objects", "pack", "tmp_*"))
-	for _, m := range matches {
+	more, _ := filepath.Glob(filepath.Join(r.dir, ".git", "tmp_*"))
+	for _, m := range append(matches, more...) {
 		_ = os.Remove(m)
 	}
 }
@@ -119,7 +122,8 @@ func (r *Repo) open() (*git.Repository, error) {
 	if err != nil {
 		return nil, err
 	}
-	return git.Open(filesystem.NewStorage(dot, cache.NewObjectLRU(1*cache.MiByte)), wt)
+	// references written whole: a push reads the branch while a commit may move it (B-11)
+	return git.Open(filesystem.NewStorage(gitfs.New(dot), cache.NewObjectLRU(1*cache.MiByte)), wt)
 }
 
 // tracked is a file of a commit's tree: its blob and its mode.

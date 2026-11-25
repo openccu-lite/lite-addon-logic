@@ -220,7 +220,9 @@ func remoteError(err error) error {
 // A push and a fetch talk to another machine and may take as long as RemoteTimeout: they do
 // not hold the lock a commit and a look at the history wait for (one of the two runs at a
 // time, behind a lock of their own). The library's storage takes that - objects are written as
-// whole files, a reference under its lock file - the way two git programs share a repository.
+// whole files, and a reference is written to a file of its own and renamed into place (gitfs,
+// B-11: the library itself rewrites it in place, and a push then read it empty) - the way two
+// git programs share a repository.
 func (r *Repo) Push(rem Remote) (pushed bool, err error) {
 	r.net.Lock()
 	defer r.net.Unlock()

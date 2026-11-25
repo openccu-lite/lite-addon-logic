@@ -26,6 +26,7 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/transport"
 	"github.com/go-git/go-git/v5/plumbing/transport/server"
 	"github.com/go-git/go-git/v5/storage/filesystem"
+	"github.com/openccu-lite/lite-addon-logic/internal/gitfs"
 	"golang.org/x/crypto/ssh"
 )
 
@@ -47,7 +48,7 @@ type GitRemote struct {
 
 // NewGitRemote makes a host over a folder.
 func NewGitRemote(root string) *GitRemote {
-	return &GitRemote{Root: root, keys: map[string]bool{}, server: server.NewServer(server.NewFilesystemLoader(osfs.New(root)))}
+	return &GitRemote{Root: root, keys: map[string]bool{}, server: server.NewServer(server.NewFilesystemLoader(gitfs.New(osfs.New(root))))}
 }
 
 // Create makes an empty repository whose branch is "main".
@@ -63,7 +64,7 @@ func (g *GitRemote) Create(name string) error {
 // file with the text (removed when the text is empty), one new entry on top.
 func (g *GitRemote) Commit(name, path, text, message string) error {
 	dot := osfs.New(filepath.Join(g.Root, name))
-	repo, err := git.Open(filesystem.NewStorage(dot, cache.NewObjectLRUDefault()), memfs.New())
+	repo, err := git.Open(filesystem.NewStorage(gitfs.New(dot), cache.NewObjectLRUDefault()), memfs.New())
 	if err != nil {
 		return err
 	}

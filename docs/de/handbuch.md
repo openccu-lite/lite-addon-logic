@@ -1705,9 +1705,9 @@ dem System eine **Schnittstelle** wie die der Funkmodule: sie heißt `Logic`, un
 Programmierschnittstelle des Systems (lite-rpc) Geräte liest, schaltet und deren Ereignisse verfolgt, sieht Variablen
 und Programme als Geräte dieser Schnittstelle – Node-RED (RedMatic), hm2mqtt.js, Homematic Manager, eigene Skripte.
 
-Die Schnittstelle lauscht nur auf dem System selbst (127.0.0.1); von außen erreicht man sie über das System und mit
-dessen Zugriffsrechten: wer Geräte lesen darf, sieht die Werte, wer bedienen darf, setzt Variablen und startet
-Programme. Programme und Variablen **bearbeiten** kann man nur auf der Seite des Addons.
+Die Schnittstelle lauscht nur auf dem System selbst (127.0.0.1, Port 31310); von außen erreicht man sie über das
+System und mit dessen Zugriffsrechten: wer Geräte lesen darf, sieht die Werte, wer bedienen darf, setzt Variablen und
+startet Programme. Programme und Variablen **bearbeiten** kann man nur auf der Seite des Addons.
 
 ### <a id="interface-devices"></a>Geräte und Adressen
 Jede Systemvariable und jedes Programm ist ein Gerät. Die Adresse entsteht aus dem Schlüssel (dem Dateinamen) und
@@ -1776,6 +1776,10 @@ Beschreibung der beiden Datenpunkte, dass man sie nicht schreiben kann (`OPERATI
   `getParamsetDescription`, `getParamset`, `getValue`, `setValue`, `putParamset`, `ping`, `system.listMethods`,
   `system.multicall`; Ereignisse kommen als `system.multicall` mit `event`-Aufrufen.
 - Funkspezifisches gibt es nicht: keine Servicemeldungen, keine Direktverknüpfungen, keine `MASTER`-Parameter.
+- Sprechen Sie die Schnittstelle über lite-rpc mit ihrem Namen `Logic` an, nicht über ihren Port: das System liest
+  den Port aus dem Manifest des Addons und trägt die Schnittstelle in `InterfacesList.xml` ein. Bis 1.0.0-beta.1 war
+  es 39310; der liegt in dem Bereich, aus dem das System Ports für ausgehende Verbindungen nimmt – hielt eine
+  Verbindung eines anderen Programms ihn, startete Logic nicht.
 - Das Feld `FIRMWARE` eines Geräts ist ein Kennwert seiner Datenpunkt-Beschreibung. Software, die
   Beschreibungen je Gerätetyp und Firmware zwischenspeichert, hat so für jede Form – eine Zahl mit anderen Grenzen,
   eine Liste mit anderen Einträgen, andere Texte für wahr und falsch – die richtige. Auch sichtbar,

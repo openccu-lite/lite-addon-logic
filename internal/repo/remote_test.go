@@ -6,6 +6,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -391,5 +392,51 @@ func TestRemoteLongAndHostile(t *testing.T) {
 	}
 	if got := a.Dir(); got != a.dir || a.Time().IsZero() {
 		t.Error("Dir and Time")
+	}
+}
+
+// B-11: a push and a fetch do not wait for a commit (they hold a lock of their own), and the
+// library rewrote a reference in place - truncated, then written - so that a push reading the
+// branch while a commit moved it now and then found the file empty ("ref file is empty"). A
+// reference is now written to a file of its own and renamed over the old one: a push beside a
+// stream of commits always reads a whole reference.
+func TestPushBesideCommits(t *testing.T) {
+	_, rem := host(t)
+	r, _ := Open(t.TempDir())
+	put2(t, r, "programs/a.yaml", "name: A\n", "first")
+	full := filepath.Join(r.dir, "programs", "a.yaml")
+	done := make(chan error, 1)
+	go func() {
+		for i := 0; i < 150; i++ {
+			if err := os.WriteFile(full, []byte("name: A\nn: "+strconv.Itoa(i)+"\n"), 0o644); err != nil {
+				done <- err
+				return
+			}
+			if _, err := r.Commit([]string{"programs/a.yaml"}, Author{Name: "t"}, "next"); err != nil {
+				done <- err
+				return
+			}
+		}
+		done <- nil
+	}()
+	for {
+		select {
+		case err := <-done:
+			if err != nil {
+				t.Fatalf("the commits: %v", err)
+			}
+			return
+		default:
+		}
+		if _, err := r.Push(rem); err != nil && code(err) != "rejected" {
+			t.Errorf("a push beside the commits: %v", err)
+		}
+		if _, err := r.Fetch(rem); err != nil {
+			t.Errorf("a fetch beside the commits: %v", err)
+		}
+		if t.Failed() {
+			<-done
+			return
+		}
 	}
 }

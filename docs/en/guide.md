@@ -1605,8 +1605,8 @@ addon is an **interface** like those of the radio modules: its name is `Logic`, 
 switches devices and follows their events through the system's programming interface (lite-rpc) sees variables and
 programs as devices of this interface - Node-RED (RedMatic), hm2mqtt.js, Homematic Manager, your own scripts.
 
-The interface listens on the system itself only (127.0.0.1); from outside it is reached through the system and
-with its access rights: who may read devices sees the values, who may operate sets variables and runs programs.
+The interface listens on the system itself only (127.0.0.1, port 31310); from outside it is reached through the system
+and with its access rights: who may read devices sees the values, who may operate sets variables and runs programs.
 Programs and variables can be **edited** on the addon's page only.
 
 ### <a id="interface-devices"></a>Devices and addresses
@@ -1673,6 +1673,10 @@ datapoints already says that they cannot be written (`OPERATIONS` 0).
   `getParamsetDescription`, `getParamset`, `getValue`, `setValue`, `putParamset`, `ping`, `system.listMethods`,
   `system.multicall`; events arrive as a `system.multicall` of `event` calls.
 - Nothing radio-specific exists: no service messages, no direct links, no `MASTER` parameters.
+- Address the interface by its name `Logic` through lite-rpc, not by its port: the system reads the port from the
+  addon's manifest and lists the interface in `InterfacesList.xml`. Until 1.0.0-beta.1 it was 39310, which lies in
+  the range the system takes ports for outgoing connections from - another program's connection could hold it, and
+  Logic then did not start.
 - A device's `FIRMWARE` field is a fingerprint of its datapoints' description. Software that keeps descriptions
   per device type and firmware thus has the right one for every shape - a number with other limits, a list with
   other entries, other texts for true and false. Visible, internal and operable are part of the shape too. When

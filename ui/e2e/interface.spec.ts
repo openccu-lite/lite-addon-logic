@@ -1,9 +1,9 @@
 import {expect, test} from '@playwright/test';
 
 // The interface process "Logic" end to end: the daemon started by scripts/dev-serve.sh answers
-// XML-RPC on 127.0.0.1:39311 as rfd and hmipserver do, and writes its devices' names into the
+// XML-RPC on 127.0.0.1:31311 as rfd and hmipserver do, and writes its devices' names into the
 // (fake) system's metadata. What lite-rpc does with it on a real system is the lab check.
-const RPC = 'http://127.0.0.1:39311/';
+const RPC = 'http://127.0.0.1:31311/';
 const SYSTEM = 'http://127.0.0.1:18081';
 
 function call(method: string, ...params: string[]): string {

@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -136,6 +137,40 @@ func TestPorts(t *testing.T) {
 	}
 	if !strings.Contains(string(main), `"port", 8301,`) {
 		t.Error("cmd/logic: the default of -port is not the proxy rule's 8301")
+	}
+	// B-10: below Linux's ephemeral range (32768-60999), where any outgoing connection on the
+	// system may hold the port and the daemon then cannot listen
+	if ri.Port >= 32768 {
+		t.Errorf("rpc_interface.port %d lies in the ephemeral range; take one below 32768", ri.Port)
+	}
+	m, _, _, _ := load(t)
+	for _, lang := range []string{"de", "en"} {
+		if !strings.Contains(m.Runtime.Note[lang], "127.0.0.1:"+itoa(ri.Port)+")") {
+			t.Errorf("the %s note does not name 127.0.0.1:%d", lang, ri.Port)
+		}
+	}
+}
+
+// B-10: the ports the end-to-end tests and the development server use lie below the ephemeral
+// range too, so that a run on a busy machine does not find one taken by an outgoing connection.
+func TestDevPortsBelowEphemeralRange(t *testing.T) {
+	port := regexp.MustCompile(`PORT['"]?\s*[:=]\s*['"]?(\d{4,5})|127\.0\.0\.1:(\d{4,5})|\$\{\w+:-(\d{4,5})\}`)
+	for _, f := range []string{"../../ui/playwright.config.ts", "../../scripts/dev-serve.sh", "../../ui/e2e/interface.spec.ts"} {
+		b, err := os.ReadFile(f)
+		if err != nil {
+			t.Fatal(err)
+		}
+		found := 0
+		for _, m := range port.FindAllStringSubmatch(string(b), -1) {
+			p, _ := strconv.Atoi(m[1] + m[2] + m[3])
+			found++
+			if p >= 32768 {
+				t.Errorf("%s: port %d lies in the ephemeral range", f, p)
+			}
+		}
+		if found == 0 {
+			t.Errorf("%s: no port found - the pattern no longer matches the file", f)
+		}
 	}
 }
 

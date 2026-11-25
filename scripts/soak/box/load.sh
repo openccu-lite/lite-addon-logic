@@ -7,7 +7,7 @@
 #   and started answering, and every write the addon refused, are in $SOAK_DIR/load.log.
 #
 DIR=${SOAK_DIR:-/usr/local/soak}
-URL=${SOAK_URL:-http://127.0.0.1:39310/}
+URL=${SOAK_URL:-http://127.0.0.1:31310/}
 PAUSE=${SOAK_PAUSE:-0.5}
 INPUTS=$DIR/inputs.txt
 n=$(wc -l < "$INPUTS")

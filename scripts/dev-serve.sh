@@ -2,7 +2,7 @@
 #
 #   Runs the daemon against the fake system, for the page's development and the Playwright
 #   tests: the fake system on 127.0.0.1:18081, the page on http://127.0.0.1:18301/addons/logic/
-#   (no session check), the interface "Logic" on 127.0.0.1:39311. A fresh data directory each run
+#   (no session check), the interface "Logic" on 127.0.0.1:31311. A fresh data directory each run
 #   unless LOGIC_CONF_DIR names one. The page is served from ui/dist (npm run build first).
 #
 #   A second one beside it, for the time modules' tests: LOGIC_PORT, LOGIC_RPC_PORT and
@@ -13,7 +13,7 @@
 set -e
 cd "$(dirname "$0")/.."
 PORT=${LOGIC_PORT:-18301}
-RPC_PORT=${LOGIC_RPC_PORT:-39311}
+RPC_PORT=${LOGIC_RPC_PORT:-31311}
 SYSTEM_PORT=${LOGIC_SYSTEM_PORT:-18081}
 DIR=${LOGIC_CONF_DIR:-$(mktemp -d)}
 mkdir -p build "$DIR/addon"

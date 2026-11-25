@@ -12,7 +12,7 @@
 #     epoch,seconds_until_back,by,programs,variables
 #
 DIR=${SOAK_DIR:-/usr/local/soak}
-URL=${SOAK_URL:-http://127.0.0.1:39310/}
+URL=${SOAK_URL:-http://127.0.0.1:31310/}
 BIN=${SOAK_BIN:-/usr/local/addons/logic/bin/logic}
 UNIT=${SOAK_UNIT:-addon-logic}
 TIMES=${1:-100}
