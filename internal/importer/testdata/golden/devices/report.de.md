@@ -3,7 +3,7 @@
 - Quelle: `ccu` (ReGa-Datenbank (homematic.regadom))
 - Standort: 52.52, 13.40
 
-3 Programme übernommen, 3 davon inaktiv, 1 nicht übernommen; 3 Systemvariablen übernommen.
+Übernommen: 3 Programme (davon 3 inaktiv) und 3 Systemvariablen; nicht übernommen: 1 Programm.
 
 ## Programme
 

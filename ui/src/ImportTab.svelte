@@ -43,7 +43,7 @@
     {@const done = reportTotals(applied)}
     <section class="lgc-section" data-testid="import-done">
         <h2>{t('Imported')}</h2>
-        <p>{t('{programs} programs and {variables} system variables were imported; {inactive} of the programs are inactive.', {programs: done.imported + done.inactive, variables: done.variables, inactive: done.inactive})}</p>
+        <p>{t('Imported: {programs} ({inactive} of them inactive) and {variables}.', {programs: t('{n} programs', {n: done.imported + done.inactive}, done.imported + done.inactive), inactive: done.inactive, variables: t('{n} system variables', {n: done.variables}, done.variables)})}</p>
         <div class="lgc-actions">
             <button class="hmm-button lgc-primary" onclick={ondone} data-testid="import-to-programs">{t('To the programs')}</button>
         </div>
@@ -55,7 +55,7 @@
             <HelpLink topic="import-report" />
         </div>
         <p data-testid="import-summary">
-            {t('{programs} programs would be imported, {inactive} of them inactive; {skipped} are not imported; {variables} system variables.', {programs: totals.imported + totals.inactive, inactive: totals.inactive, skipped: totals.skipped, variables: totals.variables})}
+            {t('Would be imported: {programs} ({inactive} of them inactive) and {variables}; not imported: {skipped}.', {programs: t('{n} programs', {n: totals.imported + totals.inactive}, totals.imported + totals.inactive), inactive: totals.inactive, variables: t('{n} system variables', {n: totals.variables}, totals.variables), skipped: t('{n} programs', {n: totals.skipped}, totals.skipped)})}
             {#if report.all_inactive}<strong>{t('Every program is imported inactive.')}</strong>{/if}
         </p>
         {#if totals.missing > 0}

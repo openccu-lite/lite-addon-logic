@@ -139,7 +139,7 @@ test.describe('in German', () => {
         await page.goto('./');
         await page.getByTestId('show-internal').check();
         await expectEven(page, page.getByTestId('program-list'), 5);
-        await expect(page.getByTestId('program-skript').getByTestId('marks')).toHaveAttribute('title', /Skript: Enthält ein Skript/);
+        await expect(page.getByTestId('program-skript').getByTestId('marks')).toHaveAttribute('title', /Script: Enthält ein Script/);
         await page.getByRole('tab', {name: 'Systemvariablen'}).click();
         const table = page.getByTestId('variable-list');
         await expect(table.locator('tbody tr').first()).toBeVisible();

@@ -44,7 +44,25 @@ func fault(code int, format string, args ...any) *Fault {
 	return &Fault{Code: code, Msg: fmt.Sprintf(format, args...)}
 }
 
+// multicallEntry is one call of a system.multicall: a struct whose member methodName comes
+// first and holds its name as a value without a type (`<value>event</value>`), params after it.
+// Both forms are a string to XML-RPC; HMIPServer reads an event multicall only in this one: with
+// the name typed (`<value><string>event</string></value>`) or params first it answers HTTP 200
+// with an empty body, so its subscription was dropped after ten events (B-13).
+type multicallEntry struct {
+	method string
+	params []any
+}
+
 func encodeValue(b *bytes.Buffer, v any) {
+	if e, ok := v.(multicallEntry); ok {
+		b.WriteString("<value><struct><member><name>methodName</name><value>")
+		_ = xml.EscapeText(b, []byte(e.method))
+		b.WriteString("</value></member><member><name>params</name>")
+		encodeValue(b, e.params)
+		b.WriteString("</member></struct></value>")
+		return
+	}
 	b.WriteString("<value>")
 	switch x := v.(type) {
 	case nil:
@@ -296,6 +314,10 @@ func Call(ctx context.Context, client *http.Client, url, method string, args ...
 	}
 	if res.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("xmlrpc: %s answered %s", method, res.Status)
+	}
+	if len(bytes.TrimSpace(body)) == 0 {
+		// no methodResponse is no answer (the spec has none without one): counted as a failure
+		return nil, fmt.Errorf("xmlrpc: %s answered with an empty body", method)
 	}
 	return DecodeResponse(body)
 }

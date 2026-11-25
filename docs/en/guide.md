@@ -1672,6 +1672,10 @@ datapoints already says that they cannot be written (`OPERATIONS` 0).
 - The interface speaks XML-RPC as rfd and HmIPServer do: `init`, `listDevices`, `getDeviceDescription`,
   `getParamsetDescription`, `getParamset`, `getValue`, `setValue`, `putParamset`, `ping`, `system.listMethods`,
   `system.multicall`; events arrive as a `system.multicall` of `event` calls.
+- In each of these `event` calls `methodName` comes first, its value without a type (`<value>event</value>`), the
+  params after it; to XML-RPC both are a string. HmIPServer reads events only in this form. A subscriber that does
+  not answer ten times in a row - an answer with an empty body counts as none - is dropped until it registers again
+  with `init`.
 - Nothing radio-specific exists: no service messages, no direct links, no `MASTER` parameters.
 - Address the interface by its name `Logic` through lite-rpc, not by its port: the system reads the port from the
   addon's manifest and lists the interface in `InterfacesList.xml`. Until 1.0.0-beta.1 it was 39310, which lies in

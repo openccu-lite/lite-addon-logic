@@ -34,6 +34,37 @@ var builtinNames = map[string][2]string{ // placeholder: de, en
 	"sysVarRainYesterday":          {"Regen gestern", "Rain yesterday"},
 }
 
+// roomNames are the words the WebUI shows for the rooms a CCU comes with: the database keeps
+// their string-table keys as their names (roomLivingRoom), the WebUI translates them.
+var roomNames = map[string][2]string{ // key: de, en
+	"roomLivingRoom":     {"Wohnzimmer", "Living room"},
+	"roomKitchen":        {"Küche", "Kitchen"},
+	"roomBedroom":        {"Schlafzimmer", "Bedroom"},
+	"roomChildrensRoom1": {"Kinderzimmer 1", "Children's room 1"},
+	"roomChildrensRoom2": {"Kinderzimmer 2", "Children's room 2"},
+	"roomOffice":         {"Büro", "Home office"},
+	"roomBathroom":       {"Badezimmer", "Bathroom"},
+	"roomGarage":         {"Garage", "Garage"},
+	"roomHWR":            {"Hauswirtschaftsraum", "Utility room"},
+	"roomGarden":         {"Garten", "Garden"},
+	"roomTerrace":        {"Terrasse", "Terrace"},
+}
+
+// rooms gives a channel's rooms by the names the WebUI shows for them.
+func (m *imp) rooms(channel int) []string {
+	out := m.db.RoomsOf(channel)
+	for i, r := range out {
+		key := strings.TrimSuffix(strings.TrimPrefix(r, "${"), "}")
+		if w, ok := roomNames[key]; ok {
+			out[i] = w[0]
+			if m.lang == "en" {
+				out[i] = w[1]
+			}
+		}
+	}
+	return out
+}
+
 var placeholder = regexp.MustCompile(`\$\{([A-Za-z0-9_]+)\}`)
 
 // words replaces the WebUI's ${...} placeholders by what the WebUI shows for them; one it does

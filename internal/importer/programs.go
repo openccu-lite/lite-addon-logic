@@ -300,7 +300,7 @@ func (m *imp) ref(id int, st *prog) (*model.Ref, *regadom.Datapoint) {
 	if s == nil {
 		s = &SeenDevice{Channel: r.Channel()}
 		if ch := m.db.Channels[dp.ChannelID]; ch != nil {
-			s.Name, s.ChannelType, s.Rooms = ch.Name, ch.Label, m.db.RoomsOf(ch.ID)
+			s.Name, s.ChannelType, s.Rooms = ch.Name, ch.Label, m.rooms(ch.ID)
 			if dev := m.db.Devices[ch.DeviceID]; dev != nil {
 				s.Device, s.Type = dev.Name, dev.Label
 			}

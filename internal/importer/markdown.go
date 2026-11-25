@@ -17,7 +17,9 @@ var texts = map[string][2]string{
 	"location":        {"Standort", "Location"},
 	"location-none":   {"nicht in der Quelle – für Astro-Zeiten in den Einstellungen eintragen", "not in the source - set it in the settings for astro times"},
 	"timezone":        {"Zeitzone", "Time zone"},
-	"summary":         {"%d Programme übernommen, %d davon inaktiv, %d nicht übernommen; %d Systemvariablen übernommen.", "%d programs imported, %d of them inactive, %d not imported; %d system variables imported."},
+	"summary":         {"Übernommen: %s (davon %d inaktiv) und %s; nicht übernommen: %s.", "Imported: %s (%d of them inactive) and %s; not imported: %s."},
+	"n-programs":      {"%d Programm|%d Programme", "%d program|%d programs"},
+	"n-variables":     {"%d Systemvariable|%d Systemvariablen", "%d system variable|%d system variables"},
 	"all-inactive-on": {"Gewählt: alle Programme inaktiv übernehmen.", "Chosen: import every program inactive."},
 	"programs":        {"Programme", "Programs"},
 	"variables":       {"Systemvariablen", "System variables"},
@@ -51,7 +53,7 @@ var texts = map[string][2]string{
 	"updated":         {"aktualisiert die Datei eines früheren Imports", "updates the file of an earlier import"},
 
 	ReasonCommand:      {"ein `system.Exec` wurde zur Aktivität „Befehl“: der Befehl läuft hier mit den Rechten des Addons, nicht als root. Bitte den Befehl prüfen, dann das Programm aktivieren", "a `system.Exec` became the activity \"command\": the command runs with the addon's rights here, not as root. Check the command, then switch the program on"},
-	ReasonScript:       {"enthält ein Skript – Skripte laufen hier nicht; das Skript bleibt als Text erhalten. Für solche Aufgaben: Node-RED (RedMatic), Home Assistant, ioBroker", "holds a script - scripts do not run here; the script is kept as text. For such tasks: Node-RED (RedMatic), Home Assistant, ioBroker"},
+	ReasonScript:       {"enthält ein Script – Scripts laufen hier nicht; das Script bleibt als Text erhalten. Für solche Aufgaben: Node-RED (RedMatic), Home Assistant, ioBroker", "holds a script - scripts do not run here; the script is kept as text. For such tasks: Node-RED (RedMatic), Home Assistant, ioBroker"},
 	ReasonCUxD:         {"verwendet CUxD (%s), das es hier nicht gibt", "uses CUxD (%s), which does not exist here"},
 	ReasonMissing:      {"Geräte fehlen auf diesem System: %s", "devices missing on this system: %s"},
 	ReasonSpecial:      {"enthält einen Sonderwert („Letzter Wert“ o. ä.); die Aktivität wird übersprungen, bis sie bearbeitet ist", "holds a special value (\"last value\" or similar); the activity is skipped until it is edited"},
@@ -95,7 +97,7 @@ var texts = map[string][2]string{
 	VarCounterPlain: {"ihr Kanal steht nicht in der Datenbank: als gewöhnliche Variable übernommen, niemand zählt sie weiter", "its channel is not in the database: taken over as a plain variable, nobody counts it on"},
 	VarHelper:       {"ein Gerätehelfer zählt sie weiter (%s)", "a device helper counts it on (%s)"},
 	VarHelperState:  {"letzter Zählerstand des Geräts: im Gerätehelfer aufgehoben, keine eigene Variable", "the device's last reading: kept inside the device helper, no variable of its own"},
-	VarHelperUnused: {"Hilfsvariable des Zählerskripts der Zentrale: nicht mehr nötig", "a scratch variable of the CCU's counter script: no longer needed"},
+	VarHelperUnused: {"Hilfsvariable des Zähler-Scripts der Zentrale: nicht mehr nötig", "a scratch variable of the CCU's counter script: no longer needed"},
 	VarHelperDay:    {"Tageswert des Gerätehelfers %s (auf der Zentrale in den Kanaldaten)", "a day's amount of the device helper %s (kept with the channel on the CCU)"},
 	VarCounterAddr:  {"Name und Datenbank nennen verschiedene Kanäle: %s", "name and database give different channels: %s"},
 	VarAlarm:        {"Alarmvariable: die Datenbank enthält keinen Alarmzustand, sie beginnt als „nie ausgelöst“", "alarm variable: the database holds no alarm state, it starts as \"never triggered\""},
@@ -108,6 +110,20 @@ var texts = map[string][2]string{
 	EventMissing:    {"%s: eine Zeile löst darauf aus, die Tabelle der Zentrale nennt es nicht", "%s: a line triggers on it, the CCU's table does not list it"},
 	EventExtra:      {"%s: die Tabelle der Zentrale nennt es, keine Zeile löst darauf aus", "%s: the CCU's table lists it, no line triggers on it"},
 	SkipUnknownType: {"unbekannter Typ (%s)", "unknown type (%s)"},
+}
+
+// count is a number with its noun: the text's two forms, singular|plural, are split at the bar.
+func count(lang, code string, n int) string {
+	t := texts[code]
+	s := t[0]
+	if lang == "en" {
+		s = t[1]
+	}
+	one, other, _ := strings.Cut(s, "|")
+	if n == 1 {
+		return fmt.Sprintf(one, n)
+	}
+	return fmt.Sprintf(other, n)
 }
 
 // Text is a code's words in a language ("de" or "en"), the arguments filled in.
@@ -195,7 +211,7 @@ func (r *Report) Markdown(lang string) string {
 	if lang == "en" {
 		summary = texts["summary"][1]
 	}
-	fmt.Fprintf(&b, "\n"+summary+"\n", imported+inactive, inactive, skipped, variables)
+	fmt.Fprintf(&b, "\n"+summary+"\n", count(lang, "n-programs", imported+inactive), inactive, count(lang, "n-variables", variables), count(lang, "n-programs", skipped))
 	if r.AllInactive {
 		fmt.Fprintf(&b, "%s\n", t("all-inactive-on"))
 	}

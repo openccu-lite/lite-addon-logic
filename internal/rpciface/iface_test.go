@@ -1431,3 +1431,80 @@ func TestSubscribersSurviveARestart(t *testing.T) {
 		t.Errorf("an unwritable file: %v %s", sixth.s.Subscribers(), sixth.logged())
 	}
 }
+
+// The event multicall's wire form (B-13): each call's member methodName comes first and holds the
+// name as a value without a type. HMIPServer reads nothing else - with the name typed, or params
+// first, it answers HTTP 200 with an empty body - so a subscriber that behaves like it stays
+// subscribed past maxFails events. An empty body is no answer and counts as a failure.
+func TestMulticallWireForm(t *testing.T) {
+	const want = `<value><struct><member><name>methodName</name><value>event</value></member><member><name>params</name><value><array><data>`
+	var mu sync.Mutex
+	var bodies []string
+	strict := true
+	got := make(chan struct{}, 100)
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		body, _ := io.ReadAll(r.Body)
+		mu.Lock()
+		bodies = append(bodies, string(body))
+		ok := strict && (!strings.Contains(string(body), "system.multicall") || strings.Contains(string(body), want))
+		mu.Unlock()
+		if ok {
+			_, _ = w.Write(EncodeResponse([]any{}, nil))
+		}
+		got <- struct{}{}
+	}))
+	t.Cleanup(srv.Close)
+	wait := func(n int) {
+		t.Helper()
+		for i := 0; i < n; i++ {
+			select {
+			case <-got:
+			case <-time.After(5 * time.Second):
+				t.Fatalf("callback %d of %d did not come", i+1, n)
+			}
+		}
+	}
+	h := start(t, Options{Client: &http.Client{Timeout: time.Second}})
+	h.ok("init", srv.URL, "Logic_java")
+	wait(1) // the greeting
+	for i := 0; i < maxFails+2; i++ {
+		h.ok("ping", "p")
+	}
+	wait(maxFails + 2)
+	if len(h.s.Subscribers()) != 1 {
+		t.Fatalf("dropped: %s", h.logged())
+	}
+	mu.Lock()
+	last := bodies[len(bodies)-1]
+	mu.Unlock()
+	exact := `<?xml version="1.0"?><methodCall><methodName>system.multicall</methodName><params><param><value><array><data>` +
+		`<value><struct><member><name>methodName</name><value>event</value></member><member><name>params</name>` +
+		`<value><array><data><value><string>Logic_java</string></value><value><string>CENTRAL</string></value><value><string>PONG</string></value><value><string>p</string></value></data></array></value>` +
+		`</member></struct></value></data></array></value></param></params></methodCall>`
+	if last != exact {
+		t.Errorf("the wire form:\n got %s\nwant %s", last, exact)
+	}
+	// a standard reader takes it as it took the typed form: the name is a string
+	method, args, err := DecodeCall([]byte(last))
+	if err != nil || method != "system.multicall" {
+		t.Fatalf("%q %v", method, err)
+	}
+	if m := args[0].([]any)[0].(map[string]any); m["methodName"] != "event" || len(m["params"].([]any)) != 4 {
+		t.Errorf("decoded %#v", m)
+	}
+	// an empty body with HTTP 200 is no answer
+	mu.Lock()
+	strict = false
+	mu.Unlock()
+	for i := 0; i < maxFails; i++ {
+		h.ok("ping", "q")
+	}
+	wait(maxFails)
+	deadline := time.Now().Add(2 * time.Second)
+	for len(h.s.Subscribers()) != 0 && time.Now().Before(deadline) {
+		time.Sleep(5 * time.Millisecond)
+	}
+	if len(h.s.Subscribers()) != 0 || !strings.Contains(h.logged(), "did not answer 10 times, dropped (last: xmlrpc: system.multicall answered with an empty body)") {
+		t.Errorf("subscribers %v, log: %s", h.s.Subscribers(), h.logged())
+	}
+}

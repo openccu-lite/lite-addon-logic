@@ -256,7 +256,7 @@ func (s *Server) call(sub *subscriber, method string, args ...any) (any, error) 
 	if cur.fails >= maxFails {
 		delete(s.subs, sub.url)
 		s.saveSubscribers()
-		s.logf("interface: %s (%s) did not answer %d times, dropped", sub.id, sub.url, cur.fails)
+		s.logf("interface: %s (%s) did not answer %d times, dropped (last: %v)", sub.id, sub.url, cur.fails, err)
 	}
 	return res, err
 }
@@ -269,7 +269,7 @@ func (s *Server) multicall(events [][3]any) {
 	for _, sub := range s.snapshot() {
 		calls := make([]any, 0, len(events))
 		for _, e := range events {
-			calls = append(calls, map[string]any{"methodName": "event", "params": []any{sub.id, e[0], e[1], e[2]}})
+			calls = append(calls, multicallEntry{method: "event", params: []any{sub.id, e[0], e[1], e[2]}})
 		}
 		_, _ = s.call(sub, "system.multicall", calls)
 	}

@@ -25,7 +25,7 @@ test('a dry run shows the report and writes nothing; "Import" takes it over', as
     await page.getByTestId('import-read-file').click();
 
     // the report: 18 programs, 7 of them inactive because of a script, 2 counter programs left out
-    await expect(page.getByTestId('import-summary')).toContainText('18 programs would be imported, 7 of them inactive; 2 are not imported; 38 system variables.');
+    await expect(page.getByTestId('import-summary')).toContainText('Would be imported: 18 programs (7 of them inactive) and 38 system variables; not imported: 2 programs.');
     await expect(page.getByTestId('import-scripts')).toContainText('Node-RED (RedMatic), Home Assistant or ioBroker');
     await expect(page.getByTestId('import-program')).toHaveCount(20);
     const wetter = page.getByTestId('import-program').filter({hasText: 'Wetter holen'});
@@ -58,7 +58,7 @@ test('a dry run shows the report and writes nothing; "Import" takes it over', as
     await page.getByRole('tab', {name: 'Import'}).click();
     await expect(page.getByTestId('import-summary')).toBeVisible();
     await page.getByTestId('import-apply').click();
-    await expect(page.getByTestId('import-done')).toContainText('18 programs and 38 system variables were imported; 7 of the programs are inactive.');
+    await expect(page.getByTestId('import-done')).toContainText('Imported: 18 programs (7 of them inactive) and 38 system variables.');
     await page.getByTestId('import-to-programs').click();
 
     // the programs are there, in the CCU's layout
@@ -174,14 +174,16 @@ test('the database kept on the system: everything inactive, discarded', async ({
 // channels and a CUxD channel. None of its addresses is a device of the fake system - here the
 // key gets the address of one that is, so the table shows both a channel that is there and
 // channels that are missing. The dry run is discarded: nothing of it reaches the tree.
-const withDevices = () => Buffer.from(readFileSync(join(here, '../../internal/regadom/testdata/devices.regadom'), 'latin1').replaceAll('LEQ0123456', 'NEQ0000001'), 'latin1');
+// The room Terrasse becomes one a CCU comes with, kept by its key roomTerrace: the report names it
+// as the WebUI shows it.
+const withDevices = () => Buffer.from(readFileSync(join(here, '../../internal/regadom/testdata/devices.regadom'), 'latin1').replaceAll('LEQ0123456', 'NEQ0000001').replace('<name>Terrasse</name>', '<name>roomTerrace</name>'), 'latin1');
 
 test('the devices that programs use: present or missing on this system, with the warning', async ({page}) => {
     await page.goto('./');
     await page.getByRole('tab', {name: 'Import'}).click();
     await page.getByTestId('import-file').setInputFiles({name: 'devices.regadom', mimeType: 'application/octet-stream', buffer: withDevices()});
     await page.getByTestId('import-read-file').click();
-    await expect(page.getByTestId('import-summary')).toContainText('3 programs would be imported, 3 of them inactive; 1 are not imported');
+    await expect(page.getByTestId('import-summary')).toContainText('Would be imported: 3 programs (3 of them inactive) and 3 system variables; not imported: 1 program.');
     // three channels are not there: the blind's two, and the CUxD one, which never is
     await expect(page.getByTestId('import-missing')).toHaveText('3 channels that programs use do not exist on this system: those programs stay inactive.');
     const devices = page.getByTestId('import-devices');
@@ -198,7 +200,8 @@ test('the devices that programs use: present or missing on this system, with the
     const blind = rows.filter({hasText: 'HmIP-RF/00111BE9AB9012:4'});
     await expect(blind).toContainText('Markise Behang');
     await expect(blind).toContainText('Markise Terrasse (HmIP-BROLL)');
-    await expect(blind).toContainText('Terrasse, Flur');
+    await expect(blind).toContainText('Terrace, Flur');
+    await expect(blind).not.toContainText('roomTerrace');
     await expect(blind.locator('.lgc-pill')).toHaveText('missing');
     const cuxd = rows.filter({hasText: 'CUxD/CUX2801001:1'});
     await expect(cuxd.locator('.lgc-pill')).toHaveText('missing');
@@ -280,11 +283,11 @@ test.describe('in German', () => {
         await page.getByRole('tab', {name: 'Import'}).click();
         await page.getByTestId('import-file').setInputFiles(fixture);
         await page.getByTestId('import-read-file').click();
-        await expect(page.getByTestId('import-summary')).toContainText('18 Programme würden übernommen, 7 davon inaktiv');
+        await expect(page.getByTestId('import-summary')).toContainText('Übernommen würden: 18 Programme (davon 7 inaktiv) und 38 Systemvariablen; nicht übernommen: 2 Programme.');
         await expect(page.getByTestId('import-quirks')).toContainText('Das Handbuch zählt diese Eigenheiten in einfachen Worten auf.');
         await expect(page.getByTestId('help-quirks')).toHaveAttribute('href', /docs\/de\/#quirks$/);
         await expect(page.getByTestId('import-program').filter({hasText: 'Wetter holen'})).toContainText('wurde zur Aktivität „Befehl“');
-        await expect(page.getByTestId('import-program').filter({hasText: 'zzL_Ia5'})).toContainText('enthält ein Skript');
+        await expect(page.getByTestId('import-program').filter({hasText: 'zzL_Ia5'})).toContainText('enthält ein Script');
         await page.getByTestId('import-discard').click();
         await page.getByTestId('import-file').setInputFiles({name: 'devices.regadom', mimeType: 'application/octet-stream', buffer: withDevices()});
         await page.getByTestId('import-read-file').click();
@@ -293,6 +296,7 @@ test.describe('in German', () => {
         await expect(key.locator('.lgc-pill')).toHaveText('vorhanden');
         await expect(page.getByTestId('import-device').filter({hasText: 'CUX2801001'}).locator('.lgc-pill')).toHaveText('fehlt');
         await expect(page.getByTestId('import-devices').locator('summary')).toHaveText('Geräte, die in Programmen vorkommen (4)');
+        await expect(page.getByTestId('import-device').filter({hasText: 'HmIP-RF/00111BE9AB9012:4'})).toContainText('Terrasse, Flur');
         await page.getByTestId('import-discard').click();
         await page.getByTestId('import-file').setInputFiles(fixture);
         await page.getByTestId('import-read-file').click();

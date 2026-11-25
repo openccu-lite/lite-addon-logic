@@ -290,7 +290,7 @@ describe('an activity', () => {
         expect([off.kind, off.subject, off.what, off.unknown]).toEqual(['Programm', 'weg', 'deaktivieren', true]);
         expect(actionText({kind: 'deactivate'}, ctx).subject).toBe('');
         const script = actionText({kind: 'script', script: 'WriteLine(1);'}, ctx);
-        expect([script.kind, script.script, script.skipped]).toEqual(['Skript', 'WriteLine(1);', true]);
+        expect([script.kind, script.script, script.skipped]).toEqual(['Script', 'WriteLine(1);', true]);
         expect(actionText({kind: 'script'}, ctx).script).toBe('');
     });
 });
@@ -317,7 +317,7 @@ describe('a program in the list', () => {
         const marked = {...markise, script: true, program: {...markise.program, internal: true}, state: {key: 'markise', failures: 2, last_failure: 'refused', no_position: true, no_clock: true}};
         expect(programMarks(marked).map((m) => [m.id, m.label, m.kind])).toEqual([
             ['failures', '2 Befehle abgelehnt', 'bad'],
-            ['script', 'Skript', 'warn'],
+            ['script', 'Script', 'warn'],
             ['no-location', 'kein Standort', 'warn'],
             ['no-clock', 'Uhr nicht gestellt', 'warn'],
             ['internal', 'systemintern', ''],
@@ -325,7 +325,7 @@ describe('a program in the list', () => {
         expect(programMarks({...markise, state: {key: 'markise', failures: 1}})[0]).toMatchObject({label: '1 Befehl abgelehnt', title: ''});
         expect(marksTitle(programMarks(marked)).split('\n')).toEqual([
             '2 Befehle abgelehnt: refused',
-            'Skript: Enthält ein Skript: Skripte laufen hier nicht.',
+            'Script: Enthält ein Script: Scripts laufen hier nicht.',
             expect.stringMatching(/^kein Standort: Sonnenaufgang/),
             expect.stringMatching(/^Uhr nicht gestellt: Die Uhr/),
             'systemintern',
@@ -456,7 +456,7 @@ describe('the variable form', () => {
 });
 
 describe('the import\'s report', () => {
-    const codes = {script: {de: 'enthält ein Skript', en: 'holds a script'}, 'missing-device': {de: 'Geräte fehlen: %s', en: 'devices missing: %s'}};
+    const codes = {script: {de: 'enthält ein Script', en: 'holds a script'}, 'missing-device': {de: 'Geräte fehlen: %s', en: 'devices missing: %s'}};
     const report: Report = {
         source: 'ccu', kind: 'regadom', location: {},
         programs: [
@@ -470,7 +470,7 @@ describe('the import\'s report', () => {
         histogram: [],
     };
     it('fills the importer\'s words with a note\'s arguments', () => {
-        expect(noteText({code: 'script'}, codes, 'de')).toBe('enthält ein Skript');
+        expect(noteText({code: 'script'}, codes, 'de')).toBe('enthält ein Script');
         expect(noteText({code: 'missing-device', args: ['a', '', 'b']}, codes, 'de')).toBe('Geräte fehlen: a, b');
         expect(noteText({code: 'missing-device', args: ['a']}, codes, 'en')).toBe('devices missing: a');
         expect(noteText({code: 'unknown', args: ['x']}, codes, 'en')).toBe('unknown x');

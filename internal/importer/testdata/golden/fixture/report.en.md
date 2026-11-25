@@ -3,7 +3,7 @@
 - Source: `ccu` (ReGa database (homematic.regadom))
 - Location: not in the source - set it in the settings for astro times
 
-18 programs imported, 7 of them inactive, 2 not imported; 38 system variables imported.
+Imported: 18 programs (7 of them inactive) and 38 system variables; not imported: 2 programs.
 
 ## Programs
 

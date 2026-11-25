@@ -716,3 +716,52 @@ func TestRest(t *testing.T) {
 		t.Errorf("%+v", notes)
 	}
 }
+
+// The rooms a CCU comes with are kept by their string-table keys (roomLivingRoom); the report
+// names them as the WebUI shows them, in the report's language. A room of the user's own keeps
+// its name, and so does a key the WebUI does not know.
+func TestRoomNames(t *testing.T) {
+	db := &regadom.DB{Rooms: []regadom.Room{
+		{Name: "roomLivingRoom", Channels: []int{1}},
+		{Name: "${roomOffice}", Channels: []int{1}},
+		{Name: "Keller", Channels: []int{1, 2}},
+		{Name: "roomAttic", Channels: []int{2}},
+	}}
+	for _, c := range []struct {
+		lang string
+		ch   int
+		want string
+	}{
+		{"de", 1, "Wohnzimmer, Büro, Keller"},
+		{"en", 1, "Living room, Home office, Keller"},
+		{"de", 2, "Keller, roomAttic"},
+		{"de", 3, ""},
+	} {
+		m := &imp{db: db, lang: c.lang}
+		if got := strings.Join(m.rooms(c.ch), ", "); got != c.want {
+			t.Errorf("%s %d: %q, want %q", c.lang, c.ch, got, c.want)
+		}
+	}
+	if db.Rooms[0].Name != "roomLivingRoom" {
+		t.Error("the database's names were changed")
+	}
+}
+
+// The report's summary counts in the singular where a number is one.
+func TestSummaryCounts(t *testing.T) {
+	for _, c := range []struct {
+		lang, code string
+		n          int
+		want       string
+	}{
+		{"de", "n-programs", 1, "1 Programm"},
+		{"de", "n-programs", 0, "0 Programme"},
+		{"de", "n-variables", 1, "1 Systemvariable"},
+		{"en", "n-programs", 1, "1 program"},
+		{"en", "n-variables", 2, "2 system variables"},
+	} {
+		if got := count(c.lang, c.code, c.n); got != c.want {
+			t.Errorf("%s %s %d: %q, want %q", c.lang, c.code, c.n, got, c.want)
+		}
+	}
+}

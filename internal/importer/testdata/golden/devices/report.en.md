@@ -3,7 +3,7 @@
 - Source: `ccu` (ReGa database (homematic.regadom))
 - Location: 52.52, 13.40
 
-3 programs imported, 3 of them inactive, 1 not imported; 3 system variables imported.
+Imported: 3 programs (3 of them inactive) and 3 system variables; not imported: 1 program.
 
 ## Programs
 

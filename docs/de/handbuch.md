@@ -7,9 +7,9 @@ passenden Abschnitt.
 ## <a id="overview"></a>Überblick
 Das Addon führt Programme aus, wie man sie von der CCU kennt (*Wenn … Dann … Sonst*), und hält Systemvariablen. Es
 übernimmt beides aus einer CCU-Sicherung oder aus der ReGa-Datenbank, die nach dem Umstieg auf dem System geblieben
-ist. Ein Programm ohne Skript verhält sich danach wie auf der CCU.
+ist. Ein Programm ohne Script verhält sich danach wie auf der CCU.
 
-Skripte gibt es bewusst nicht. Für alles, was über einfache Automationen hinausgeht, sind Node-RED (RedMatic), Home
+Scripts gibt es bewusst nicht. Für alles, was über einfache Automationen hinausgeht, sind Node-RED (RedMatic), Home
 Assistant oder ioBroker die besseren Werkzeuge.
 
 Wer von einer CCU kommt, beginnt mit [Umstieg von einer CCU](#from-ccu).
@@ -19,7 +19,7 @@ Die Seite hat sieben Reiter: **Programme**, **Systemvariablen**, **Zeitplan**, *
 
 ## <a id="from-ccu"></a>Umstieg von einer CCU
 Dieses Kapitel ist für alle, die Programme und Systemvariablen auf einer CCU3 oder auf OpenCCU (RaspberryMatic) hatten
-und jetzt openccu-lite betreiben. Kurz gesagt: man importiert sie, die Programme ohne Skript tun weiter, was sie
+und jetzt openccu-lite betreiben. Kurz gesagt: man importiert sie, die Programme ohne Script tun weiter, was sie
 taten, und die Seite nennt jedes Programm, das einen Blick braucht. [Die Eigenheiten der CCU in einfachen
 Worten](#quirks) zählt auf, was solche Programme schon immer tun und was viele überrascht - und sagt zu jedem Punkt, ob
 es hier genauso ist.
@@ -41,8 +41,8 @@ es hier genauso ist.
    | Grund | Was zu tun ist |
    | --- | --- |
    | Geräte fehlen auf diesem System | Das Gerät an diesem System anlernen - es behält seine Adresse, das Programm ist dann vollständig. Kommt ein anderes Gerät desselben Typs an seine Stelle, das Gerät in allen Programmen auf einmal [ersetzen](#replace-device); oder das Programm bearbeiten und ein anderes Gerät wählen. Dann das Programm aktivieren |
-   | es enthält ein Skript | Skripte laufen hier nie. Hat das Skript etwas Einfaches getan, baut man es aus Bedingungszeilen und Aktivitäten ([Über die Zentrale hinaus](#additions) nennt, wofür man auf der CCU oft ein Skript brauchte); sonst gehört die Aufgabe in Node-RED (RedMatic), Home Assistant oder ioBroker. Das Skript aus dem Programm entfernen, bevor man es aktiviert |
-   | ein `system.Exec` wurde zum Befehl | Das Skript war ein einziges `system.Exec` und ist jetzt die Aktivität [Befehl](#command) mit derselben Zeile. Sie läuft hier mit den Rechten des Addons, nicht als root, und nur mit Programmen, die dieses System hat: den Befehl ansehen, das Programm mit *Erstes „Dann“ ausführen* ausprobieren und den [Verlauf](#trace) lesen, dann aktivieren |
+   | es enthält ein Script | Scripts laufen hier nie. Hat das Script etwas Einfaches getan, baut man es aus Bedingungszeilen und Aktivitäten ([Über die Zentrale hinaus](#additions) nennt, wofür man auf der CCU oft ein Script brauchte); sonst gehört die Aufgabe in Node-RED (RedMatic), Home Assistant oder ioBroker. Das Script aus dem Programm entfernen, bevor man es aktiviert |
+   | ein `system.Exec` wurde zum Befehl | Das Script war ein einziges `system.Exec` und ist jetzt die Aktivität [Befehl](#command) mit derselben Zeile. Sie läuft hier mit den Rechten des Addons, nicht als root, und nur mit Programmen, die dieses System hat: den Befehl ansehen, das Programm mit *Erstes „Dann“ ausführen* ausprobieren und den [Verlauf](#trace) lesen, dann aktivieren |
    | es verwendet CUxD | CUxD gibt es hier nicht. Diese Zeilen entfernen oder ersetzen |
    | es enthält einen Sonderwert („Letzter Wert“ o. ä.) | Die Aktivität wird übersprungen, bis sie im Editor einen Wert bekommt |
    | ein Zeitmodul widerspricht sich selbst, oder die Datenbank enthält ein Feld, das diese Version nicht kennt | Das Programm öffnen, die Stelle ansehen, die der Bericht nennt, und speichern |
@@ -78,24 +78,24 @@ Dateien, statt alles ein zweites Mal anzulegen ([Noch einmal importieren](#impor
 | Die Servicemeldungen | nicht in diesem Addon: das System zeigt sie selbst |
 | Energiezähler, Regenmenge und Sonnenscheindauer eines Geräts (die Zentrale legt sie beim Anlernen an) | [Gerätehelfer](#helpers) im Reiter **Systemvariablen**; die Zähler der Zentrale kommen mit dem Import und zählen weiter |
 | Der Standort für Sonnenauf- und -untergang | der Reiter **Einstellungen** ([Der Standort](#time-location)) |
-| Der Skript-Editor und „Skript testen“ | gibt es nicht |
+| Der Script-Editor und „Script testen“ | gibt es nicht |
 | *aktiv*, *sichtbar*, *bedienbar*, *systemintern* eines Programms | dieselben vier Eigenschaften, dazu *beim Systemstart prüfen* |
 | Das Kontrollkästchen „Vor dem Ausführen alle laufenden Verzögerungen für diese Aktivitäten beenden“ | *Laufende Verzögerungen für diese Ziele vorher beenden* im Editor ([Aktivitäten und Verzögerungen](#delays)) |
 | Einen früheren Stand eines Programms zurückholen (auf der CCU: eine Sicherung einspielen) | Programme und Variablen sind lesbare Dateien mit einem Verlauf; jede frühere Version lässt sich zurückholen ([Versionen](#versions)) |
 
 ### <a id="from-ccu-not"></a>Was nicht mitkommt
-- **Skripte.** Ein Programm mit einem Skript kommt inaktiv, das Skript bleibt als Text erhalten. Zwei einzeilige
-  Skripte werden erkannt und zu Aktivitäten: ein Programm ausführen und eines aktivieren oder deaktivieren
+- **Scripts.** Ein Programm mit einem Script kommt inaktiv, das Script bleibt als Text erhalten. Zwei einzeilige
+  Scripts werden erkannt und zu Aktivitäten: ein Programm ausführen und eines aktivieren oder deaktivieren
   ([Was übernommen wird](#import-what)).
 - **CUxD-Geräte.**
-- **Was ein Skript mit `system.Exec` getan hat**, kommt nur mit, wenn das Skript nichts als dieser eine Aufruf ist:
+- **Was ein Script mit `system.Exec` getan hat**, kommt nur mit, wenn das Script nichts als dieser eine Aufruf ist:
   Es wird zu einem Webhook, einem Wake-on-LAN oder einem [Befehl](#command)
   ([Was übernommen wird](#import-what)). Ein Befehl läuft mit den Rechten des Addons, nicht als root: Was auf der
   Zentrale root brauchte, geht nicht.
 - **Räume, Gewerke und Gerätenamen:** die hat das System beim Umstieg selbst übernommen. **Benutzer, Favoriten und
   direkte Verknüpfungen** sind nicht Sache dieses Addons.
 - **Die versteckten Zählerprogramme der Zentrale** für Energie, Gas, Wasser, Regen und Sonnenschein: sie bestehen aus
-  Skripten. Ihre Variablen kommen mit ihren Ständen, und ein eingebauter [Gerätehelfer](#helpers) zählt sie
+  Scripts. Ihre Variablen kommen mit ihren Ständen, und ein eingebauter [Gerätehelfer](#helpers) zählt sie
   weiter - ohne Sprung beim ersten Wert des Geräts.
 - **Ein ausgelöster Alarm:** die Datenbank der Zentrale speichert keinen Alarmzustand, jede Alarmvariable beginnt
   deshalb als „nie ausgelöst“.
@@ -245,17 +245,17 @@ nebeneinander.
     übernommenes Astro-Programm läuft also einige Minuten früher oder später als bisher. ([Astro](#time-astro))
 16. **Ein ausgelöster Alarm übersteht einen Neustart.** Die CCU vergaß ihn.
 
-### <a id="quirks-gone"></a>Mit den Skripten verschwunden
-- Ein verzögertes Skript ließ sich nicht beenden, und ein Skript, das wartete, hielt jedes andere Programm auf: es
-  gibt keine Skripte, und nichts, was ein Programm tut, lässt ein anderes warten - ein [Befehl](#command), der sich
+### <a id="quirks-gone"></a>Mit den Scripts verschwunden
+- Ein verzögertes Script ließ sich nicht beenden, und ein Script, das wartete, hielt jedes andere Programm auf: es
+  gibt keine Scripts, und nichts, was ein Programm tut, lässt ein anderes warten - ein [Befehl](#command), der sich
   Zeit lässt, hält höchstens seinen eigenen Block auf, und nur, wenn man es ihm sagt.
-- Ein Skript konnte eine Variable stillschweigend ändern, ohne etwas auszulösen. Hier ist jedes Schreiben eine
+- Ein Script konnte eine Variable stillschweigend ändern, ohne etwas auszulösen. Hier ist jedes Schreiben eine
   Aktualisierung und ein anderer Wert eine Änderung.
 - Die Grenzen für die Zahl der Programme und Variablen, die eine CCU hat, gibt es nicht.
 
 ## <a id="programs"></a>Programme
 Ein Programm ist eine Kette von Regeln: *Wenn…*, beliebig viele *Sonst, wenn…* und höchstens ein *Sonst…*. Jede Regel
-mit Bedingung hat Bedingungszeilen und Aktivitäten. Programme, die von einer CCU übernommen wurden und kein Skript
+mit Bedingung hat Bedingungszeilen und Aktivitäten. Programme, die von einer CCU übernommen wurden und kein Script
 enthalten, verhalten sich hier wie dort – mit den Eigenheiten, an die sich bestehende Programme gewöhnt haben, und mit
 wenigen, unten genannten Korrekturen.
 
@@ -269,7 +269,7 @@ einblenden.
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="../screenshots/de/02-program-dark.png"><img alt="Ein Programm" src="../screenshots/de/02-program.png"></picture>
 
-- Der Schalter **aktiv** schaltet ein Programm ein oder aus. Ein Programm mit einem Skript oder mit einem Fehler
+- Der Schalter **aktiv** schaltet ein Programm ein oder aus. Ein Programm mit einem Script oder mit einem Fehler
   (eine Variable oder ein Programm, auf das es sich bezieht, gibt es nicht mehr) lässt sich nicht einschalten.
 - Ein Klick auf den Namen öffnet das Programm in der Darstellung der CCU: *Bedingung: Wenn…*, *Sonst, wenn…*,
   *Sonst…*, darunter jeweils die Bedingungszeilen mit ihrem Auslöser und *Aktivität: Dann…* mit den Aktivitäten
@@ -289,7 +289,7 @@ eine Karte mit denselben Zeilen.
 Die Spalte **Hinweise** sagt, was an einem Programm zu beachten ist:
 
 - *n Befehle abgelehnt* – das System hat Schreibbefehle des Programms abgelehnt; der Hinweis nennt den letzten;
-- *Skript* – das Programm enthält ein Skript, das nie ausgeführt wird;
+- *Script* – das Programm enthält ein Script, das nie ausgeführt wird;
 - *kein Standort* und *Uhr nicht gestellt* – ein [Zeitmodul](#time) kann nicht auslösen;
 - *systemintern* – ein internes Programm.
 
@@ -353,7 +353,7 @@ wurde: *Dann*, *Sonst, wenn 1*, *Sonst*, *nichts lief*, *verzögerte Aktivität*
 - **Jede Aktivität mit dem, was aus ihr wurde:** *gesendet* und, sobald das System geantwortet hat, *bestätigt* mit der
   Uhrzeit oder *abgelehnt* mit dem Grund; *geschrieben* bei einer Systemvariable; *geplant für* eine Uhrzeit bei einer
   Verzögerung – und später dort *ausgeführt* oder *beendet*, mit dem, der sie beendet hat (von Hand im Zeitplan, ein
-  Programm mit „laufende Verzögerungen beenden“); *übersprungen* mit dem Grund (ein Skript, ein Sonderwert, ein Wert,
+  Programm mit „laufende Verzögerungen beenden“); *übersprungen* mit dem Grund (ein Script, ein Sonderwert, ein Wert,
   der nicht bekannt ist).
 - Eine **verzögerte Aktivität**, die fällig wird, ist ein eigener Eintrag: dabei wird nichts erneut geprüft, auch wenn
   die Bedingung inzwischen falsch ist.
@@ -495,7 +495,7 @@ fester, oder der aktuelle Wert einer Variable oder eines anderen Datenpunkts. Je
 weiteren Optionen, *ein für …* und die längste Zeit der zufälligen Verzögerung (siehe
 [Über die Zentrale hinaus](#additions)). **Laufende Verzögerungen für diese
 Ziele vorher beenden** ist das Kontrollkästchen der CCU für den Block (siehe [Aktivitäten und Verzögerungen](#delays)).
-Aktivitäten werden wie Zeilen gezogen oder verschoben, auch in eine andere Regel. Ein übernommenes Skript bleibt als
+Aktivitäten werden wie Zeilen gezogen oder verschoben, auch in eine andere Regel. Ein übernommenes Script bleibt als
 Text an seinem Platz und lässt sich nur entfernen; eine Aktivität mit einem Sonderwert der CCU wird übersprungen, bis
 sie hier einen Wert bekommt.
 
@@ -519,7 +519,7 @@ CCU übernommen wurden – der Importbericht nennt sie –, und aus bei hier ang
   mit eingeschaltetem Schalter mit seinen Bedingungen geprüft: der erste erfüllte Block läuft, sonst „Sonst“. Die
   Ausführung ist mit *Systemstart* gekennzeichnet.
 - Ein Programm ohne Bedingungen führt sein „Dann“ aus. Ein Programm, das nur Zeitmodule hat, führt sein „Sonst“ aus,
-  außer der Augenblick liegt in einer seiner Zeitspannen. Programme mit Skripten und inaktive Programme nehmen nicht
+  außer der Augenblick liegt in einer seiner Zeitspannen. Programme mit Scripts und inaktive Programme nehmen nicht
   teil.
 - Das Addon wartet, bis es die Werte der Geräte gelesen hat, die die Programme verwenden, und die Uhr des Systems
   gestellt ist – höchstens fünf Minuten; dann prüft es mit dem, was es weiß (eine Zeile auf einen unbekannten Wert ist
@@ -597,7 +597,7 @@ darunter, was gesetzt ist – und im Formular einer Zeitsteuerung; in der Datei 
 - **Die fünf Zeilen einer Anzeige** - die Aktivität [Anzeige](#display) für den HmIP-WRCD, mit Vorschau.
 - **Eine Web-Adresse aufrufen** und **ein Gerät aufwecken** - die Aktivitäten [Webhook](#webhook) und
   [Wake-on-LAN](#wake).
-- **Ein Programm des Systems ausführen** - die Aktivität [Befehl](#command), anstelle eines Skripts mit
+- **Ein Programm des Systems ausführen** - die Aktivität [Befehl](#command), anstelle eines Scripts mit
   `system.Exec`.
 
 ### <a id="values"></a>Mehrere Werte in einem Befehl
@@ -741,7 +741,7 @@ Anzeige gezeigt.
 ### <a id="webhook"></a>Webhooks
 Die Aktivität **Webhook** ruft eine Web-Adresse auf: Sie sagt einem anderen Dienst, dass etwas geschehen ist - einem
 Benachrichtigungsdienst, einem Chat, einem Gerät mit Web-Oberfläche, einer anderen Hausautomation. Auf einer CCU braucht
-das ein Skript mit `wget` oder `curl`; hier ist es ein Formular:
+das ein Script mit `wget` oder `curl`; hier ist es ein Formular:
 
 - **Methode** - GET, POST oder PUT - und die **Adresse**, `http://…` oder `https://…`. Adressen auf dem System selbst
   (`127.0.0.1`) sind erlaubt: So wird ein anderes Addon erreicht.
@@ -820,8 +820,8 @@ aufgewacht ist. Am Gerät muss Wake-on-LAN eingeschaltet sein (in seiner Firmwar
 muss per Kabel angeschlossen sein; über WLAN wachen die meisten nicht auf.
 
 ### <a id="command"></a>Befehle
-Die Aktivität **Befehl** führt ein Programm des Systems aus - das, was auf einer CCU ein Skript mit `system.Exec`
-getan hat: einen Wert mit `curl` holen, ein eigenes Skript aufrufen, einen Wert an ein anderes Werkzeug übergeben. Zwei
+Die Aktivität **Befehl** führt ein Programm des Systems aus - das, was auf einer CCU ein Script mit `system.Exec`
+getan hat: einen Wert mit `curl` holen, ein eigenes Script aufrufen, einen Wert an ein anderes Werkzeug übergeben. Zwei
 Dinge sind mit Absicht anders als auf der CCU:
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="../screenshots/de/05-command-dark.png"><img alt="Ein Befehl" src="../screenshots/de/05-command.png"></picture>
@@ -904,7 +904,7 @@ ihren vollen Pfad in `/usr/local/addons/tools/bin/` (unter anderem `socat`).
 Was root braucht, geht **nicht**: `ether-wake` und `ping` (dafür die Aktivität [Wake-on-LAN](#wake)), `reboot`,
 `mount`, Änderungen unter `/etc` oder `/usr/local/etc`. Python gibt es nicht.
 
-Ein eigenes Skript gehört in den Datenordner des Addons (`/usr/local/etc/config/addons/logic/`), etwa in einen
+Ein eigenes Script gehört in den Datenordner des Addons (`/usr/local/etc/config/addons/logic/`), etwa in einen
 Ordner `scripts` dort: Dort bleibt es bei einem Update des Addons erhalten und ist Teil der
 Sicherung des Systems. Der Benutzer des Addons muss es lesen und ausführen können.
 
@@ -952,9 +952,9 @@ Grenzen der Ausgabe) und auf einem Raspberry Pi 4 mit openccu-lite 2.0.0-rc.2 na
 Addons ausführen und schreiben kann, ist das, was dieser Abschnitt sagt.
 
 ### <a id="not-yet"></a>Was diese Version noch nicht kann
-- **Skripte** werden nie ausgeführt. Ein übernommenes Programm mit Skript bleibt inaktiv; das Skript ist als Text
+- **Scripts** werden nie ausgeführt. Ein übernommenes Programm mit Script bleibt inaktiv; das Script ist als Text
   aufbewahrt. Für solche Aufgaben sind Node-RED (RedMatic), Home Assistant oder ioBroker die richtigen Werkzeuge.
-  (Ein Skript, das nur einen Befehl ausführt, wird als [Befehl](#command) übernommen.)
+  (Ein Script, das nur einen Befehl ausführt, wird als [Befehl](#command) übernommen.)
 
 ## <a id="time"></a>Zeitmodule
 Ein Zeitmodul ist eine Bedingungszeile, die von der Uhr abhängt: *täglich um 06:30*, *am Wochenende von 20:00 bis
@@ -1287,8 +1287,8 @@ In der Datei ist ein berechneter Wert eine `number` mit `computed:` – siehe [P
 ### <a id="helpers"></a>Gerätehelfer
 
 Ein **Gerätehelfer** führt den Zähler eines Geräts als Systemvariablen: den **Gesamtstand**, und was **heute** und
-**gestern** hinzukam. Die Zentrale tut dasselbe mit versteckten Programmen aus Skripten, die sie beim Anlernen eines
-Geräts anlegt (`svEnergyCounter…`, `svHmIPRainCounter…`); hier ist es eingebaut, ohne Skript.
+**gestern** hinzukam. Die Zentrale tut dasselbe mit versteckten Programmen aus Scripts, die sie beim Anlernen eines
+Geräts anlegt (`svEnergyCounter…`, `svHmIPRainCounter…`); hier ist es eingebaut, ohne Script.
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="../screenshots/de/16-helper-dark.png"><img alt="Einen Gerätehelfer anlegen" src="../screenshots/de/16-helper.png"></picture>
 
@@ -1334,7 +1334,7 @@ den das Gerät gerade hat, wird nicht mitgezählt.
 
 **Was hier anders ist als auf der Zentrale** - bewusst:
 
-- Regen *heute* springt nicht bei 1440 auf 0 (auf der Zentrale ein Versehen im Skript).
+- Regen *heute* springt nicht bei 1440 auf 0 (auf der Zentrale ein Versehen im Script).
 - *heute* und der Gesamtstand bewegen sich immer gemeinsam.
 - Sonnenschein wird bei jeder Meldung der Sonnenscheindauer gezählt, nicht nur bei einer Meldung der Helligkeit.
 - Eine verpasste Tagesgrenze wird nachgeholt (die Zentrale lässt *heute* dann einfach weiterlaufen).
@@ -1390,7 +1390,7 @@ inaktiv bleibt und warum, was nicht übernommen wird. Erst *Übernehmen* legt di
 **Welche Programme danach aktiv sind:** Ein Programm behält den Zustand, den es auf der Zentrale hatte, wenn nichts
 dagegen spricht. Es wird **inaktiv** übernommen, wenn
 
-- es ein Skript enthält (siehe unten),
+- es ein Script enthält (siehe unten),
 - ein Gerät, das es verwendet, auf diesem System nicht angelernt ist,
 - es CUxD verwendet,
 - es einen Sonderwert enthält („Letzter Wert“ o. ä.),
@@ -1413,18 +1413,18 @@ Verzögerungen, und die Eigenschaften *aktiv*, *sichtbar*, *bedienbar*, *systemi
   (ein wöchentliches ohne Wochentag), lässt sein Programm inaktiv; der Bericht nennt den Grund.
 - **Systemstart:** Die Zentrale prüft jedes aktive Programm einmal nach ihrem Start. Übernommene Programme tun das
   hier auch; die Einstellung „Bei Zentralenstart ausführen“ neuer OpenCCU-Versionen wird übernommen.
-- **Zwei Skripte werden erkannt** und zu Aktivitäten: ein Programm ausführen (`…ProgramExecute();`) und ein Programm
+- **Zwei Scripts werden erkannt** und zu Aktivitäten: ein Programm ausführen (`…ProgramExecute();`) und ein Programm
   ein- oder ausschalten (`…Active(true);`, `…Active(false);`).
-- **Ein Skript, das ein einziges `system.Exec` ist,** wird ebenfalls zur Aktivität. Ein `wget` oder `curl`, das nur
+- **Ein Script, das ein einziges `system.Exec` ist,** wird ebenfalls zur Aktivität. Ein `wget` oder `curl`, das nur
   eine Adresse abruft, wird zum [Webhook](#webhook) (die Antwort wird nicht gelesen, und das Programm wartet nicht
   darauf), ein `ether-wake` zu [Wake-on-LAN](#wake). Jede andere Zeile wird zu einem [Befehl](#command) mit der Zeile,
   wie sie geschrieben wurde, über die Shell ausgeführt, und der Block wartet darauf wie auf der Zentrale; hat das
-  Skript die Ausgabe des Befehls in eine Systemvariable geschrieben
+  Script die Ausgabe des Befehls in eine Systemvariable geschrieben
   (`system.Exec("…", &out, &err); dom.GetObject("…").State(out);`), tut der Befehl dasselbe. Ein Programm mit einem
   solchen Befehl kommt **inaktiv**: Auf der Zentrale lief die Zeile als root, hier läuft sie mit den Rechten des
   Addons - erst ansehen. Der Bericht kennzeichnet einen Befehl, der einen Systempfad nennt oder ein Werkzeug, das nur
   root benutzen kann.
-- **Jedes andere Skript** bleibt als Text im Programm stehen und wird nie ausgeführt; das Programm kommt inaktiv.
+- **Jedes andere Script** bleibt als Text im Programm stehen und wird nie ausgeführt; das Programm kommt inaktiv.
   Für solche Aufgaben sind Node-RED (RedMatic), Home Assistant oder ioBroker die richtigen Werkzeuge.
 
 **Systemvariablen** kommen mit Typ (Logikwert, Werteliste, Zahl, Zeichenkette, Alarm), Bezeichnungen, Einheit,
@@ -1470,7 +1470,7 @@ Verweisen.
 
 ### <a id="import-anonymise"></a>Eine Datenbank weitergeben
 Wenn ein Import schiefgeht, hilft die Datenbank, an der es sich zeigt, am meisten - nur steht darin das eigene
-Zuhause: die Namen von Räumen, Geräten und Programmen, Seriennummern, Texte, Skripte. Das Addon schreibt eine Kopie
+Zuhause: die Namen von Räumen, Geräten und Programmen, Seriennummern, Texte, Scripts. Das Addon schreibt eine Kopie
 **ohne** all das:
 
     /usr/local/addons/logic/bin/logic anonymise backup.sbk anonym.regadom
@@ -1482,7 +1482,7 @@ Zeitmodulen und Gerätetypen, in der
 - Seriennummern neu durchgezählt sind (aus `MEQ0123456:1` wird `MEQ0000001:1`),
 - Texte, die Variablen halten und Programme vergleichen oder schreiben, „Text 1“ heißen, Einträge von Wertelisten
   „Wert 1“, Beschreibungen „Beschreibung“,
-- Skripte zu einer Zeile werden, die sagt, wie lang sie waren (die zwei einzeiligen Skripte, die der Import versteht,
+- Scripts zu einer Zeile werden, die sagt, wie lang sie waren (die zwei einzeiligen Scripts, die der Import versteht,
   bleiben, mit dem ersetzten Namen),
 - Benutzer, Passwörter, Mailadressen, der Standort und die Beschreibungen der Geräte geleert sind.
 
@@ -1575,7 +1575,7 @@ Eine **Aktivität** ist genau eines von:
 | `variable: schlüssel` | eine Systemvariable schreiben |
 | `run: schlüssel` mit `mode: then` oder `mode: check` | ein anderes Programm ausführen: nur dessen ersten *Dann*-Block ohne Prüfung (`then`) oder mit Prüfung der Bedingungen (`check`) |
 | `activate: schlüssel`, `deactivate: schlüssel` | ein anderes Programm aktivieren oder deaktivieren |
-| `script:` | ein übernommenes Skript, als Text aufbewahrt und nie ausgeführt |
+| `script:` | ein übernommenes Script, als Text aufbewahrt und nie ausgeführt |
 | `channel: Interface/ADRESSE:KANAL` mit `values:` (Datenpunkte mit ihren Werten) | mehrere Datenpunkte eines Kanals in einem Befehl schreiben: siehe [Mehrere Werte in einem Befehl](#values) |
 | `display: Interface/ADRESSE:KANAL` mit `lines:` und `sound:` | bis zu fünf Zeilen auf einer Anzeige zeigen und einen Signalton spielen: siehe [Eine Anzeige](#display) |
 | `webhook: "Adresse"` mit `method:` und nach Bedarf `headers:` (eine Liste aus `name:` und `value:`), `body_type:` (`json`, `form`, `text`) mit `body:`, `insecure: true` | eine Web-Adresse aufrufen: siehe [Webhooks](#webhook) |
@@ -1703,7 +1703,7 @@ Programme auf ein anderes System um oder kommen nach einer Neuinstallation zurü
 Andere Software braucht für Systemvariablen und Programme keine eigene Anbindung an dieses Addon. Das Addon ist auf
 dem System eine **Schnittstelle** wie die der Funkmodule: sie heißt `Logic`, und alles, was über die
 Programmierschnittstelle des Systems (lite-rpc) Geräte liest, schaltet und deren Ereignisse verfolgt, sieht Variablen
-und Programme als Geräte dieser Schnittstelle – Node-RED (RedMatic), hm2mqtt.js, Homematic Manager, eigene Skripte.
+und Programme als Geräte dieser Schnittstelle – Node-RED (RedMatic), hm2mqtt.js, Homematic Manager, eigene Scripts.
 
 Die Schnittstelle lauscht nur auf dem System selbst (127.0.0.1, Port 31310); von außen erreicht man sie über das
 System und mit dessen Zugriffsrechten: wer Geräte lesen darf, sieht die Werte, wer bedienen darf, setzt Variablen und
@@ -1775,6 +1775,10 @@ Beschreibung der beiden Datenpunkte, dass man sie nicht schreiben kann (`OPERATI
 - Die Schnittstelle spricht XML-RPC wie rfd und HmIPServer: `init`, `listDevices`, `getDeviceDescription`,
   `getParamsetDescription`, `getParamset`, `getValue`, `setValue`, `putParamset`, `ping`, `system.listMethods`,
   `system.multicall`; Ereignisse kommen als `system.multicall` mit `event`-Aufrufen.
+- In jedem dieser `event`-Aufrufe steht `methodName` zuerst und sein Wert ohne Typ (`<value>event</value>`), die
+  Parameter danach; für XML-RPC ist beides eine Zeichenkette. HmIPServer liest Ereignisse nur in dieser Form. Ein
+  Abonnent, der zehnmal hintereinander nicht antwortet – auch eine Antwort mit leerem Inhalt zählt so –, wird
+  abgemeldet, bis er sich mit `init` wieder anmeldet.
 - Funkspezifisches gibt es nicht: keine Servicemeldungen, keine Direktverknüpfungen, keine `MASTER`-Parameter.
 - Sprechen Sie die Schnittstelle über lite-rpc mit ihrem Namen `Logic` an, nicht über ihren Port: das System liest
   den Port aus dem Manifest des Addons und trägt die Schnittstelle in `InterfacesList.xml` ein. Bis 1.0.0-beta.1 war

@@ -3,18 +3,18 @@
 - Quelle: `ccu` (ReGa-Datenbank (homematic.regadom))
 - Standort: nicht in der Quelle – für Astro-Zeiten in den Einstellungen eintragen
 
-18 Programme übernommen, 7 davon inaktiv, 2 nicht übernommen; 38 Systemvariablen übernommen.
+Übernommen: 18 Programme (davon 7 inaktiv) und 38 Systemvariablen; nicht übernommen: 2 Programme.
 
 ## Programme
 
 | Programm | Datei | Ergebnis | Hinweise |
 | --- | --- | --- | --- |
-| zzL_Ia5 | `programs/zzl-ia5.yaml` | übernommen, inaktiv | enthält ein Skript – Skripte laufen hier nicht; das Skript bleibt als Text erhalten. Für solche Aufgaben: Node-RED (RedMatic), Home Assistant, ioBroker |
-| zzL_Ib31 | `programs/zzl-ib31.yaml` | übernommen, inaktiv | enthält ein Skript – Skripte laufen hier nicht; das Skript bleibt als Text erhalten. Für solche Aufgaben: Node-RED (RedMatic), Home Assistant, ioBroker |
-| zzL_Ic5r | `programs/zzl-ic5r.yaml` | übernommen, inaktiv | enthält ein Skript – Skripte laufen hier nicht; das Skript bleibt als Text erhalten. Für solche Aufgaben: Node-RED (RedMatic), Home Assistant, ioBroker |
-| zzL_Id5p | `programs/zzl-id5p.yaml` | übernommen, inaktiv | enthält ein Skript – Skripte laufen hier nicht; das Skript bleibt als Text erhalten. Für solche Aufgaben: Node-RED (RedMatic), Home Assistant, ioBroker |
-| zzL_Ie7 | `programs/zzl-ie7.yaml` | übernommen, inaktiv | enthält ein Skript – Skripte laufen hier nicht; das Skript bleibt als Text erhalten. Für solche Aufgaben: Node-RED (RedMatic), Home Assistant, ioBroker |
-| zzL_If31r | `programs/zzl-if31r.yaml` | übernommen, inaktiv | enthält ein Skript – Skripte laufen hier nicht; das Skript bleibt als Text erhalten. Für solche Aufgaben: Node-RED (RedMatic), Home Assistant, ioBroker |
+| zzL_Ia5 | `programs/zzl-ia5.yaml` | übernommen, inaktiv | enthält ein Script – Scripts laufen hier nicht; das Script bleibt als Text erhalten. Für solche Aufgaben: Node-RED (RedMatic), Home Assistant, ioBroker |
+| zzL_Ib31 | `programs/zzl-ib31.yaml` | übernommen, inaktiv | enthält ein Script – Scripts laufen hier nicht; das Script bleibt als Text erhalten. Für solche Aufgaben: Node-RED (RedMatic), Home Assistant, ioBroker |
+| zzL_Ic5r | `programs/zzl-ic5r.yaml` | übernommen, inaktiv | enthält ein Script – Scripts laufen hier nicht; das Script bleibt als Text erhalten. Für solche Aufgaben: Node-RED (RedMatic), Home Assistant, ioBroker |
+| zzL_Id5p | `programs/zzl-id5p.yaml` | übernommen, inaktiv | enthält ein Script – Scripts laufen hier nicht; das Script bleibt als Text erhalten. Für solche Aufgaben: Node-RED (RedMatic), Home Assistant, ioBroker |
+| zzL_Ie7 | `programs/zzl-ie7.yaml` | übernommen, inaktiv | enthält ein Script – Scripts laufen hier nicht; das Script bleibt als Text erhalten. Für solche Aufgaben: Node-RED (RedMatic), Home Assistant, ioBroker |
+| zzL_If31r | `programs/zzl-if31r.yaml` | übernommen, inaktiv | enthält ein Script – Scripts laufen hier nicht; das Script bleibt als Text erhalten. Für solche Aufgaben: Node-RED (RedMatic), Home Assistant, ioBroker |
 | Markise bei Regen einfahren | `programs/markise-bei-regen-einfahren.yaml` | übernommen, aktiv | beendet laufende Verzögerungen für seine Ziele – auch die anderer Programme; mehrere Aktivitäten: hier immer in der angegebenen Reihenfolge, eine nach der anderen; „bei Aktualisierung“ mit „Sonst“: „Sonst“ läuft bei jeder Meldung, solange die Bedingung nicht erfüllt ist; wird nach jedem Systemstart einmal geprüft, wie auf der Zentrale (abschaltbar: „beim Systemstart prüfen“) |
 | Heizperiode schalten | `programs/heizperiode-schalten.yaml` | übernommen, aktiv | „bei Änderung“ in einem „Sonst, wenn“: löst bei jedem Schreiben aus, solange ein früherer Block erfüllt ist (wie auf der Zentrale); Vergleich „außerhalb des Wertebereichs“: im Editor der Zentrale nicht einstellbar, Verhalten dort nicht gemessen; wird nach jedem Systemstart einmal geprüft, wie auf der Zentrale (abschaltbar: „beim Systemstart prüfen“) |
 | Vergleiche alle | `programs/vergleiche-alle.yaml` | übernommen, aktiv | mehrere Aktivitäten: hier immer in der angegebenen Reihenfolge, eine nach der anderen; „bei Aktualisierung“ mit „Sonst“: „Sonst“ läuft bei jeder Meldung, solange die Bedingung nicht erfüllt ist; wird nach jedem Systemstart einmal geprüft, wie auf der Zentrale (abschaltbar: „beim Systemstart prüfen“) |

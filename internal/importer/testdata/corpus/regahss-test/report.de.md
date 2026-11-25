@@ -3,7 +3,7 @@
 - Quelle: `ccu` (ReGa-Datenbank (homematic.regadom))
 - Standort: nicht in der Quelle – für Astro-Zeiten in den Einstellungen eintragen
 
-28 Programme übernommen, 0 davon inaktiv, 0 nicht übernommen; 7 Systemvariablen übernommen.
+Übernommen: 28 Programme (davon 0 inaktiv) und 7 Systemvariablen; nicht übernommen: 0 Programme.
 
 ## Programme
 

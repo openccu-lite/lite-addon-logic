@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+## [1.0.0-beta.3] - 2026-11-25
+
+The fourth pre-release, for openccu-lite 2.0.0-rc.1 and later. **HmIPServer now stays subscribed to the interface
+"Logic"** - before, it was dropped ten events after each of its starts.
+
+- **HmIPServer stays subscribed to the interface "Logic":** it could not read the events Logic sent it (every event's
+  method name was written as a typed string), answered each with nothing, and after ten events Logic dropped it until
+  HmIPServer's next start - ten error messages in HmIPServer's log after every start. Events now name their method in
+  the form HmIPServer reads; other software reads both forms. Logic's log line for a dropped subscriber now says why
+  the last call failed.
+- **The import report names a CCU's built-in rooms as the CCU shows them:** "Wohnzimmer" (or "Living room"), not
+  `roomLivingRoom`, the name the CCU keeps them by.
+- **The import's summaries count in the singular where a number is one:** "Übernommen: 3 Programme (davon 1 inaktiv)
+  und 6 Systemvariablen" instead of "1 der Programme sind inaktiv"; the dry run and the report file say it the same
+  way.
+- **German texts write "Script"**, not "Skript" - on the page, in the guide, the import report and the catalogue
+  description.
+
 ## [1.0.0-beta.2] - 2026-11-25
 
 The third pre-release, for openccu-lite 2.0.0-rc.1 and later. **The interface "Logic" listens on port 31310 now**
