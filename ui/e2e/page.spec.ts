@@ -58,3 +58,28 @@ test.describe('in German', () => {
         await expect(guide.locator('#overview')).toHaveText('Überblick');
     });
 });
+
+// occulited B-184: openccu-lite links to the import as /addons/logic/#/import (the manifest's
+// ui.regadom_import_url) - the page opens on that tab, and the address follows the tabs
+test('the address names the tab: #/import opens the import, a tab change keeps the hash in step', async ({page}) => {
+    await page.goto('./#/import');
+    await expect(page.getByTestId('page-import')).toBeVisible();
+    await expect(page.getByRole('tab', {name: 'Import'})).toHaveAttribute('aria-selected', 'true');
+    await page.getByRole('tab', {name: 'System variables'}).click();
+    await expect(page.getByTestId('page-variables')).toBeVisible();
+    await expect(page).toHaveURL(/#\/variables$/);
+    await page.reload();
+    await expect(page.getByTestId('page-variables')).toBeVisible();
+    // a hash change (the link clicked again in the same tab) moves the page too
+    await page.evaluate(() => (location.hash = '#/import'));
+    await expect(page.getByTestId('page-import')).toBeVisible();
+    // a hash the page does not know: the programs; no hash: none is added
+    await page.goto('about:blank');
+    await page.goto('./#/nothing');
+    await expect(page.getByTestId('page-programs')).toBeVisible();
+    await page.goto('./');
+    await expect(page.getByTestId('page-programs')).toBeVisible();
+    await page.getByRole('tab', {name: 'Import'}).click();
+    await expect(page.getByTestId('page-import')).toBeVisible();
+    expect(new URL(page.url()).hash).toBe('');
+});

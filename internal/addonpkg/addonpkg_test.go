@@ -110,15 +110,16 @@ func TestManifest(t *testing.T) {
 	if !strings.HasPrefix(importURL, "/addons/logic/") {
 		t.Errorf("ui.regadom_import_url %q", importURL)
 	}
-	if m.Description["de"] == "" || m.Description["en"] == "" || m.Runtime.Note["de"] == "" || m.Runtime.Note["en"] == "" {
-		t.Error("the description and the note in both languages")
+	if m.Description["de"] == "" || m.Description["en"] == "" || m.Runtime.Technical["de"] == "" || m.Runtime.Technical["en"] == "" ||
+		m.Runtime.Note["de"] == "" || m.Runtime.Note["en"] == "" {
+		t.Error("the description, the note and the technical text in both languages")
 	}
 	for _, scope := range scopes {
-		if !strings.Contains(m.Runtime.Note["en"], scope) || !strings.Contains(m.Runtime.Note["de"], scope) {
-			t.Errorf("the note does not explain %s", scope)
+		if !strings.Contains(m.Runtime.Technical["en"], scope) || !strings.Contains(m.Runtime.Technical["de"], scope) {
+			t.Errorf("the technical text does not explain %s", scope)
 		}
 	}
-	for _, text := range []string{m.Description["de"], m.Description["en"], m.Runtime.Note["de"], m.Runtime.Note["en"]} {
+	for _, text := range []string{m.Description["de"], m.Description["en"], m.Runtime.Technical["de"], m.Runtime.Note["de"], m.Runtime.Technical["en"], m.Runtime.Note["en"]} {
 		if strings.Contains(strings.ToLower(text), " box") {
 			t.Error("user-facing text says \"the system\"")
 		}
@@ -145,8 +146,8 @@ func TestPorts(t *testing.T) {
 	}
 	m, _, _, _ := load(t)
 	for _, lang := range []string{"de", "en"} {
-		if !strings.Contains(m.Runtime.Note[lang], "127.0.0.1:"+itoa(ri.Port)+")") {
-			t.Errorf("the %s note does not name 127.0.0.1:%d", lang, ri.Port)
+		if !strings.Contains(m.Runtime.Technical[lang], "127.0.0.1:"+itoa(ri.Port)+")") {
+			t.Errorf("the %s technical text does not name 127.0.0.1:%d", lang, ri.Port)
 		}
 	}
 }

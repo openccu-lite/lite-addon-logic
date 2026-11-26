@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## [1.0.0-beta.4] - 2026-11-26
+
+The fifth pre-release, for openccu-lite 2.0.0-rc.1 and later. **openccu-lite's "Import" link opens the import.**
+
+- **The import opens from openccu-lite's link on its own tab:** the welcome page's and the backup page's "Import"
+  link (`/addons/logic/#/import`) opened the page on the programs, one click short. The address now names the tab
+  the page opens on, and follows it while it carries one, so a reload stays on the same tab.
+- **The catalogue describes Logic for users:** a description and a note in plain words; the technical account (the
+  rights it uses, the interface on the system alone, what it contacts) is under *Details* and in the install question
+  on openccu-lite 2.0.0-rc.5 and later.
+
 ## [1.0.0-beta.3] - 2026-11-25
 
 The fourth pre-release, for openccu-lite 2.0.0-rc.1 and later. **HmIPServer now stays subscribed to the interface

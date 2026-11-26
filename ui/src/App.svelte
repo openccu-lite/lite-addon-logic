@@ -18,10 +18,13 @@
     import TriggersTab from './TriggersTab.svelte';
     import VariablesTab from './VariablesTab.svelte';
     import {ApiError, del, get, post, put, upload} from './api.js';
+    import {hashFor, tabFromHash} from './route.js';
     import type {Codes, Overview, Preview, Program, Report, Settings, Value, VariableDef} from './model.js';
 
     const notices = new NoticesStore();
-    let tab = $state('programs');
+    // the tab ids, and the one the address names (#/import: openccu-lite's link to the import)
+    const TAB_IDS = ['programs', 'variables', 'schedule', 'triggers', 'history', 'import', 'settings'];
+    let tab = $state(tabFromHash(location.hash, TAB_IDS) ?? 'programs');
     let version = $state('');
     let loadError = $state('');
     let overview = $state<Overview | null>(null);
@@ -55,7 +58,17 @@
         }
     }
 
+    // the address follows the tab while it carries one, so a reload stays where it was
+    $effect(() => {
+        if (location.hash && location.hash !== hashFor(tab)) history.replaceState(history.state, '', hashFor(tab));
+    });
+
     onMount(() => {
+        const onHash = () => {
+            const to = tabFromHash(location.hash, TAB_IDS);
+            if (to) go(to);
+        };
+        window.addEventListener('hashchange', onHash);
         get<{version: string}>('api/v1/health').then(
             (h) => (version = h.version),
             (e: Error) => (loadError = e.message),
@@ -69,7 +82,10 @@
         const timer = setInterval(() => {
             if (document.visibilityState === 'visible') refresh();
         }, 5000);
-        return () => clearInterval(timer);
+        return () => {
+            clearInterval(timer);
+            window.removeEventListener('hashchange', onHash);
+        };
     });
 
     // an action: do it, say what went wrong, show the new state
